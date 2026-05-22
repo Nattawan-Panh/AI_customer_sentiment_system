@@ -28,3 +28,9 @@ accelerate
 safetensors
 
 huggingface-hub
+
+sentencepiece
+tiktoken
+protobuf
+transformers
+tokenizers
