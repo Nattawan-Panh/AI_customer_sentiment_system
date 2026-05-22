@@ -1,0 +1,34 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "comments": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "knowledge_base": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "brand_settings": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "notifications": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "feedback": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "logs": {
+      ".read": "auth != null",
+      ".write": true
+    },
+    "models": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    }
+  }
+}

@@ -1,0 +1,39 @@
+import base64, hashlib, hmac, os
+from fastapi import APIRouter, Request, HTTPException
+from app.services.pipeline_service import process_line_message
+from app.services.logging_service import log_event
+from app.services.security_service import limiter
+router=APIRouter()
+def validate_line_signature(body: bytes, signature: str | None) -> bool:
+    secret = os.getenv('LINE_CHANNEL_SECRET', '').strip()
+    signature = (signature or '').strip()
+
+    if not secret or not signature:
+        return False
+
+    digest = hmac.new(
+        secret.encode('utf-8'),
+        body,
+        hashlib.sha256
+    ).digest()
+
+    expected = base64.b64encode(digest).decode('utf-8')
+    return hmac.compare_digest(expected, signature)
+@router.post('/webhook')
+@limiter.limit('120/minute')
+async def line_webhook(request:Request):
+    body=await request.body(); sig = request.headers.get('x-line-signature') or request.headers.get('X-Line-Signature')
+    if not validate_line_signature(body,sig):
+        await log_event('line_signature','error','Invalid LINE signature',fallback_used=True,severity='high')
+        raise HTTPException(status_code=403, detail='Invalid LINE signature')
+    payload=await request.json(); results=[]
+    for e in payload.get('events',[]):
+        if e.get('type')=='message' and e.get('message',{}).get('type')=='text':
+            results.append(await process_line_message(e))
+    return {'ok':True,'processed':len(results),'results':results}
+@router.post('/mock')
+@limiter.limit('30/minute')
+async def line_mock(request:Request):
+    p=await request.json()
+    e={'replyToken':p.get('replyToken','mock-reply-token'),'source':{'type':'user','userId':p.get('line_user_id','mock-user')},'message':{'type':'text','text':p.get('text','')}}
+    return {'ok':True,'result':await process_line_message(e,mock=True)}

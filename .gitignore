@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Env
+.env
+
+# Firebase
+serviceAccountKey.json
+
+# Models
+backend/models/
+training/checkpoints/
+training/raw_datasets/
+
+# AI
+*.bin
+*.pt
+*.pth
+*.safetensors
+*.onnx
+
+# Node
+node_modules/
+
+# Logs
+*.log

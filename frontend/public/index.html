@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang='th'>
+    <head>
+        <meta charset='UTF-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+        <title>Dashboard</title>
+        <link rel='stylesheet' href='css/style.css'>
+    </head>
+    
+    
+    <body>
+        <div class='layout'>
+            <aside class='sidebar'>
+                <div class='brand'>LINE Sentiment AI</div>
+                <nav class='nav'>
+                    <a href='index.html'>Dashboard</a>
+                    <a href='comments.html'>LINE Comments</a>
+                    <a href='review.html'>Human Review</a>
+                    <a href='notifications.html'>Notifications</a>
+                    <a href='knowledge.html'>Knowledge Base</a>
+                    <a href='brand.html'>Brand Setting</a>
+                    <a href='models.html'>Model Management</a>
+                    <a href='feedback.html'>Feedback</a>
+                    <a href='logs.html'>Error Logs</a>
+                    <a href="#" onclick="logout()">Logout</a>
+                </nav>
+            </aside>
+            <main class='main'>
+                <div class='header'>
+                    <div>
+                        <h1>Dashboard</h1>
+                        <p class='small'>ภาพรวมข้อความจาก LINE OA และสถานะ AI แบบ realtime</p>
+                    </div>
+                </div>
+                <section class='grid grid-4'>
+                    <div class='card'>
+                        <div>Total Messages</div>
+                        <div class='metric' id='totalMessages'>0</div>
+                    </div>
+                    <div class='card'>
+                        <div>High Risk</div>
+                        <div class='metric' id='highRisk'>0</div>
+                    </div>
+                    <div class='card'>
+                        <div>Pending Review</div>
+                        <div class='metric' id='pendingReview'>0</div>
+                    </div>
+                    <div class='card'>
+                        <div>Auto Sent</div>
+                        <div class='metric' id='autoSent'>0</div>
+                    </div>
+                </section>
+                <section class='grid grid-2'>
+                    <div class='card'>
+                        <h2>Sentiment Summary</h2>
+                        <div id='sentimentSummary'></div>
+                    </div>
+                    <div class='card'>
+                        <h2>Latest LINE Messages</h2>
+                        <div id='latestMessages'></div>
+                    </div>
+                </section>
+            </main>
+        </div>
+        <script type='module' src='js/firebase-config.js'></script>
+        <script type='module' src='js/auth-guard.js'></script>
+        <script type='module' src='js/dashboard.js'></script>
+
+    </body>
+</html>
+
+

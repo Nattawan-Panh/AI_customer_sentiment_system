@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang='th'>
+    <head>
+        <meta charset='UTF-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+        <title>Brand Setting</title>
+        <link rel='stylesheet' href='css/style.css'>
+    </head>
+    
+    <body>
+        <div class='layout'>
+            <aside class='sidebar'>
+                <div class='brand'>LINE Sentiment AI</div>
+                <nav class='nav'>
+                    <a href='index.html'>Dashboard</a>
+                    <a href='comments.html'>LINE Comments</a>
+                    <a href='review.html'>Human Review</a>
+                    <a href='notifications.html'>Notifications</a>
+                    <a href='knowledge.html'>Knowledge Base</a>
+                    <a href='brand.html'>Brand Setting</a>
+                    <a href='models.html'>Model Management</a>
+                    <a href='feedback.html'>Feedback</a>
+                    <a href='logs.html'>Error Logs</a>
+                    <a href="#" onclick="logout()">Logout</a>
+                </nav>
+            </aside>
+            <main class='main'>
+                <div class='header'>
+                    <div>
+                        <h1>Brand Setting</h1>
+                        <p class='small'>กำหนดบุคลิกแบรนด์และนโยบายการตอบ</p>
+                    </div>
+                </div>
+                <div class='card'>
+                    <div class='form-row'>
+                        <input id='brandName' placeholder='Brand name'>
+                        <select id='tone'>
+                            <option value='สุภาพ'>สุภาพ</option>
+                            <option value='เป็นกันเอง'>เป็นกันเอง</option>
+                            <option value='วัยรุ่น'>วัยรุ่น</option>
+                            <option value='มืออาชีพ'>มืออาชีพ</option>
+                        </select>
+                    </div>
+                    <textarea id='persona' placeholder='Brand Persona / Reply Policy'></textarea>
+                    <textarea id='forbiddenWords' placeholder='คำต้องห้าม คั่นด้วย comma'></textarea>
+                    <br><br><button id='saveBrand'>Save Brand Setting</button>
+                </div>
+            </main>
+        </div>
+        <script type='module' src='js/firebase-config.js'></script>
+        <script type='module' src='js/auth-guard.js'></script>
+        <script type='module' src='js/brand.js'></script>
+    </body>
+</html>

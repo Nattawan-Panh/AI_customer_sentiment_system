@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang='th'>
+    <head>
+        <meta charset='UTF-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+        <title>Comments</title>
+        <link rel='stylesheet' href='css/style.css'>
+    </head>
+    
+    
+    <body>
+        <div class='layout'>
+            <aside class='sidebar'>
+                <div class='brand'>LINE Sentiment AI</div>
+                <nav class='nav'>
+                    <a href='index.html'>Dashboard</a>
+                    <a href='comments.html'>LINE Comments</a>
+                    <a href='review.html'>Human Review</a>
+                    <a href='notifications.html'>Notifications</a>
+                    <a href='knowledge.html'>Knowledge Base</a>
+                    <a href='brand.html'>Brand Setting</a>
+                    <a href='models.html'>Model Management</a>
+                    <a href='feedback.html'>Feedback</a>
+                    <a href='logs.html'>Error Logs</a>
+                    <a href="#" onclick="logout()">Logout</a>
+                </nav>
+            </aside>
+            <main class='main'>
+                <div class='header'>
+                    <div>
+                        <h1>LINE Comments</h1>
+                        <p class='small'>ข้อความจาก LINE OA ที่วิเคราะห์โดยระบบ</p>
+                    </div>
+                </div>
+                <div class='card'>
+                    <div class='form-row'>
+                        <select id='sentimentFilter'>
+                            <option value=''>All Sentiment</option>
+                            <option value='positive'>Positive</option>
+                            <option value='neutral'>Neutral</option>
+                            <option value='negative'>Negative</option>
+                        </select>
+                        <select id='statusFilter'>
+                            <option value=''>All Status</option>
+                            <option value='auto_sent'>Auto Sent</option>
+                            <option value='pending_review'>Pending Review</option>
+                            <option value='sent'>Sent</option>
+                            <option value='spam'>Spam</option>
+                        </select>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Message</th>
+                                <th>Sentiment</th>
+                                <th>Intent</th>
+                                <th>Risk</th>
+                                <th>Status</th>
+                                <th>Created</th>
+                            </tr>
+                        </thead>
+                        <tbody id='commentsTable'></tbody>
+                    </table>
+                </div>
+            </main>
+        </div>
+        <script type='module' src='js/firebase-config.js'></script>
+        <script type='module' src='js/auth-guard.js'></script>
+        <script type='module' src='js/comments.js'></script>
+    </body>
+</html>
