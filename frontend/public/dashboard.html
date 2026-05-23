@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang='th'>
+    <head>
+        <meta charset='UTF-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+        <title>Pudding Petal Cafe's Customer Sentiment System</title>
+        <link rel='stylesheet' href='css/style.css'>
+    </head>
+    
+    
+    <body>
+        <div class='layout'>
+            <aside class='sidebar'>
+                <div class='brand'>Menu</div>
+                <nav class='nav'>
+                    <a href='dashboard'>Dashboard</a>
+                    <a href='comments.html'>LINE Messages</a>
+                    <a href='review.html'>Human Review</a>
+                    <a href='notifications.html'>Email Notifications</a>
+                    <a href="#" onclick="logout()">Logout</a>
+                </nav>
+            </aside>
+            <main class='main'>
+                <div class='header'>
+                    <div>
+                        <h1>Dashboard</h1>
+                        <p class='small'>Pudding Petal Cafe's Customer Sentiment System</p>
+                    </div>
+                </div>
+                <section class='grid grid-4'>
+                    <div class='card'>
+                        <div>Total Messages</div>
+                        <div class='metric' id='totalMessages'>0</div>
+                    </div>
+                    <div class='card'>
+                        <div>High Risk</div>
+                        <div class='metric' id='highRisk'>0</div>
+                    </div>
+                    <div class='card'>
+                        <div>Pending Review</div>
+                        <div class='metric' id='pendingReview'>0</div>
+                    </div>
+                    <div class='card'>
+                        <div>Auto Sent</div>
+                        <div class='metric' id='autoSent'>0</div>
+                    </div>
+                </section>
+                <section class='grid grid-2'>
+                    <div class='card'>
+                        <h2>Sentiment Summary</h2>
+                        <div id='sentimentSummary'></div>
+                    </div>
+                    <div class='card'>
+                        <h2>Latest LINE Messages</h2>
+                        <div id='latestMessages'></div>
+                    </div>
+                </section>
+            </main>
+        </div>
+        <script type='module' src='js/firebase-config.js'></script>
+        <script type="module" src="js/auth-check.js"></script>
+        <script type='module' src='js/dashboard.js'></script>
+
+    </body>
+</html>
+
+

@@ -27,6 +27,8 @@ def _headers():
     }
 
 
+
+
 def _normalize_text(text: str) -> str:
     text = str(text or "").strip()
 
@@ -81,6 +83,30 @@ def _send_line_request(url: str, payload: dict) -> dict:
             "error_type": "unknown_error",
             "error": str(e)
         }
+
+
+def get_line_display_name(user_id: str) -> str:
+    user_id = str(user_id or "").strip()
+
+    if not user_id:
+        return "unknown-line-user"
+
+    try:
+        response = requests.get(
+            f"https://api.line.me/v2/bot/profile/{user_id}",
+            headers=_headers(),
+            timeout=15
+        )
+
+        if response.status_code == 200:
+            data = response.json()
+            return data.get("displayName", user_id)
+
+        return user_id
+
+    except Exception as e:
+        print("LINE display name error:", e)
+        return user_id
 
 
 def push_message(line_user_id: str, text: str) -> dict:

@@ -11,7 +11,7 @@ from app.services.template_service import select_template
 from app.services.brand_service import get_brand_settings
 from app.services.llama_service import refine_reply_with_llama
 from app.services.decision_service import should_auto_send
-from app.services.line_service import push_message, reply_message
+from app.services.line_service import push_message, reply_message, get_line_display_name
 from app.services.notification_service import notify_admin_for_review
 from app.services.feedback_service import save_feedback
 from app.services.firebase_service import db_push, db_update
@@ -29,6 +29,7 @@ async def process_line_message(event, mock=False):
         text = event.get("message", {}).get("text", "")
         reply_token = event.get("replyToken")
         line_user_id = event.get("source", {}).get("userId", "unknown-line-user")
+        line_display_name = get_line_display_name(line_user_id)
 
         if not text:
             await log_event(
@@ -178,7 +179,8 @@ async def process_line_message(event, mock=False):
         data = {
             "platform": "LINE OA",
             "line_user_id": line_user_id,
-            "customer_name": line_user_id,
+            "customer_name": line_display_name,
+            "line_display_name": line_display_name,
             "reply_token": reply_token,
             "original_text": text,
             "clean_text": clean,

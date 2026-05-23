@@ -1,6 +1,6 @@
 import{db,ref,onValue,badge,short}from'./firebase-service.js';
 
-onValue(ref(db,'messages'),
+onValue(ref(db,'comments'),
 snap=>{
     const rows=Object.entries(snap.val()||{}).map(([id,v])=>({id,...v}));
 
@@ -12,7 +12,7 @@ snap=>{
     const s={positive:0,neutral:0,negative:0};
     rows.forEach(r=>s[r.sentiment]=(s[r.sentiment]||0)+1);
     
-    sentimentSummary.innerHTML=Object.entries(s).map(([k,v])=>`<p>${badge(k)} ${v} messages</p>`).join('');
+    sentimentSummary.innerHTML=Object.entries(s).map(([k,v])=>`<p>${badge(k)} ${v} comments</p>`).join('');
     latestMessages.innerHTML=rows.slice(-5).reverse().map(r=>
         `<div class='card'>
         <b>${r.customer_name||r.line_user_id||'-'}</b>

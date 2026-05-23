@@ -17,7 +17,7 @@ async function sendLineReply(cid,msg){
     return r.json()
 }
     
-onValue(ref(db,'messages'),
+onValue(ref(db,'comments'),
 snap=>{
     const rows=Object.entries(snap.val()||{}).map(([id,v])=>({id,...v})).filter(r=>
         ['pending_review','draft_ready','edited'].includes(r.status)).reverse();
@@ -76,7 +76,7 @@ snap=>{
                     }
                 if(action==='reject')
                     {
-                        await update(ref(db,`messages/${id}`),
+                        await update(ref(db,`comments/${id}`),
                         {
                             status:'rejected',final_reply:finalReply,reviewed_at:new Date().toISOString()
                         });

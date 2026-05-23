@@ -21,16 +21,13 @@ accelerate
 sentencepiece
 protobuf
 
-transformers
-torch
-sentencepiece
-accelerate
+
 safetensors
 
 huggingface-hub
 
-sentencepiece
+pythainlp
+
 tiktoken
-protobuf
-transformers
+
 tokenizers

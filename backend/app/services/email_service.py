@@ -23,7 +23,7 @@ def send_admin_email(
     admin_email = os.getenv("ADMIN_EMAIL")
     from_name = os.getenv(
         "EMAIL_FROM_NAME",
-        "AI Customer Sentiment System"
+        "Pudding Petals Cafe AI System"
     )
 
     subject = str(subject or "AI Review Required").strip()

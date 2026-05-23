@@ -90,7 +90,8 @@ def load_sentiment_model():
     try:
         _sentiment_tokenizer = AutoTokenizer.from_pretrained(
             SENTIMENT_MODEL_NAME,
-            token=HF_TOKEN
+            token = HF_TOKEN,
+            use_fast = False
         )
 
         _sentiment_model = AutoModelForSequenceClassification.from_pretrained(
@@ -103,10 +104,12 @@ def load_sentiment_model():
 
         return _sentiment_tokenizer, _sentiment_model
 
-    except Exception:
+    except Exception as e:
+        print(f"[SENTIMENT MODEL ERROR] {e}")
         _sentiment_tokenizer = None
         _sentiment_model = None
         _sentiment_id2label = None
+
         return None, None
 
 
