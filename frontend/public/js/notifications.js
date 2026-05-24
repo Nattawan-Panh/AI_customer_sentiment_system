@@ -16,52 +16,7 @@ function formatThaiDateTime(value) {
     });
 }
 
-function actionButton(notificationId, data) {
-    const status = String(data.status || '').toLowerCase();
-    const commentId = data.comment_id || data.commentId || '';
 
-    if (status === 'failed') {
-        return `
-            <button class="btn small danger" onclick="retryEmail('${notificationId}')">
-                ส่งอีกครั้ง
-            </button>
-        `;
-    }
-
-    return `
-        <button class="btn small" onclick="viewNotificationDetail('${commentId}')">
-            ดูรายละเอียด
-        </button>
-    `;
-}
-
-window.viewNotificationDetail = function(commentId) {
-    if (!commentId || commentId === '-') {
-        alert('ไม่พบข้อมูลข้อความที่เกี่ยวข้อง');
-        return;
-    }
-
-    window.location.href = `notification-detail.html?commentId=${commentId}`;
-};
-
-window.retryEmail = async function(notificationId) {
-  try {
-    const response = await fetch(`${API_BASE_URL}/admin/notifications/${notificationId}/retry`, {
-      method: "POST"
-    });
-
-    if (!response.ok) {
-      throw new Error("Retry failed");
-    }
-
-    alert("ส่งอีเมลอีกครั้งสำเร็จ");
-    location.reload();
-
-  } catch (error) {
-    console.error(error);
-    alert("ส่งอีเมลซ้ำไม่สำเร็จ");
-  }
-};
 
 onValue(ref(db, 'notifications'), snap => {
     notificationsTable.innerHTML = Object.entries(snap.val() || {})
@@ -74,7 +29,6 @@ onValue(ref(db, 'notifications'), snap => {
                 <td>${r.channel || '-'}</td>
                 <td>${badge(r.status)}</td>
                 <td>${r.subject || '-'}</td>
-                <td>${actionButton(r.id, r)}</td>
             </tr>
         `)
         .join('');
