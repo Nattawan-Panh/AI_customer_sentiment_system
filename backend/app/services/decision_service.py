@@ -11,6 +11,17 @@ HUMAN_REQUIRED_INTENTS = {
     "price_negotiation",
 }
 
+SAFE_AUTO_REPLY_INTENTS = {
+    "greeting",
+    "menu_inquiry",
+    "price_inquiry",
+    "recommendation",
+    "opening_hours",
+    "location",
+    "compliment",
+    "general_question"
+}
+
 def should_auto_send(
     risk_level,
     sentiment_confidence,
@@ -52,10 +63,10 @@ def should_auto_send(
             "reason": f"human_required_intent_{intent_label}"
         }
 
-    if risk_level != "LOW":
+    if risk_level == "LOW" and intent_label in SAFE_AUTO_REPLY_INTENTS:
         return {
-            "auto_send": False,
-            "reason": f"risk_{risk_level.lower()}"
+            "auto_send": True,
+            "reason": f"safe_auto_reply_intent_{intent_label}"
         }
 
     sentiment_threshold = float(

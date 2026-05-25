@@ -1,4 +1,4 @@
-import{db,ref,onValue,badge,short}from'./firebase-service.js';
+import{db,ref,onValue,badge,short,escapeHtml}from'./firebase-service.js';
 
 let rows=[];
 
@@ -36,19 +36,22 @@ function render(){
             formatDateTime(r.created_at || r.createdAt || r.timestamp);
 
         return `<tr>
-            <td>${userName}</td>
-            <td>${short(r.original_text || r.message || r.text,120)}</td>
+            <td>${escapeHtml(userName)}</td>
+            <td>${escapeHtml(short(r.original_text || r.message || r.text,120))}</td>
             <td>${badge(r.sentiment)}</td>
-            <td>${r.intent||'-'}</td>
+            <td>${escapeHtml(r.intent||'-')}</td>
             <td>${badge(r.risk_level)}</td>
             <td>${badge(r.status)}</td>
-            <td>${created}</td>
+            <td>${escapeHtml(created)}</td>
         </tr>`;
     }).join('');
 }
 
 onValue(ref(db,'comments'),
-snap=>{rows=Object.entries(snap.val()||{}).map(([id,v])=>({id,...v})).reverse();render()});
+snap=>{
+    rows=Object.entries(snap.val()||{}).map(([id,v])=>({id,...v})).reverse();
+    render();
+});
 
 sentimentFilter.addEventListener('change',render);
 statusFilter.addEventListener('change',render);

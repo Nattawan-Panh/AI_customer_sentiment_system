@@ -29,7 +29,7 @@ async def process_line_message(event, mock=False):
         text = event.get("message", {}).get("text", "")
         reply_token = event.get("replyToken")
         line_user_id = event.get("source", {}).get("userId", "unknown-line-user")
-        line_display_name = get_line_display_name(line_user_id)
+        line_display_name = line_user_id
 
         if not text:
             await log_event(
@@ -49,11 +49,16 @@ async def process_line_message(event, mock=False):
             "Text cleaned"
         )
 
-        status = "spam" if is_spam(clean) else "processing"
+        spam_result = is_spam(clean)
+        status = "spam" if spam_result.get("is_spam") else "processing"
 
         await log_event(
             "duplicate_spam_check",
             "success",
+            str({
+                "spam_score": spam_result.get("score"),
+                "spam_matched": spam_result.get("matched")
+            }),
             f"Status: {status}"
         )
 
@@ -120,32 +125,59 @@ async def process_line_message(event, mock=False):
             brand
         )
 
-        if isinstance(llm_result, dict):
-            ai_reply = llm_result.get("reply") or template
-            llm_used = llm_result.get("used_llama", False)
-            llm_status = llm_result.get("status", "unknown")
-        else:
-            ai_reply = llm_result or template
+        llm_reason = None
+        llm_error = None
+
+        if not pre.get("safe"):
+            template = (
+                "ขอบคุณที่บอกให้ Pudding Petals ทราบนะคะ "
+                "ข้อความนี้อาจต้องให้แอดมินช่วยตรวจสอบเพิ่มเติมก่อน "
+                "เพื่อให้ดูแลคุณลูกค้าได้อย่างถูกต้องและสบายใจที่สุดค่ะ 🌷"
+            )
+            ai_reply = template
             llm_used = False
-            llm_status = "legacy_return"
+            llm_status = "skipped_pre_safety_failed"
+            llm_reason = "pre_safety_failed"
+        else:
+            llm_result = refine_reply_with_llama(
+                clean,
+                template,
+                knowledge.get("content", ""),
+                brand
+            )
+
+            if isinstance(llm_result, dict):
+                ai_reply = llm_result.get("reply") or template
+                llm_used = llm_result.get("used_llama", False)
+                llm_status = llm_result.get("status", "unknown")
+                llm_reason = llm_result.get("reason")
+                llm_error = llm_result.get("error")
+            else:
+                ai_reply = llm_result or template
+                llm_used = False
+                llm_status = "legacy_return"
 
         await log_event(
             "llm_reply_refinement",
             "success",
-            "Reply refined or template fallback used",
-            fallback_used=not llm_used,
-            extra={
+            str({
+                "message": "LLM used successfully" if llm_used else "LLM fallback used",
                 "llm_used": llm_used,
-                "llm_status": llm_status
-            }
+                "llm_status": llm_status,
+                "llm_reason": llm_reason,
+                "llm_error": llm_error
+            }),
+            fallback_used=not llm_used,
+            severity="normal" if llm_used else "warning"
         )
 
         post = post_safety_check(ai_reply)
 
         if not post.get("safe"):
             ai_reply = (
-                "ขอบคุณที่ติดต่อเข้ามานะคะ "
-                "ทางแอดมินจะตรวจสอบข้อมูลและตอบกลับโดยเร็วที่สุดค่ะ"
+                "ขอบคุณที่บอกให้ Pudding Petals ทราบนะคะ "
+                "ข้อความนี้อาจต้องให้แอดมินช่วยตรวจสอบเพิ่มเติมก่อน "
+                "เพื่อให้ดูแลคุณลูกค้าได้อย่างถูกต้องและสบายใจที่สุดค่ะ 🌷"
             )
 
             await log_event(
@@ -172,6 +204,9 @@ async def process_line_message(event, mock=False):
         )
 
         final_status = "auto_sent" if decision.get("auto_send") else "pending_review"
+
+        if not pre.get("safe"):
+            final_status = "pending_review"
 
         if status == "spam":
             final_status = "spam"
@@ -206,6 +241,12 @@ async def process_line_message(event, mock=False):
             "ai_reply": ai_reply,
             "post_safe": post.get("safe"),
 
+            "reply_source": "llama" if llm_used else "template_fallback",
+            "llm_used": llm_used,
+            "llm_status": llm_status,
+            "llm_reason": llm_reason,
+            "llm_error": llm_error,
+
             "decision_reason": decision.get("reason"),
             "status": final_status,
             "created_at": utc_now()
@@ -234,6 +275,9 @@ async def process_line_message(event, mock=False):
                         if reply_token
                         else push_message(line_user_id, ai_reply)
                     )
+
+                    if not sent.get("success"):
+                        raise RuntimeError(f"LINE send failed: {sent}")
 
                 db_update(
                     f"comments/{comment_id}",

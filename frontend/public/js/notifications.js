@@ -1,4 +1,4 @@
-import { db, ref, onValue, badge } from './firebase-service.js';
+import { db, ref, onValue, badge, escapeHtml } from './firebase-service.js';
 
 function formatThaiDateTime(value) {
     if (!value) return '-';
@@ -16,19 +16,17 @@ function formatThaiDateTime(value) {
     });
 }
 
-
-
 onValue(ref(db, 'notifications'), snap => {
     notificationsTable.innerHTML = Object.entries(snap.val() || {})
         .map(([id, v]) => ({ id, ...v }))
         .reverse()
         .map(r => `
             <tr>
-                <td>${formatThaiDateTime(r.created_at || r.createdAt || r.sent_at)}</td>
+                <td>${escapeHtml(formatThaiDateTime(r.created_at || r.createdAt || r.sent_at))}</td>
                 <td>${badge(r.type)}</td>
-                <td>${r.channel || '-'}</td>
+                <td>${escapeHtml(r.channel || '-')}</td>
                 <td>${badge(r.status)}</td>
-                <td>${r.subject || '-'}</td>
+                <td>${escapeHtml(r.subject || '-')}</td>
             </tr>
         `)
         .join('');

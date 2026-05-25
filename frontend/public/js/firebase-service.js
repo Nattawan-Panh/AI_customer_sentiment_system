@@ -35,9 +35,20 @@ export {
   signOut
 };
 
+export function escapeHtml(value) {
+  return String(value || '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+}
+
 export function badge(v) {
   const t = String(v || 'unknown');
-  return `<span class="badge ${t} ${t.toLowerCase()}">${t}</span>`;
+  const cls = t.toLowerCase().replace(/[^a-z0-9_-]/g, '-');
+
+  return `<span class="badge ${cls}">${escapeHtml(t)}</span>`;
 }
 
 export function short(text, max = 90) {
