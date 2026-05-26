@@ -1168,6 +1168,18 @@ def format_menu_item(item: dict, include_price: bool = True) -> str:
 
     return line
 
+def format_menu_item_short(item: dict) -> str:
+    name = get_menu_name(item)
+    description = _safe_str(item.get("description"))
+
+    # ตัดคำอธิบายให้สั้นลง
+    if len(description) > 45:
+        description = description[:45].strip() + "..."
+
+    if description:
+        return f"{name} - {description}"
+
+    return name
 
 def format_menu_detail(item: dict) -> str:
     if not isinstance(item, dict):
@@ -1280,51 +1292,30 @@ def build_recommendation_answer(kb: dict, text: str) -> str:
         return ""
 
     category = detect_menu_category(text)
-    rule_name = detect_recommendation_rule(text)
-    recommendation_rules = get_recommendation_rules()
+
 
     filtered_items = []
 
-    # ใช้ recommendation_rules ก่อน ถ้าข้อความสื่อความต้องการเฉพาะ
-    if rule_name and isinstance(recommendation_rules.get(rule_name), list):
-        filtered_items = _menu_items_by_ids(recommendation_rules.get(rule_name))
+    for item in items:
+        if not isinstance(item, dict):
+            continue
 
-        if category:
-            filtered_items = [
-                item for item in filtered_items
-                if item.get("category") == category
-            ]
+        if category and item.get("category") != category:
+            continue
 
-    # ถ้าไม่มี rule หรือ rule ไม่ตรง ให้คัดจาก menu_catalog
-    if not filtered_items:
-        for item in items:
-            if not isinstance(item, dict):
-                continue
+        tags = item.get("tags", [])
+        recommended_for = item.get("recommended_for", [])
 
-            if category and item.get("category") != category:
-                continue
+        is_recommended = (
+            "signature" in tags
+            or "signature_drink" in tags
+            or "best_seller" in tags
+            or "photo_friendly" in tags
+            or len(recommended_for) > 0
+        )
 
-            tags = item.get("tags", [])
-            recommended_for = item.get("recommended_for", [])
-
-            tag_text = " ".join(str(tag).lower() for tag in tags) if isinstance(tags, list) else ""
-            recommended_text = (
-                " ".join(str(value).lower() for value in recommended_for)
-                if isinstance(recommended_for, list)
-                else ""
-            )
-
-            is_recommended = (
-                "signature" in tag_text
-                or "signature_drink" in tag_text
-                or "best_seller" in tag_text
-                or "photo_friendly" in tag_text
-                or "not_too_sweet" in tag_text
-                or bool(recommended_text)
-            )
-
-            if is_recommended:
-                filtered_items.append(item)
+        if is_recommended:
+            filtered_items.append(item)
 
     if not filtered_items:
         filtered_items = [
@@ -1333,7 +1324,8 @@ def build_recommendation_answer(kb: dict, text: str) -> str:
             and (not category or item.get("category") == category)
         ]
 
-    selected_items = filtered_items[:3]
+    # ลดจาก 3 รายการ เหลือ 2 รายการ
+    selected_items = filtered_items[:2]
 
     if not selected_items:
         return ""
@@ -1349,14 +1341,16 @@ def build_recommendation_answer(kb: dict, text: str) -> str:
     else:
         intro = "เมนูแนะนำของร้านมีหลายเมนูที่ลูกค้าชอบค่ะ 🌷"
 
-    lines = [intro]
+    menu_lines = [
+        f"- {format_menu_item_short(item)}"
+        for item in selected_items
+    ]
 
-    for item in selected_items:
-        lines.append(f"- {format_menu_item(item)}")
-
-    lines.append("ลูกค้าชอบแนวหวานน้อย ชา กาแฟ นม หรือโซดาสดชื่นเป็นพิเศษไหมคะ")
-
-    return "\n".join(lines)
+    return (
+        intro + "\n"
+        + "\n".join(menu_lines)
+        + "\n\nลูกค้าชอบแนวหวานน้อย ชา กาแฟ นม หรือโซดาเป็นพิเศษไหมคะ"
+    )
 
 
 def build_menu_summary(category: str = "") -> str:
