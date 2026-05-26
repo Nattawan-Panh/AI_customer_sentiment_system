@@ -1,124 +1,74 @@
-HIGH_KEYWORDS = [
-    "ฟ้อง",
-    "สคบ",
-    "โกง",
-    "ประจาน",
-    "คืนเงิน",
-    "หลอก",
-    "ร้องเรียน",
-    "แจ้งความ",
-    "เสียหายมาก",
-    "บริการแย่มาก",
-    "รับผิดชอบ",
-]
-
-MEDIUM_KEYWORDS = [
-    "แย่",
-    "ช้า",
-    "เสีย",
-    "พัง",
-    "ผิดหวัง",
-    "ไม่โอเค",
-    "ไม่พอใจ",
-    "ของไม่ครบ",
-    "ได้ของผิด",
-    "เค้กเละ",
-    "ขนมหก",
-    "ส่งช้า",
-]
-
-HIGH_RISK_INTENTS = {
-    "refund_exchange",
-    "complaint",
-    "human_required",
-}
-
-MEDIUM_RISK_INTENTS = {
-    "order_problem",
-    "delivery_issue",
-    "event_booking",
-    "collaboration",
-    "sweetness_allergy",
-    "custom_cake",
-    "reservation",
-}
-
-
-def score_risk(text, sentiment, intent, pre_safe):
+def calculate_risk(text: str, sentiment_label: str, intent_label: str) -> dict:
     text = str(text or "").lower()
-    sentiment = str(sentiment or "").lower()
-    intent = str(intent or "").lower()
 
-    score = 0
-    reasons = []
-
-    matched_high_keywords = [
-        word for word in HIGH_KEYWORDS
-        if word.lower() in text
+    high_keywords = [
+        "high_risk_complaint"
     ]
 
-    if matched_high_keywords:
-        added_score = len(matched_high_keywords) * 3
-        score += added_score
-        reasons.append({
-            "type": "high_keywords",
-            "matched": matched_high_keywords,
-            "score": added_score
-        })
-
-    matched_medium_keywords = [
-        word for word in MEDIUM_KEYWORDS
-        if word.lower() in text
+    medium_keywords = [
+        "allergy",
+        "complaint_product",
+        "complaint_service",
+        "refund_return",
     ]
 
-    if matched_medium_keywords:
-        added_score = len(matched_medium_keywords) * 1
-        score += added_score
-        reasons.append({
-            "type": "medium_keywords",
-            "matched": matched_medium_keywords,
-            "score": added_score
-        })
+    low_safe_intents = {
+        "greeting",
+        "thanks",
+        "menu_inquiry",
+        "recommendation",
+        "promotion",
+        "price_inquiry",
+        "size_option",
+        "availability",
+        "opening_hours",
+        "location",
+        "reservation",
+        "delivery_takeaway",
+        "payment",
+        "custom_cake",
+        "special_occasion",
+        "packaging",
+        "sweetness_adjustment",
+        "ingredients",
+        "dietary_option",
+        "ambience_photo_spot",
+        "facility",
+        "service_question",
+        "compliment",
+        "general_question",
+    }
 
-    if sentiment == "negative":
-        score += 2
-        reasons.append({
-            "type": "negative_sentiment",
-            "score": 2
-        })
+    if any(k in text for k in high_keywords):
+        return {
+            "level": "HIGH",
+            "score": 90,
+            "reason": "high_risk_keyword"
+        }
 
-    if intent in HIGH_RISK_INTENTS:
-        score += 3
-        reasons.append({
-            "type": "high_risk_intent",
-            "intent": intent,
-            "score": 3
-        })
+    if any(k in text for k in medium_keywords):
+        return {
+            "level": "MEDIUM",
+            "score": 60,
+            "reason": "medium_risk_keyword"
+        }
 
-    elif intent in MEDIUM_RISK_INTENTS:
-        score += 2
-        reasons.append({
-            "type": "medium_risk_intent",
-            "intent": intent,
-            "score": 2
-        })
+    if intent_label in low_safe_intents:
+        return {
+            "level": "LOW",
+            "score": 10,
+            "reason": "safe_intent"
+        }
 
-    if pre_safe is False:
-        score += 4
-        reasons.append({
-            "type": "pre_safety_failed",
-            "score": 4
-        })
-
-    if score >= 5:
-        level = "HIGH"
-    elif score >= 2:
-        level = "MEDIUM"
-    else:
-        level = "LOW"
+    if sentiment_label == "negative":
+        return {
+            "level": "MEDIUM",
+            "score": 50,
+            "reason": "negative_sentiment"
+        }
 
     return {
-        "level": level,
-        "score": score,
-        "reasons": reasons
+        "level": "LOW",
+        "score": 10,
+        "reason": "default_low"
     }

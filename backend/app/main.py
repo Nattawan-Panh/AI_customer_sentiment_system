@@ -30,6 +30,13 @@ app = FastAPI(
     redoc_url=None if IS_PRODUCTION else "/redoc"
 )
 
+@app.get("/health")
+def health_check():
+    return {
+        "status": "ok",
+        "service": "customer-sentiment-backend"
+    }
+
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, rate_limit_handler)
 
@@ -54,10 +61,3 @@ app.include_router(
 )
 
 
-@app.get("/health")
-async def health():
-    return {
-        "ok": True,
-        "status": "healthy",
-        "allowed_origins": allowed_origins
-    }
