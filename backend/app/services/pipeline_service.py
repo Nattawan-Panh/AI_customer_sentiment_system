@@ -76,7 +76,9 @@ async def process_line_message(event, mock=False):
         await log_event(
             "sentiment_prediction",
             "success",
-            str(sentiment)
+            str(sentiment),
+            fallback_used=bool(sentiment.get("fallback_used")),
+            severity="warning" if sentiment.get("fallback_used") else "normal"
         )
 
         intent = predict_intent(clean)
@@ -117,13 +119,6 @@ async def process_line_message(event, mock=False):
         template_result = select_template(intent["label"])
         template = template_result["reply"]
         brand = get_brand_settings()
-
-        llm_result = refine_reply_with_llama(
-            clean,
-            template,
-            knowledge.get("content", ""),
-            brand
-        )
 
         llm_reason = None
         llm_error = None
@@ -226,6 +221,8 @@ async def process_line_message(event, mock=False):
             "sentiment": sentiment.get("label"),
             "sentiment_confidence": sentiment.get("confidence"),
             "sentiment_model": sentiment.get("model"),
+            "sentiment_fallback_used": sentiment.get("fallback_used"),
+            "sentiment_fallback_reason": sentiment.get("fallback_reason"),
 
             "intent": intent.get("label"),
             "intent_confidence": intent.get("confidence"),

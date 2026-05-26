@@ -2,6 +2,14 @@ import os
 import re
 
 try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except Exception:
+    # On production, env vars usually come from Railway/Render directly.
+    # If python-dotenv is not installed yet, do not crash the service.
+    pass
+
+try:
     import torch
     from transformers import AutoModelForSequenceClassification, AutoTokenizer
 except Exception as import_error:
@@ -87,20 +95,44 @@ NEGATION_WORDS = [
 ]
 
 
+# Keep the original variable names so other files that reference them will not break.
 SENTIMENT_MODEL_NAME = os.getenv("SENTIMENT_MODEL_NAME", "").strip()
 HF_TOKEN = os.getenv("HF_TOKEN", "").strip()
-
 USE_MODEL = os.getenv("USE_MODEL", "true").strip().lower() in [
     "true",
     "1",
     "yes",
-    "y"
+    "y",
+    "on",
 ]
 
 _sentiment_tokenizer = None
 _sentiment_model = None
 _sentiment_id2label = None
 _sentiment_model_error = None
+_sentiment_loaded_model_name = None
+
+
+def _refresh_env_settings():
+    """
+    Read env vars at runtime, not only at import time.
+    This fixes the case where .env is loaded after this service is imported.
+    """
+    global SENTIMENT_MODEL_NAME
+    global HF_TOKEN
+    global USE_MODEL
+
+    SENTIMENT_MODEL_NAME = os.getenv("SENTIMENT_MODEL_NAME", "").strip()
+    HF_TOKEN = os.getenv("HF_TOKEN", "").strip()
+    USE_MODEL = os.getenv("USE_MODEL", "true").strip().lower() in [
+        "true",
+        "1",
+        "yes",
+        "y",
+        "on",
+    ]
+
+    return SENTIMENT_MODEL_NAME, HF_TOKEN, USE_MODEL
 
 
 def normalize_text(text: str) -> str:
@@ -118,10 +150,35 @@ def contains_negation(text: str, word: str) -> bool:
 
 
 def _get_hf_kwargs() -> dict:
-    if HF_TOKEN:
-        return {"token": HF_TOKEN}
+    _, hf_token, _ = _refresh_env_settings()
+
+    if hf_token:
+        return {"token": hf_token}
 
     return {}
+
+
+def _get_legacy_hf_kwargs() -> dict:
+    _, hf_token, _ = _refresh_env_settings()
+
+    if hf_token:
+        return {"use_auth_token": hf_token}
+
+    return {}
+
+
+def _reset_model_cache(error_message=None):
+    global _sentiment_tokenizer
+    global _sentiment_model
+    global _sentiment_id2label
+    global _sentiment_model_error
+    global _sentiment_loaded_model_name
+
+    _sentiment_tokenizer = None
+    _sentiment_model = None
+    _sentiment_id2label = None
+    _sentiment_loaded_model_name = None
+    _sentiment_model_error = error_message
 
 
 def load_sentiment_model():
@@ -129,12 +186,15 @@ def load_sentiment_model():
     global _sentiment_model
     global _sentiment_id2label
     global _sentiment_model_error
+    global _sentiment_loaded_model_name
 
-    if not USE_MODEL:
+    model_name, _, use_model = _refresh_env_settings()
+
+    if not use_model:
         _sentiment_model_error = "USE_MODEL is false"
         return None, None
 
-    if not SENTIMENT_MODEL_NAME:
+    if not model_name:
         _sentiment_model_error = "SENTIMENT_MODEL_NAME is missing"
         return None, None
 
@@ -145,73 +205,106 @@ def load_sentiment_model():
         )
         return None, None
 
-    if _sentiment_tokenizer is not None and _sentiment_model is not None:
+    # Reuse model if it has already loaded successfully.
+    # Reload only when SENTIMENT_MODEL_NAME has changed.
+    if (
+        _sentiment_tokenizer is not None
+        and _sentiment_model is not None
+        and _sentiment_loaded_model_name == model_name
+    ):
         return _sentiment_tokenizer, _sentiment_model
 
     try:
         hf_kwargs = _get_hf_kwargs()
 
         _sentiment_tokenizer = AutoTokenizer.from_pretrained(
-            SENTIMENT_MODEL_NAME,
+            model_name,
             use_fast=False,
             **hf_kwargs
         )
 
         _sentiment_model = AutoModelForSequenceClassification.from_pretrained(
-            SENTIMENT_MODEL_NAME,
+            model_name,
             **hf_kwargs
         )
 
         _sentiment_model.eval()
-        _sentiment_id2label = _sentiment_model.config.id2label
+        _sentiment_id2label = _sentiment_model.config.id2label or {}
+        _sentiment_loaded_model_name = model_name
         _sentiment_model_error = None
 
+        print(f"[SENTIMENT MODEL] Loaded: {model_name}")
         return _sentiment_tokenizer, _sentiment_model
 
     except TypeError:
+        # Compatibility for older transformers versions that use use_auth_token.
         try:
-            auth_kwargs = {}
-
-            if HF_TOKEN:
-                auth_kwargs = {"use_auth_token": HF_TOKEN}
+            auth_kwargs = _get_legacy_hf_kwargs()
 
             _sentiment_tokenizer = AutoTokenizer.from_pretrained(
-                SENTIMENT_MODEL_NAME,
+                model_name,
                 use_fast=False,
                 **auth_kwargs
             )
 
             _sentiment_model = AutoModelForSequenceClassification.from_pretrained(
-                SENTIMENT_MODEL_NAME,
+                model_name,
                 **auth_kwargs
             )
 
             _sentiment_model.eval()
-            _sentiment_id2label = _sentiment_model.config.id2label
+            _sentiment_id2label = _sentiment_model.config.id2label or {}
+            _sentiment_loaded_model_name = model_name
             _sentiment_model_error = None
 
+            print(f"[SENTIMENT MODEL] Loaded: {model_name}")
             return _sentiment_tokenizer, _sentiment_model
 
         except Exception as exc:
-            _sentiment_tokenizer = None
-            _sentiment_model = None
-            _sentiment_id2label = None
-            _sentiment_model_error = str(exc)
-
-            print(f"[SENTIMENT MODEL ERROR] {_sentiment_model_error}")
+            error_message = str(exc)
+            _reset_model_cache(error_message)
+            print(f"[SENTIMENT MODEL ERROR] {error_message}")
             return None, None
 
     except Exception as exc:
-        _sentiment_tokenizer = None
-        _sentiment_model = None
-        _sentiment_id2label = None
-        _sentiment_model_error = str(exc)
-
-        print(f"[SENTIMENT MODEL ERROR] {_sentiment_model_error}")
+        error_message = str(exc)
+        _reset_model_cache(error_message)
+        print(f"[SENTIMENT MODEL ERROR] {error_message}")
         return None, None
 
 
+def _map_sentiment_label(raw_label):
+    raw_label = str(raw_label).strip().lower()
+
+    label_map = {
+        "label_0": "negative",
+        "label_1": "neutral",
+        "label_2": "positive",
+        "0": "negative",
+        "1": "neutral",
+        "2": "positive",
+        "neg": "negative",
+        "negative": "negative",
+        "negative_label": "negative",
+        "neu": "neutral",
+        "neutral": "neutral",
+        "neutral_label": "neutral",
+        "pos": "positive",
+        "positive": "positive",
+        "positive_label": "positive",
+    }
+
+    label = label_map.get(raw_label, raw_label)
+
+    if label not in ["positive", "neutral", "negative"]:
+        label = "neutral"
+
+    return label
+
+
 def predict_sentiment_with_model(text: str):
+    global _sentiment_model_error
+
     tokenizer, model = load_sentiment_model()
 
     if tokenizer is None or model is None:
@@ -232,27 +325,9 @@ def predict_sentiment_with_model(text: str):
             pred_id = int(torch.argmax(probs).item())
             confidence = float(probs[pred_id].item())
 
-        raw_label = str(_sentiment_id2label.get(pred_id, pred_id)).lower()
-
-        label_map = {
-            "label_0": "negative",
-            "label_1": "neutral",
-            "label_2": "positive",
-            "0": "negative",
-            "1": "neutral",
-            "2": "positive",
-            "neg": "negative",
-            "negative": "negative",
-            "neu": "neutral",
-            "neutral": "neutral",
-            "pos": "positive",
-            "positive": "positive",
-        }
-
-        label = label_map.get(raw_label, raw_label)
-
-        if label not in ["positive", "neutral", "negative"]:
-            label = "neutral"
+        raw_label = _sentiment_id2label.get(pred_id, pred_id)
+        label = _map_sentiment_label(raw_label)
+        model_name, _, _ = _refresh_env_settings()
 
         return {
             "label": label,
@@ -260,13 +335,12 @@ def predict_sentiment_with_model(text: str):
             "score": 0,
             "positive_matches": [],
             "negative_matches": [],
-            "model": SENTIMENT_MODEL_NAME,
+            "model": model_name,
             "fallback_used": False,
             "fallback_reason": None
         }
 
     except Exception as exc:
-        global _sentiment_model_error
         _sentiment_model_error = str(exc)
         print(f"[SENTIMENT PREDICT ERROR] {_sentiment_model_error}")
         return None
@@ -324,6 +398,8 @@ def predict_sentiment_by_rules(text: str) -> dict:
         label = "neutral"
         confidence = 0.70
 
+    fallback_reason = _sentiment_model_error or "model_result_is_none"
+
     return {
         "label": label,
         "confidence": round(confidence, 2),
@@ -332,7 +408,7 @@ def predict_sentiment_by_rules(text: str) -> dict:
         "negative_matches": negative_matches,
         "model": "rule_based_fallback",
         "fallback_used": True,
-        "fallback_reason": _sentiment_model_error
+        "fallback_reason": fallback_reason
     }
 
 
@@ -353,3 +429,20 @@ def analyze_sentiment(text):
 
 def get_sentiment(text):
     return predict_sentiment(text)
+
+
+def get_sentiment_model_status():
+    """
+    Optional helper for debug/admin route.
+    It does not force model loading; it only reports current cached state.
+    """
+    model_name, _, use_model = _refresh_env_settings()
+
+    return {
+        "use_model": use_model,
+        "sentiment_model_name": model_name,
+        "model_loaded": _sentiment_model is not None,
+        "loaded_model_name": _sentiment_loaded_model_name,
+        "fallback_reason": _sentiment_model_error,
+        "transformers_import_error": TRANSFORMERS_IMPORT_ERROR,
+    }
