@@ -10,7 +10,6 @@ from app.routes.admin import router as admin_router
 
 
 APP_ENV = os.getenv("APP_ENV", "development")
-FRONTEND_ORIGIN = os.getenv("FRONTEND_ORIGIN", "http://localhost:5173")
 
 IS_PRODUCTION = APP_ENV == "production"
 
@@ -24,11 +23,22 @@ app = FastAPI(
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, rate_limit_handler)
 
+FRONTEND_ORIGINS = os.getenv(
+    "FRONTEND_ORIGINS",
+    "http://localhost:5173,https://customer-sentiment-syste-b6ca8.web.app"
+)
+
+allowed_origins = [
+    origin.strip()
+    for origin in FRONTEND_ORIGINS.split(",")
+    if origin.strip()
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[FRONTEND_ORIGIN],
+    allow_origins=allowed_origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
