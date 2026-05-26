@@ -237,6 +237,15 @@ async def process_line_message(event, mock=False):
 
             "risk_level": risk.get("level"),
             "risk_score": risk.get("score"),
+            "risk_reasons": risk.get("reasons", []),
+
+            # เพิ่มส่วนนี้
+            "knowledge_matched": knowledge.get("matched"),
+            "knowledge_source": knowledge.get("source"),
+            "knowledge_answer": knowledge.get("answer") or knowledge.get("content"),
+
+            "template_source": template_result.get("source"),
+            "template_reply": template,
 
             "knowledge_title": knowledge.get("title"),
             "knowledge_matched": knowledge.get("matched"),
@@ -253,7 +262,8 @@ async def process_line_message(event, mock=False):
 
             "decision_reason": decision.get("reason"),
             "status": final_status,
-            "created_at": utc_now()
+            "created_at": utc_now(),
+            "updated_at": utc_now(),
         }
 
         ref = db_push("comments", data)
