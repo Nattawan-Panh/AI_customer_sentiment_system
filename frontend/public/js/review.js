@@ -1,6 +1,6 @@
 import{db,ref,onValue,update,push,set,badge,escapeHtml}from'./firebase-service.js';
 
-const API_BASE_URL='https://customer-sentiment-system-production.up.railway.app';
+const API_BASE_URL='https://aicustomersentimentsystem-production.up.railway.app';
 async function saveFeedback(cid,p){
     const f=push(ref(db,'feedback'));
     await set(f,{comment_id:cid,...p,created_at:new Date().toISOString()})
@@ -58,8 +58,8 @@ snap=>{
                             await sendLineReply(id, finalReply);
                             alert('Approved and sent');
                         } catch(e) {
-                            console.error(e);
-                            alert('ส่ง LINE ไม่สำเร็จ กรุณาตรวจสอบระบบ');
+                            console.error("LINE send failed:", error);
+                            alert(`ส่ง LINE ไม่สำเร็จ: ${error.message}`);
                         }
                     }
 
