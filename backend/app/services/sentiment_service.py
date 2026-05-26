@@ -4,10 +4,13 @@ import re
 try:
     import torch
     from transformers import AutoModelForSequenceClassification, AutoTokenizer
-except Exception:
+except Exception as import_error:
     torch = None
     AutoTokenizer = None
     AutoModelForSequenceClassification = None
+    TRANSFORMERS_IMPORT_ERROR = str(import_error)
+else:
+    TRANSFORMERS_IMPORT_ERROR = None
 
 
 POSITIVE_WORDS = [
@@ -21,6 +24,11 @@ POSITIVE_WORDS = [
     "อร่อย",
     "ละมุน",
     "บริการดี",
+    "สวย",
+    "น่ากิน",
+    "น่าทาน",
+    "โอเค",
+    "ดีมาก",
 ]
 
 NEGATIVE_WORDS = [
@@ -34,6 +42,11 @@ NEGATIVE_WORDS = [
     "ไม่โอเค",
     "ร้องเรียน",
     "บริการแย่",
+    "ไม่ดี",
+    "รอนาน",
+    "ไม่สุภาพ",
+    "ไม่อร่อย",
+    "ผิดเมนู",
 ]
 
 STRONG_NEGATIVE_WORDS = [
@@ -42,6 +55,10 @@ STRONG_NEGATIVE_WORDS = [
     "ประจาน",
     "หลอก",
     "สคบ",
+    "แจ้งความ",
+    "อาหารเป็นพิษ",
+    "เข้าโรงพยาบาล",
+    "แพ้รุนแรง",
 ]
 
 POSITIVE_EMOJIS = [
@@ -51,6 +68,8 @@ POSITIVE_EMOJIS = [
     "💖",
     "😊",
     "😋",
+    "✨",
+    "🌷",
 ]
 
 NEGATIVE_EMOJIS = [
@@ -67,49 +86,128 @@ NEGATION_WORDS = [
     "ไม่ค่อย",
 ]
 
-SENTIMENT_MODEL_NAME = os.getenv("SENTIMENT_MODEL_NAME")
-HF_TOKEN = os.getenv("HF_TOKEN")
+
+SENTIMENT_MODEL_NAME = os.getenv("SENTIMENT_MODEL_NAME", "").strip()
+HF_TOKEN = os.getenv("HF_TOKEN", "").strip()
+
+USE_MODEL = os.getenv("USE_MODEL", "true").strip().lower() in [
+    "true",
+    "1",
+    "yes",
+    "y"
+]
 
 _sentiment_tokenizer = None
 _sentiment_model = None
 _sentiment_id2label = None
+_sentiment_model_error = None
+
+
+def normalize_text(text: str) -> str:
+    text = str(text or "").lower()
+    text = re.sub(r"\s+", " ", text)
+    text = text.strip()
+    return text
+
+
+def contains_negation(text: str, word: str) -> bool:
+    return any(
+        f"{neg}{word}" in text or f"{neg} {word}" in text
+        for neg in NEGATION_WORDS
+    )
+
+
+def _get_hf_kwargs() -> dict:
+    if HF_TOKEN:
+        return {"token": HF_TOKEN}
+
+    return {}
 
 
 def load_sentiment_model():
-    global _sentiment_tokenizer, _sentiment_model, _sentiment_id2label
+    global _sentiment_tokenizer
+    global _sentiment_model
+    global _sentiment_id2label
+    global _sentiment_model_error
+
+    if not USE_MODEL:
+        _sentiment_model_error = "USE_MODEL is false"
+        return None, None
 
     if not SENTIMENT_MODEL_NAME:
+        _sentiment_model_error = "SENTIMENT_MODEL_NAME is missing"
         return None, None
 
     if torch is None or AutoTokenizer is None or AutoModelForSequenceClassification is None:
+        _sentiment_model_error = (
+            TRANSFORMERS_IMPORT_ERROR
+            or "torch or transformers is not installed"
+        )
         return None, None
 
     if _sentiment_tokenizer is not None and _sentiment_model is not None:
         return _sentiment_tokenizer, _sentiment_model
 
     try:
+        hf_kwargs = _get_hf_kwargs()
+
         _sentiment_tokenizer = AutoTokenizer.from_pretrained(
             SENTIMENT_MODEL_NAME,
-            token = HF_TOKEN,
-            use_fast = False
+            use_fast=False,
+            **hf_kwargs
         )
 
         _sentiment_model = AutoModelForSequenceClassification.from_pretrained(
             SENTIMENT_MODEL_NAME,
-            token=HF_TOKEN
+            **hf_kwargs
         )
 
         _sentiment_model.eval()
         _sentiment_id2label = _sentiment_model.config.id2label
+        _sentiment_model_error = None
 
         return _sentiment_tokenizer, _sentiment_model
 
-    except Exception as e:
-        print(f"[SENTIMENT MODEL ERROR] {e}")
+    except TypeError:
+        try:
+            auth_kwargs = {}
+
+            if HF_TOKEN:
+                auth_kwargs = {"use_auth_token": HF_TOKEN}
+
+            _sentiment_tokenizer = AutoTokenizer.from_pretrained(
+                SENTIMENT_MODEL_NAME,
+                use_fast=False,
+                **auth_kwargs
+            )
+
+            _sentiment_model = AutoModelForSequenceClassification.from_pretrained(
+                SENTIMENT_MODEL_NAME,
+                **auth_kwargs
+            )
+
+            _sentiment_model.eval()
+            _sentiment_id2label = _sentiment_model.config.id2label
+            _sentiment_model_error = None
+
+            return _sentiment_tokenizer, _sentiment_model
+
+        except Exception as exc:
+            _sentiment_tokenizer = None
+            _sentiment_model = None
+            _sentiment_id2label = None
+            _sentiment_model_error = str(exc)
+
+            print(f"[SENTIMENT MODEL ERROR] {_sentiment_model_error}")
+            return None, None
+
+    except Exception as exc:
         _sentiment_tokenizer = None
         _sentiment_model = None
         _sentiment_id2label = None
+        _sentiment_model_error = str(exc)
 
+        print(f"[SENTIMENT MODEL ERROR] {_sentiment_model_error}")
         return None, None
 
 
@@ -162,39 +260,21 @@ def predict_sentiment_with_model(text: str):
             "score": 0,
             "positive_matches": [],
             "negative_matches": [],
-            "model": SENTIMENT_MODEL_NAME
+            "model": SENTIMENT_MODEL_NAME,
+            "fallback_used": False,
+            "fallback_reason": None
         }
 
-    except Exception:
+    except Exception as exc:
+        global _sentiment_model_error
+        _sentiment_model_error = str(exc)
+        print(f"[SENTIMENT PREDICT ERROR] {_sentiment_model_error}")
         return None
 
 
-def normalize_text(text: str) -> str:
-    text = str(text or "").lower()
-
-    text = re.sub(r"\s+", " ", text)
-    text = text.strip()
-
-    return text
-
-
-def contains_negation(text: str, word: str) -> bool:
-    return any(
-        f"{neg}{word}" in text or f"{neg} {word}" in text
-        for neg in NEGATION_WORDS
-    )
-
-
-def predict_sentiment(text):
-    text = normalize_text(text)
-
-    model_result = predict_sentiment_with_model(text)
-    if model_result is not None:
-        return model_result
-
+def predict_sentiment_by_rules(text: str) -> dict:
     positive_matches = []
     negative_matches = []
-
     score = 0
 
     for word in POSITIVE_WORDS:
@@ -228,7 +308,6 @@ def predict_sentiment(text):
 
     if score > 0:
         label = "positive"
-
         confidence = min(
             0.95,
             0.60 + (abs(score) * 0.08)
@@ -236,7 +315,6 @@ def predict_sentiment(text):
 
     elif score < 0:
         label = "negative"
-
         confidence = min(
             0.97,
             0.62 + (abs(score) * 0.08)
@@ -252,5 +330,26 @@ def predict_sentiment(text):
         "score": score,
         "positive_matches": positive_matches,
         "negative_matches": negative_matches,
-        "model": "rule_fallback_wangchanberta_ready"
+        "model": "rule_based_fallback",
+        "fallback_used": True,
+        "fallback_reason": _sentiment_model_error
     }
+
+
+def predict_sentiment(text):
+    text = normalize_text(text)
+
+    model_result = predict_sentiment_with_model(text)
+
+    if model_result is not None:
+        return model_result
+
+    return predict_sentiment_by_rules(text)
+
+
+def analyze_sentiment(text):
+    return predict_sentiment(text)
+
+
+def get_sentiment(text):
+    return predict_sentiment(text)
