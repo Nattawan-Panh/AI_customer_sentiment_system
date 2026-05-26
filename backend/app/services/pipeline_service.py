@@ -112,7 +112,9 @@ async def process_line_message(event, mock=False):
             "success",
             str({
                 "title": knowledge.get("title"),
-                "matched": knowledge.get("matched")
+                "matched": knowledge.get("matched"),
+                "source": knowledge.get("source"),
+                "answer_length": len(knowledge.get("answer") or knowledge.get("content") or "")
             })
         )
 
@@ -124,8 +126,35 @@ async def process_line_message(event, mock=False):
             risk_level=risk.get("level")
         )
 
-        template = template_result.get("reply") or knowledge.get("answer") or knowledge.get("content")
+        knowledge_reply = (
+            knowledge.get("answer")
+            or knowledge.get("content")
+            or ""
+        ).strip()
+
+        template_reply = (
+            template_result.get("reply")
+            or ""
+        ).strip()
+
+        knowledge_used = bool(knowledge.get("matched") and knowledge_reply)
+
+        if knowledge_used:
+            template = knowledge_reply
+            template_source = knowledge.get("source") or "knowledge_base_json"
+        else:
+            template = template_reply
+            template_source = template_result.get("source") or "template_fallback"
+
+        if not template:
+            template = (
+                "ขออภัยค่ะ ระบบยังไม่พบข้อมูลที่ตรงกับคำถามนี้ "
+                "แอดมินจะช่วยตรวจสอบและตอบกลับให้อีกครั้งนะคะ 🌷"
+            )
+            template_source = "template_fallback"
+
         brand = get_brand_settings()
+        
 
         llm_reason = None
         llm_error = None
@@ -154,10 +183,20 @@ async def process_line_message(event, mock=False):
                 llm_status = llm_result.get("status", "unknown")
                 llm_reason = llm_result.get("reason")
                 llm_error = llm_result.get("error")
+
+                if llm_used:
+                    reply_source = "llama"
+                elif knowledge_used:
+                    reply_source = "knowledge_base"
+                else:
+                    reply_source = "template_fallback"
+
             else:
                 ai_reply = llm_result or template
                 llm_used = False
                 llm_status = "legacy_return"
+
+            
 
         await log_event(
             "llm_reply_refinement",
@@ -195,6 +234,8 @@ async def process_line_message(event, mock=False):
                 "success",
                 str(post)
             )
+
+
 
         decision = should_auto_send(
             risk.get("level"),
@@ -234,27 +275,27 @@ async def process_line_message(event, mock=False):
             "intent": intent.get("label"),
             "intent_confidence": intent.get("confidence"),
             "intent_method": intent.get("method"),
+            "intent_matched_keywords": intent.get("matched_keywords", []),
 
             "risk_level": risk.get("level"),
             "risk_score": risk.get("score"),
             "risk_reasons": risk.get("reasons", []),
 
-            # เพิ่มส่วนนี้
-            "knowledge_matched": knowledge.get("matched"),
-            "knowledge_source": knowledge.get("source"),
-            "knowledge_answer": knowledge.get("answer") or knowledge.get("content"),
-
-            "template_source": template_result.get("source"),
-            "template_reply": template,
-
             "knowledge_title": knowledge.get("title"),
             "knowledge_matched": knowledge.get("matched"),
+            "knowledge_used": knowledge_used,
+            "knowledge_source": knowledge.get("source"),
+            "knowledge_answer": knowledge_reply,
+            "knowledge_content": knowledge.get("content"),
+            "knowledge_category": knowledge.get("category"),
 
+            "template_source": template_source,
             "template_reply": template,
+
             "ai_reply": ai_reply,
             "post_safe": post.get("safe"),
 
-            "reply_source": "llama" if llm_used else "template_fallback",
+            "reply_source": reply_source,
             "llm_used": llm_used,
             "llm_status": llm_status,
             "llm_reason": llm_reason,
