@@ -1,400 +1,3271 @@
-{  
-  "STORE_INFO" : 
-  {
-      "store_name": "Pudding Petals",
-      "brand_type": "Flower Garden Dessert Cafe",
-      "concept": "Pudding Petals เป็นคาเฟ่ขนมหวานท่ามกลางสวนดอกไม้ มีทั้งโซน indoor และ outdoor ให้ลูกค้าเลือกนั่งพักผ่อน ถ่ายรูป หรือทำงานในบรรยากาศนุ่มนวลสบายใจ",
-      "location": "ราชพฤกษ์",
-      "opening_hours": "เปิดทุกวัน เวลา 10:00 - 20:00 น.",
-      "reservation_policy": "ลูกค้าสามารถ Walk-in ได้ตามปกติ หรือทักแชทเพื่อสอบถามโต๊ะว่างก่อนเข้ามาได้ค่ะ สำหรับวันหยุดหรือช่วงบ่าย แนะนำให้จองล่วงหน้าเล็กน้อยนะคะ",
-      "cafe_zones": 
-      {
-          "indoor": 
-          {
-            "description": "โซนคาเฟ่ในร้าน ตกแต่งด้วยโทนสวนดอกไม้ มองเห็นวิวสวน",
-            "suitable_for": ["นั่งทำงาน", "พักผ่อน", "หลบแดด", "ถ่ายรูป"]
-          },
-          "outdoor": 
-          {
-            "description": "โซนสวนดอกไม้ด้านนอก มีที่นั่งกระจายตามมุมต่าง ๆ",
-            "suitable_for": ["ถ่ายรูป", "นั่งรับบรรยากาศ", "พาสัตว์เลี้ยง"]
-          },
-          "photo_spots": ["หน้าร้าน","โต๊ะสวนดอกไม้","มุมกระจก","มุมขนม","โซน outdoor"]
-      },
-
-      "facilities": 
-      {
-          "wifi": 
-          {
-              "available": true,
-              "description": "มี Wi-Fi ให้บริการสำหรับลูกค้านั่งทำงาน"
-          },
-          "power_plug": 
-          {
-              "available": true,
-              "description": "มีปลั๊กบางจุดในโซน indoor"
-          },
-          "parking": 
-          {
-              "available": true,
-              "description": "มีที่จอดรถจำนวนจำกัด"
-          },
-          "pet_friendly": 
-          {
-              "available": true,
-              "description": "โซน outdoor สามารถพาสัตว์เลี้ยงมาได้ โดยรบกวนดูแลน้องให้อยู่ในสายจูงหรือกระเป๋านะคะ"
-          }
-      }
+{
+  "metadata": {
+    "system_name": "Pudding Petals AI Customer Sentiment & Auto-Reply Knowledge Base",
+    "version": "2.0.0",
+    "language": [
+      "th",
+      "en"
+    ],
+    "created_for": [
+      "LINE OA",
+      "FastAPI Backend",
+      "Firebase Realtime Database",
+      "Admin Human Review",
+      "AI Auto-Reply"
+    ],
+    "last_updated": "2026-05-26",
+    "currency": "THB",
+    "note": "ราคาและเมนูเป็นข้อมูลตั้งต้นสำหรับระบบ สามารถแก้ไขให้ตรงกับราคาจริงของร้านได้"
   },
-
-
-  "DELIVERY_INFO" :
-  {
-      "platforms": ["GrabFood", "LINE MAN"],
-      "available": true,
-      "description": "ลูกค้าสามารถสั่งขนมและเครื่องดื่มผ่าน GrabFood และ LINE MAN ได้เลยค่ะ ทางร้านจะเตรียมขนมสดใหม่และแพ็กอย่างระมัดระวังทุกออเดอร์",
-      "tracking_policy": "สถานะการจัดส่งสามารถตรวจสอบได้โดยตรงผ่านแอปที่ลูกค้าสั่งซื้อค่ะ หากเป็นปัญหาด้านไรเดอร์หรือเส้นทางจัดส่ง แนะนำติดต่อผ่านแพลตฟอร์มโดยตรงนะคะ",
-      "store_responsibility": 
-      [
-          "สินค้าไม่ครบ",
-          "ได้เมนูผิด",
-          "ขนมเสียหายจากการแพ็ก",
-          "คุณภาพสินค้าไม่ตรงตามมาตรฐานร้าน"
+  "brand_profile": {
+    "store_name": "Pudding Petals",
+    "brand_type": "Flower Garden Dessert Cafe",
+    "brand_concept": "คาเฟ่ขนมหวานท่ามกลางสวนดอกไม้ ภาพลักษณ์อ่อนหวานคล้ายผู้หญิง สวยงาม หอมอบอวล และให้ลูกค้ารู้สึกเหมือนได้พักใจในสวนขนม",
+    "brand_personality": {
+      "if_brand_were_a_person": "ผู้หญิงที่อ่อนโยน สุภาพ ใจดี ชอบดอกไม้และขนมหวาน พูดด้วยน้ำเสียงนุ่มนวล ทำให้คนคุยด้วยรู้สึกสบายใจ",
+      "keywords": [
+        "soft",
+        "feminine",
+        "floral",
+        "romantic",
+        "dreamy",
+        "cozy",
+        "gentle",
+        "sweet",
+        "elegant",
+        "fragrant"
       ],
-      "platform_responsibility": 
-      [
-          "ไรเดอร์มาช้า",
-          "ไรเดอร์หลงทาง",
-          "สถานะในแอปไม่อัปเดต",
-          "ปัญหาการชำระเงินในแอป"
+      "color_mood": [
+        "pastel lavender",
+        "soft pink",
+        "cream white",
+        "sage green",
+        "warm beige"
       ]
+    },
+    "tone_of_voice": {
+      "core_style": "สุภาพ อ่อนโยน อบอุ่น เหมือนเพื่อนผู้หญิงที่ใส่ใจและช่วยดูแลลูกค้า",
+      "rules": [
+        "ใช้ค่ะ/นะคะ",
+        "ใช้คำละมุน",
+        "ตอบตรงคำถาม",
+        "ใช้ emoji ดอกไม้ได้เล็กน้อย",
+        "ไม่ตอบห้วนหรือแข็ง"
+      ],
+      "avoid": [
+        "ไม่รู้",
+        "เช็กเอง",
+        "ไปดูเอง",
+        "ผิดเอง",
+        "ไม่มีทาง",
+        "ระบบผิด"
+      ],
+      "complaint_tone": "ขอโทษก่อน รับฟัง ไม่โต้แย้ง ขอรายละเอียดและส่งต่อแอดมิน",
+      "safety_tone": "กรณี allergy หรือสุขภาพ ห้ามยืนยันความปลอดภัยเอง ต้องส่งต่อแอดมิน"
+    },
+    "signature_phrases": [
+      "ยินดีต้อนรับสู่สวนขนมของ Pudding Petals นะคะ 🌷",
+      "หวังว่าความหวานเล็ก ๆ วันนี้จะทำให้วันของคุณสดใสขึ้นนะคะ",
+      "ขอบคุณที่แวะมาพักใจที่สวนดอกไม้ของเรานะคะ"
+    ]
   },
-
-
-  "MENU_ITEMS" : 
-  [
-      {
-          "id": "strawberry_shortcake",
-          "name": "Strawberry Garden Shortcake",
-          "category": "cake",
-          "description": "เค้กสตรอว์เบอร์รีเนื้อนุ่ม ครีมละมุน ตกแต่งโทนสวนดอกไม้ ถ่ายรูปสวยและทานง่าย",
-          "sizes": [
-              {"size": "Mini", "price": 89, "serving": "1 คน"},
-              {"size": "Regular", "price": 139, "serving": "1-2 คน"},
-              {"size": "Whole Cake", "price": 790, "serving": "4-6 คน"}
-          ],
-          "sweetness": "หวานกลาง",
-          "allergens": ["นม", "ไข่", "กลูเตน"],
-          "available": true,
-          "tags": ["ยอดนิยม", "ถ่ายรูปสวย", "เหมาะกับวันเกิด", "ทานง่าย"],
-          "recommended_for": ["ลูกค้าใหม่", "วันเกิด", "ถ่ายรูป", "ของขวัญ"]
+  "store_info": {
+    "store_name": "Pudding Petals",
+    "location": "ราชพฤกษ์",
+    "opening_hours": {
+      "days": "เปิดทุกวัน",
+      "time": "10:00 - 20:00 น.",
+      "holiday_note": "วันหยุดหรือช่วงบ่ายอาจมีลูกค้าเยอะ แนะนำทักแชทเพื่อสอบถามโต๊ะก่อนเข้ามา"
+    },
+    "reservation_policy": "Walk-in ได้ตามปกติ หรือทักแชทเพื่อสอบถามโต๊ะว่างก่อนเข้ามา สำหรับวันหยุดหรือช่วงบ่ายแนะนำให้จองล่วงหน้า",
+    "cafe_zones": {
+      "indoor": {
+        "description": "โซนในร้าน ตกแต่งสวนดอกไม้ มองเห็นวิวสวน เย็นสบาย",
+        "suitable_for": [
+          "นั่งทำงาน",
+          "พักผ่อน",
+          "หลบแดด",
+          "ถ่ายรูป"
+        ]
       },
-
-      {
-          "id": "rose_vanilla_cake",
-          "name": "Rose Vanilla Petal Cake",
-          "category": "cake",
-          "description": "เค้กวานิลลากลิ่นหอมอ่อน ๆ ตกแต่งด้วยครีมโทนกลีบดอกไม้ ให้ความรู้สึกละมุนและหวานนิด ๆ",
-          "sizes": [
-              {"size": "Mini", "price": 95, "serving": "1 คน"},
-              {"size": "Regular", "price": 149, "serving": "1-2 คน"},
-              {"size": "Whole Cake", "price": 850, "serving": "4-6 คน"}
-          ],
-          "sweetness": "หวานน้อยถึงกลาง",
-          "allergens": ["นม", "ไข่", "กลูเตน"],
-          "available": true,
-          "tags": ["signature", "ละมุน", "เหมาะกับของขวัญ"],
-          "recommended_for": ["คนชอบวานิลลา", "ของขวัญ", "ถ่ายรูป"]
+      "outdoor": {
+        "description": "โซนสวนดอกไม้ด้านนอก มีที่นั่งตามมุมต่าง ๆ",
+        "suitable_for": [
+          "ถ่ายรูป",
+          "นั่งรับบรรยากาศ",
+          "พาสัตว์เลี้ยง"
+        ]
       },
-
-      {
-          "id": "flower_pudding",
-          "name": "Flower Milk Pudding",
-          "category": "dessert",
-          "description": "พุดดิ้งนมเนื้อนุ่ม หอมละมุน เสิร์ฟพร้อมซอสผลไม้หรือดอกไม้กินได้ตามฤดูกาล",
-          "sizes": [
-              {"size": "Cup", "price": 79, "serving": "1 คน"},
-              {"size": "Set of 3", "price": 219, "serving": "2-3 คน"}
-          ],
-          "sweetness": "หวานน้อย",
-          "allergens": ["นม"],
-          "available": true,
-          "tags": ["เบา ๆ", "เด็กทานได้", "ผู้ใหญ่ทานง่าย", "ราคาเข้าถึงง่าย"],
-          "recommended_for": ["ทุกวัย", "เด็ก", "ผู้ใหญ่", "ของหวานเบา ๆ"]
+      "photo_spots": [
+        "หน้าร้าน",
+        "โต๊ะสวนดอกไม้",
+        "มุมกระจก",
+        "มุมขนม",
+        "โซน outdoor",
+        "มุมป้ายร้าน"
+      ]
+    },
+    "facilities": {
+      "wifi": {
+        "available": true,
+        "description": "มี Wi-Fi ให้บริการ"
       },
-
-      {
-          "id": "lavender_cheesecake",
-          "name": "Lavender Blueberry Cheesecake",
-          "category": "cake",
-          "description": "ชีสเค้กเนื้อแน่นแต่ละมุน หอมบลูเบอร์รีและกลิ่นลาเวนเดอร์อ่อน ๆ",
-          "sizes": [
-              {"size": "Mini", "price": 109, "serving": "1 คน"},
-              {"size": "Regular", "price": 169, "serving": "1-2 คน"}
-          ],
-          "sweetness": "หวานกลาง อมเปรี้ยวเล็กน้อย",
-          "allergens": ["นม", "ไข่", "กลูเตน"],
-          "available": true,
-          "tags": ["premium", "หอม", "ถ่ายรูปสวย"],
-          "recommended_for": ["คนชอบชีสเค้ก", "คาเฟ่ฮอปปิ้ง", "ถ่ายรูป"]
+      "power_plug": {
+        "available": true,
+        "description": "มีปลั๊กบางจุดในโซน indoor"
       },
-
-      {
-          "id": "butter_croissant",
-          "name": "Petals Butter Croissant",
-          "category": "bakery",
-          "description": "ครัวซองต์เนยหอม กรอบนอกนุ่มใน เหมาะกับทานคู่กาแฟหรือชา",
-          "sizes": [
-              {"size": "Classic", "price": 85, "serving": "1 คน"},
-              {"size": "Set with Drink", "price": 159, "serving": "1 คน"}
-          ],
-          "sweetness": "ไม่หวาน",
-          "allergens": ["นม", "ไข่", "กลูเตน"],
-          "available": true,
-          "tags": ["เบเกอรี่", "ทานคู่กาแฟ", "นั่งทำงาน"],
-          "recommended_for": ["อาหารว่าง", "นั่งทำงาน", "มื้อเบา ๆ"]
+      "parking": {
+        "available": true,
+        "description": "มีที่จอดรถจำนวนจำกัด"
       },
-
-      {
-          "id": "garden_tea",
-          "name": "Blooming Garden Tea",
-          "category": "drink",
-          "description": "ชาดอกไม้หอมอ่อน ๆ สดชื่น ดื่มง่าย เหมาะกับบรรยากาศสวนของร้าน",
-          "sizes": [
-              {"size": "Regular", "price": 95},
-              {"size": "Large", "price": 125}
-          ],
-          "sweetness": "เลือกหวานได้",
-          "allergens": [],
-          "available": true,
-          "tags": ["signature drink", "สดชื่น", "ถ่ายรูปสวย"],
-          "recommended_for": ["คนชอบชา", "หวานน้อย", "ถ่ายรูป"]
+      "pet_friendly": {
+        "available": true,
+        "description": "โซน outdoor สามารถพาสัตว์เลี้ยงมาได้ โดยให้อยู่ในสายจูงหรือกระเป๋า"
       },
-
-      {
-          "id": "strawberry_milk",
-          "name": "Strawberry Petal Milk",
-          "category": "drink",
-          "description": "นมสตรอว์เบอร์รีโทนชมพูหวานละมุน มีเนื้อสตรอว์เบอร์รี ให้ความรู้สึกน่ารักและสดใส",
-          "sizes": [
-              {"size": "Regular", "price": 105},
-              {"size": "Large", "price": 135}
-          ],
-          "sweetness": "เลือกหวานได้",
-          "allergens": ["นม"],
-          "available": true,
-          "tags": ["น่ารัก", "ยอดนิยม", "เด็กทานได้", "ถ่ายรูปสวย"],
-          "recommended_for": ["สายหวาน", "ถ่ายรูป", "เด็กและวัยรุ่น"]
+      "restroom": {
+        "available": true,
+        "description": "มีห้องน้ำให้บริการ"
+      },
+      "air_conditioning": {
+        "available": true,
+        "description": "มีแอร์ในโซน indoor"
       }
+    },
+    "social_channels": {
+      "line_oa": "สำหรับแชท สอบถาม จองโต๊ะ และติดตามออเดอร์",
+      "facebook": "ข่าวสารและรีวิว",
+      "instagram": "ภาพบรรยากาศร้านและเมนูใหม่",
+      "tiktok": "คอนเทนต์สั้นและบรรยากาศร้าน"
+    }
+  },
+  "delivery_info": {
+    "available": true,
+    "platforms": [
+      "GrabFood",
+      "LINE MAN"
+    ],
+    "takeaway_available": true,
+    "pickup_available": true,
+    "description": "สั่งขนมและเครื่องดื่มผ่าน GrabFood และ LINE MAN ได้ หรือสั่งกลับบ้าน/รับเองที่ร้านได้",
+    "tracking_policy": "สถานะไรเดอร์ตรวจสอบผ่านแอปโดยตรง ส่วนปัญหาสินค้าให้แอดมินรับเรื่องตรวจสอบ",
+    "store_responsibility": [
+      "สินค้าไม่ครบ",
+      "ได้เมนูผิด",
+      "ขนมเสียหายจากการแพ็ก",
+      "คุณภาพสินค้าไม่ตรงตามมาตรฐานร้าน"
+    ],
+    "platform_responsibility": [
+      "ไรเดอร์มาช้า",
+      "ไรเดอร์หลงทาง",
+      "สถานะในแอปไม่อัปเดต",
+      "ปัญหาการชำระเงินในแอป"
+    ]
+  },
+  "menu_catalog": {
+    "categories": {
+      "cake": "เค้ก",
+      "dessert": "ขนมหวาน",
+      "bakery": "เบเกอรี่",
+      "drink": "เครื่องดื่ม"
+    },
+    "items": [
+      {
+        "id": "strawberry_garden_shortcake",
+        "name_th": "Strawberry Garden Shortcake",
+        "name_en": "Strawberry Garden Shortcake",
+        "category": "cake",
+        "description": "เค้กสตรอว์เบอร์รีเนื้อนุ่ม ครีมละมุน ตกแต่งโทนสวนดอกไม้ เหมาะกับลูกค้าใหม่ วันเกิด และถ่ายรูป",
+        "sizes": [
+          {
+            "size": "Mini",
+            "price": 89,
+            "serving": "1 คน"
+          },
+          {
+            "size": "Regular",
+            "price": 139,
+            "serving": "1-2 คน"
+          },
+          {
+            "size": "Whole Cake",
+            "price": 790,
+            "serving": "4-6 คน",
+            "preorder": "2-3 วัน"
+          }
+        ],
+        "sweetness": "หวานกลาง",
+        "sweetness_adjustable": false,
+        "allergens": [
+          "นม",
+          "ไข่",
+          "กลูเตน"
+        ],
+        "contains_caffeine": false,
+        "available_default": true,
+        "availability_note": "จำนวนสินค้าอาจเปลี่ยนตามรอบอบและช่วงเวลา แนะนำให้เช็กกับแอดมินก่อนสั่ง",
+        "tags": [
+          "best_seller",
+          "signature",
+          "photo_friendly",
+          "birthday"
+        ],
+        "recommended_for": [
+          "ลูกค้าใหม่",
+          "วันเกิด",
+          "สายถ่ายรูป"
+        ],
+        "pairing": [
+          "Blooming Garden Tea",
+          "Strawberry Petal Milk"
+        ]
+      },
+      {
+        "id": "rose_vanilla_petal_cake",
+        "name_th": "Rose Vanilla Petal Cake",
+        "name_en": "Rose Vanilla Petal Cake",
+        "category": "cake",
+        "description": "เค้กวานิลลากลิ่นกุหลาบอ่อน ๆ ตกแต่งเหมือนกลีบดอกไม้ ให้ฟีล feminine และเหมาะเป็นของขวัญ",
+        "sizes": [
+          {
+            "size": "Mini",
+            "price": 95,
+            "serving": "1 คน"
+          },
+          {
+            "size": "Regular",
+            "price": 149,
+            "serving": "1-2 คน"
+          },
+          {
+            "size": "Whole Cake",
+            "price": 850,
+            "serving": "4-6 คน",
+            "preorder": "2-3 วัน"
+          }
+        ],
+        "sweetness": "หวานน้อยถึงกลาง",
+        "sweetness_adjustable": false,
+        "allergens": [
+          "นม",
+          "ไข่",
+          "กลูเตน"
+        ],
+        "contains_caffeine": false,
+        "available_default": true,
+        "availability_note": "จำนวนสินค้าอาจเปลี่ยนตามรอบอบและช่วงเวลา แนะนำให้เช็กกับแอดมินก่อนสั่ง",
+        "tags": [
+          "signature",
+          "gift",
+          "romantic"
+        ],
+        "recommended_for": [
+          "ของขวัญ",
+          "วันครบรอบ",
+          "คนชอบวานิลลา"
+        ],
+        "pairing": [
+          "Rose Earl Grey Tea",
+          "Vanilla Blossom Latte"
+        ]
+      },
+      {
+        "id": "lavender_blueberry_cheesecake",
+        "name_th": "Lavender Blueberry Cheesecake",
+        "name_en": "Lavender Blueberry Cheesecake",
+        "category": "cake",
+        "description": "ชีสเค้กเนื้อแน่นละมุน กลิ่นลาเวนเดอร์และบลูเบอร์รี โทนม่วงพาสเทล ถ่ายรูปสวยมาก",
+        "sizes": [
+          {
+            "size": "Mini",
+            "price": 109,
+            "serving": "1 คน"
+          },
+          {
+            "size": "Regular",
+            "price": 169,
+            "serving": "1-2 คน"
+          },
+          {
+            "size": "Whole Cake",
+            "price": 920,
+            "serving": "4-6 คน",
+            "preorder": "2-3 วัน"
+          }
+        ],
+        "sweetness": "หวานกลาง อมเปรี้ยวเล็กน้อย",
+        "sweetness_adjustable": false,
+        "allergens": [
+          "นม",
+          "ไข่",
+          "กลูเตน"
+        ],
+        "contains_caffeine": false,
+        "available_default": true,
+        "availability_note": "มีจำนวนจำกัดต่อวัน",
+        "tags": [
+          "premium",
+          "lavender",
+          "photo_friendly"
+        ],
+        "recommended_for": [
+          "คนชอบชีสเค้ก",
+          "คาเฟ่ฮอปปิ้ง",
+          "วันครบรอบ"
+        ],
+        "pairing": [
+          "Lavender Milk Tea",
+          "Honey Garden Americano"
+        ]
+      },
+      {
+        "id": "honey_daisy_chiffon",
+        "name_th": "Honey Daisy Chiffon",
+        "name_en": "Honey Daisy Chiffon",
+        "category": "cake",
+        "description": "ชิฟฟอนน้ำผึ้งเนื้อนุ่มเบา หอมละมุน ตกแต่งดอกเดซี่ เหมาะกับคนไม่ชอบหวานจัด",
+        "sizes": [
+          {
+            "size": "Mini",
+            "price": 85,
+            "serving": "1 คน"
+          },
+          {
+            "size": "Regular",
+            "price": 129,
+            "serving": "1-2 คน"
+          }
+        ],
+        "sweetness": "หวานน้อยถึงกลาง",
+        "sweetness_adjustable": false,
+        "allergens": [
+          "นม",
+          "ไข่",
+          "กลูเตน",
+          "น้ำผึ้ง"
+        ],
+        "contains_caffeine": false,
+        "available_default": true,
+        "availability_note": "จำนวนสินค้าอาจเปลี่ยนตามรอบอบและช่วงเวลา แนะนำให้เช็กกับแอดมินก่อนสั่ง",
+        "tags": [
+          "light",
+          "not_too_sweet"
+        ],
+        "recommended_for": [
+          "ผู้ใหญ่",
+          "คนชอบขนมเบา ๆ"
+        ],
+        "pairing": [
+          "Blooming Garden Tea"
+        ]
+      },
+      {
+        "id": "earl_grey_blossom_cake",
+        "name_th": "Earl Grey Blossom Cake",
+        "name_en": "Earl Grey Blossom Cake",
+        "category": "cake",
+        "description": "เค้กชาเอิร์ลเกรย์หอมละมุน ครีมเบา ไม่เลี่ยน เหมาะกับคนชอบชา",
+        "sizes": [
+          {
+            "size": "Mini",
+            "price": 99,
+            "serving": "1 คน"
+          },
+          {
+            "size": "Regular",
+            "price": 159,
+            "serving": "1-2 คน"
+          },
+          {
+            "size": "Whole Cake",
+            "price": 890,
+            "serving": "4-6 คน",
+            "preorder": "2-3 วัน"
+          }
+        ],
+        "sweetness": "หวานน้อยถึงกลาง",
+        "sweetness_adjustable": false,
+        "allergens": [
+          "นม",
+          "ไข่",
+          "กลูเตน"
+        ],
+        "contains_caffeine": true,
+        "available_default": true,
+        "availability_note": "จำนวนสินค้าอาจเปลี่ยนตามรอบอบและช่วงเวลา แนะนำให้เช็กกับแอดมินก่อนสั่ง",
+        "tags": [
+          "tea_flavor",
+          "not_too_sweet",
+          "premium"
+        ],
+        "recommended_for": [
+          "คนชอบชา",
+          "นั่งทำงาน"
+        ],
+        "pairing": [
+          "Rose Earl Grey Tea"
+        ]
+      },
+      {
+        "id": "chocolate_rose_mousse",
+        "name_th": "Chocolate Rose Mousse",
+        "name_en": "Chocolate Rose Mousse",
+        "category": "cake",
+        "description": "มูสช็อกโกแลตเนียนนุ่ม ตกแต่งกุหลาบพาสเทล เหมาะกับคนชอบรสช็อกโกแลตเข้มละมุน",
+        "sizes": [
+          {
+            "size": "Mini",
+            "price": 115,
+            "serving": "1 คน"
+          },
+          {
+            "size": "Regular",
+            "price": 179,
+            "serving": "1-2 คน"
+          }
+        ],
+        "sweetness": "หวานกลาง เข้มช็อกโกแลต",
+        "sweetness_adjustable": false,
+        "allergens": [
+          "นม",
+          "ไข่",
+          "กลูเตน"
+        ],
+        "contains_caffeine": true,
+        "available_default": true,
+        "availability_note": "จำนวนสินค้าอาจเปลี่ยนตามรอบอบและช่วงเวลา แนะนำให้เช็กกับแอดมินก่อนสั่ง",
+        "tags": [
+          "chocolate",
+          "premium",
+          "romantic"
+        ],
+        "recommended_for": [
+          "คนชอบช็อกโกแลต",
+          "วันครบรอบ"
+        ],
+        "pairing": [
+          "Rose Mocha"
+        ]
+      },
+      {
+        "id": "matcha_garden_roll",
+        "name_th": "Matcha Garden Roll",
+        "name_en": "Matcha Garden Roll",
+        "category": "cake",
+        "description": "โรลเค้กมัทฉะ ครีมละมุน รสชาเขียวหอมชัด หวานน้อย",
+        "sizes": [
+          {
+            "size": "Slice",
+            "price": 119,
+            "serving": "1 คน"
+          },
+          {
+            "size": "Roll",
+            "price": 590,
+            "serving": "4-5 คน",
+            "preorder": "1-2 วัน"
+          }
+        ],
+        "sweetness": "หวานน้อย",
+        "sweetness_adjustable": false,
+        "allergens": [
+          "นม",
+          "ไข่",
+          "กลูเตน"
+        ],
+        "contains_caffeine": true,
+        "available_default": true,
+        "availability_note": "จำนวนสินค้าอาจเปลี่ยนตามรอบอบและช่วงเวลา แนะนำให้เช็กกับแอดมินก่อนสั่ง",
+        "tags": [
+          "matcha",
+          "not_too_sweet"
+        ],
+        "recommended_for": [
+          "คนชอบมัทฉะ",
+          "คนไม่ชอบหวานจัด"
+        ],
+        "pairing": [
+          "Blooming Garden Tea"
+        ]
+      },
+      {
+        "id": "peach_petal_tart",
+        "name_th": "Peach Petal Tart",
+        "name_en": "Peach Petal Tart",
+        "category": "dessert",
+        "description": "ทาร์ตพีชหอมสดชื่น จัดเรียงเหมือนกลีบดอกไม้ เหมาะกับของฝากและถ่ายรูป",
+        "sizes": [
+          {
+            "size": "Piece",
+            "price": 129,
+            "serving": "1 คน"
+          },
+          {
+            "size": "Box of 4",
+            "price": 480,
+            "serving": "3-4 คน"
+          }
+        ],
+        "sweetness": "หวานกลาง อมเปรี้ยว",
+        "sweetness_adjustable": false,
+        "allergens": [
+          "นม",
+          "ไข่",
+          "กลูเตน"
+        ],
+        "contains_caffeine": false,
+        "available_default": true,
+        "availability_note": "จำนวนสินค้าอาจเปลี่ยนตามรอบอบและช่วงเวลา แนะนำให้เช็กกับแอดมินก่อนสั่ง",
+        "tags": [
+          "fruit",
+          "gift",
+          "photo_friendly"
+        ],
+        "recommended_for": [
+          "ของฝาก",
+          "คนชอบผลไม้"
+        ],
+        "pairing": [
+          "Sakura Peach Tea"
+        ]
+      },
+      {
+        "id": "flower_milk_pudding",
+        "name_th": "Flower Milk Pudding",
+        "name_en": "Flower Milk Pudding",
+        "category": "dessert",
+        "description": "พุดดิ้งนมเนื้อนุ่ม หวานน้อย หอมละมุน เมนูที่สื่อชื่อร้าน Pudding Petals ได้ชัดที่สุด",
+        "sizes": [
+          {
+            "size": "Cup",
+            "price": 79,
+            "serving": "1 คน"
+          },
+          {
+            "size": "Set of 3",
+            "price": 219,
+            "serving": "2-3 คน"
+          }
+        ],
+        "sweetness": "หวานน้อย",
+        "sweetness_adjustable": false,
+        "allergens": [
+          "นม"
+        ],
+        "contains_caffeine": false,
+        "available_default": true,
+        "availability_note": "จำนวนสินค้าอาจเปลี่ยนตามรอบอบและช่วงเวลา แนะนำให้เช็กกับแอดมินก่อนสั่ง",
+        "tags": [
+          "signature",
+          "light",
+          "kids_friendly",
+          "not_too_sweet"
+        ],
+        "recommended_for": [
+          "เด็ก",
+          "ผู้ใหญ่",
+          "คนชอบของหวานเบา ๆ"
+        ],
+        "pairing": [
+          "Blooming Garden Tea"
+        ]
+      },
+      {
+        "id": "blueberry_panna_cotta",
+        "name_th": "Blueberry Panna Cotta",
+        "name_en": "Blueberry Panna Cotta",
+        "category": "dessert",
+        "description": "พานาคอตต้านมเนียนนุ่ม ราดซอสบลูเบอร์รี หวานอมเปรี้ยว เย็นสดชื่น",
+        "sizes": [
+          {
+            "size": "Cup",
+            "price": 89,
+            "serving": "1 คน"
+          },
+          {
+            "size": "Set of 3",
+            "price": 249,
+            "serving": "2-3 คน"
+          }
+        ],
+        "sweetness": "หวานน้อยถึงกลาง",
+        "sweetness_adjustable": false,
+        "allergens": [
+          "นม"
+        ],
+        "contains_caffeine": false,
+        "available_default": true,
+        "availability_note": "จำนวนสินค้าอาจเปลี่ยนตามรอบอบและช่วงเวลา แนะนำให้เช็กกับแอดมินก่อนสั่ง",
+        "tags": [
+          "cool_dessert",
+          "fruit",
+          "not_too_sweet"
+        ],
+        "recommended_for": [
+          "อากาศร้อน",
+          "คนชอบผลไม้"
+        ],
+        "pairing": [
+          "Butterfly Pea Blossom Soda"
+        ]
+      },
+      {
+        "id": "petals_butter_croissant",
+        "name_th": "Petals Butter Croissant",
+        "name_en": "Petals Butter Croissant",
+        "category": "bakery",
+        "description": "ครัวซองต์เนยหอม กรอบนอกนุ่มใน เหมาะกับทานคู่กาแฟหรือชา",
+        "sizes": [
+          {
+            "size": "Classic",
+            "price": 85,
+            "serving": "1 คน"
+          },
+          {
+            "size": "Set with Drink",
+            "price": 159,
+            "serving": "1 คน"
+          }
+        ],
+        "sweetness": "ไม่หวาน",
+        "sweetness_adjustable": false,
+        "allergens": [
+          "นม",
+          "ไข่",
+          "กลูเตน"
+        ],
+        "contains_caffeine": false,
+        "available_default": true,
+        "availability_note": "จำนวนสินค้าอาจเปลี่ยนตามรอบอบและช่วงเวลา แนะนำให้เช็กกับแอดมินก่อนสั่ง",
+        "tags": [
+          "bakery",
+          "coffee_pairing",
+          "work_study"
+        ],
+        "recommended_for": [
+          "นั่งทำงาน",
+          "มื้อเบา ๆ"
+        ],
+        "pairing": [
+          "Lavender Latte",
+          "Honey Garden Americano"
+        ]
+      },
+      {
+        "id": "almond_flower_madeleine",
+        "name_th": "Almond Flower Madeleine",
+        "name_en": "Almond Flower Madeleine",
+        "category": "bakery",
+        "description": "มาเดอลีนเนยหอม กลิ่นอัลมอนด์อ่อน ๆ เหมาะกับซื้อกลับบ้านหรือของฝาก",
+        "sizes": [
+          {
+            "size": "Piece",
+            "price": 45,
+            "serving": "1 คน"
+          },
+          {
+            "size": "Box of 6",
+            "price": 249,
+            "serving": "3-6 คน"
+          }
+        ],
+        "sweetness": "หวานน้อยถึงกลาง",
+        "sweetness_adjustable": false,
+        "allergens": [
+          "นม",
+          "ไข่",
+          "กลูเตน",
+          "อัลมอนด์"
+        ],
+        "contains_caffeine": false,
+        "available_default": true,
+        "availability_note": "จำนวนสินค้าอาจเปลี่ยนตามรอบอบและช่วงเวลา แนะนำให้เช็กกับแอดมินก่อนสั่ง",
+        "tags": [
+          "gift",
+          "bakery",
+          "bite_size"
+        ],
+        "recommended_for": [
+          "ของฝาก",
+          "ทานคู่ชา"
+        ],
+        "pairing": [
+          "Rose Earl Grey Tea"
+        ]
+      },
+      {
+        "id": "blooming_garden_tea",
+        "name_th": "Blooming Garden Tea",
+        "name_en": "Blooming Garden Tea",
+        "category": "drink",
+        "description": "ชาดอกไม้หอมอ่อน ๆ สดชื่น ดื่มง่าย เข้ากับบรรยากาศสวนดอกไม้ของร้าน",
+        "sizes": [
+          {
+            "size": "Regular",
+            "price": 95
+          },
+          {
+            "size": "Large",
+            "price": 125
+          }
+        ],
+        "sweetness": "เลือกหวานได้ 0%, 25%, 50%, 75%, 100%",
+        "sweetness_adjustable": true,
+        "allergens": [],
+        "contains_caffeine": "low",
+        "available_default": true,
+        "availability_note": "จำนวนสินค้าอาจเปลี่ยนตามรอบอบและช่วงเวลา แนะนำให้เช็กกับแอดมินก่อนสั่ง",
+        "tags": [
+          "signature_drink",
+          "floral",
+          "fresh",
+          "not_too_sweet"
+        ],
+        "recommended_for": [
+          "คนชอบชา",
+          "คนชอบหวานน้อย"
+        ],
+        "pairing": [
+          "Strawberry Garden Shortcake"
+        ]
+      },
+      {
+        "id": "rose_earl_grey_tea",
+        "name_th": "Rose Earl Grey Tea",
+        "name_en": "Rose Earl Grey Tea",
+        "category": "drink",
+        "description": "ชาเอิร์ลเกรย์หอมกุหลาบ ดื่มง่าย ให้ฟีล elegant และละมุน",
+        "sizes": [
+          {
+            "size": "Regular",
+            "price": 105
+          },
+          {
+            "size": "Large",
+            "price": 135
+          }
+        ],
+        "sweetness": "เลือกหวานได้ 0%, 25%, 50%, 75%, 100%",
+        "sweetness_adjustable": true,
+        "allergens": [],
+        "contains_caffeine": true,
+        "available_default": true,
+        "availability_note": "จำนวนสินค้าอาจเปลี่ยนตามรอบอบและช่วงเวลา แนะนำให้เช็กกับแอดมินก่อนสั่ง",
+        "tags": [
+          "tea",
+          "floral",
+          "elegant"
+        ],
+        "recommended_for": [
+          "คนชอบชา",
+          "คนชอบกลิ่นกุหลาบ"
+        ],
+        "pairing": [
+          "Rose Vanilla Petal Cake"
+        ]
+      },
+      {
+        "id": "lavender_milk_tea",
+        "name_th": "Lavender Milk Tea",
+        "name_en": "Lavender Milk Tea",
+        "category": "drink",
+        "description": "ชานมกลิ่นลาเวนเดอร์อ่อน ๆ สีม่วงพาสเทล ถ่ายรูปสวย",
+        "sizes": [
+          {
+            "size": "Regular",
+            "price": 115
+          },
+          {
+            "size": "Large",
+            "price": 145
+          }
+        ],
+        "sweetness": "เลือกหวานได้ 25%, 50%, 75%, 100%",
+        "sweetness_adjustable": true,
+        "allergens": [
+          "นม"
+        ],
+        "contains_caffeine": true,
+        "available_default": true,
+        "availability_note": "จำนวนสินค้าอาจเปลี่ยนตามรอบอบและช่วงเวลา แนะนำให้เช็กกับแอดมินก่อนสั่ง",
+        "tags": [
+          "lavender",
+          "milk_tea",
+          "photo_friendly"
+        ],
+        "recommended_for": [
+          "สายถ่ายรูป",
+          "คนชอบชานม"
+        ],
+        "pairing": [
+          "Lavender Blueberry Cheesecake"
+        ]
+      },
+      {
+        "id": "strawberry_petal_milk",
+        "name_th": "Strawberry Petal Milk",
+        "name_en": "Strawberry Petal Milk",
+        "category": "drink",
+        "description": "นมสตรอว์เบอร์รีโทนชมพูหวานละมุน มีเนื้อผลไม้ เหมาะกับเด็กและสายหวาน",
+        "sizes": [
+          {
+            "size": "Regular",
+            "price": 105
+          },
+          {
+            "size": "Large",
+            "price": 135
+          }
+        ],
+        "sweetness": "เลือกหวานได้ 25%, 50%, 75%, 100%",
+        "sweetness_adjustable": true,
+        "allergens": [
+          "นม"
+        ],
+        "contains_caffeine": false,
+        "available_default": true,
+        "availability_note": "จำนวนสินค้าอาจเปลี่ยนตามรอบอบและช่วงเวลา แนะนำให้เช็กกับแอดมินก่อนสั่ง",
+        "tags": [
+          "kids_friendly",
+          "pink",
+          "best_seller"
+        ],
+        "recommended_for": [
+          "เด็ก",
+          "สายหวาน",
+          "คนชอบสตรอว์เบอร์รี"
+        ],
+        "pairing": [
+          "Flower Milk Pudding"
+        ]
+      },
+      {
+        "id": "blueberry_lavender_milk",
+        "name_th": "Blueberry Lavender Milk",
+        "name_en": "Blueberry Lavender Milk",
+        "category": "drink",
+        "description": "นมบลูเบอร์รีกลิ่นลาเวนเดอร์ สีม่วงพาสเทล หวานอมเปรี้ยวเล็กน้อย",
+        "sizes": [
+          {
+            "size": "Regular",
+            "price": 115
+          },
+          {
+            "size": "Large",
+            "price": 145
+          }
+        ],
+        "sweetness": "เลือกหวานได้ 25%, 50%, 75%, 100%",
+        "sweetness_adjustable": true,
+        "allergens": [
+          "นม"
+        ],
+        "contains_caffeine": false,
+        "available_default": true,
+        "availability_note": "จำนวนสินค้าอาจเปลี่ยนตามรอบอบและช่วงเวลา แนะนำให้เช็กกับแอดมินก่อนสั่ง",
+        "tags": [
+          "pastel_purple",
+          "photo_friendly",
+          "milk"
+        ],
+        "recommended_for": [
+          "สายถ่ายรูป",
+          "คนชอบบลูเบอร์รี"
+        ],
+        "pairing": [
+          "Lavender Blueberry Cheesecake"
+        ]
+      },
+      {
+        "id": "vanilla_rose_milk",
+        "name_th": "Vanilla Rose Milk",
+        "name_en": "Vanilla Rose Milk",
+        "category": "drink",
+        "description": "นมวานิลลากลิ่นกุหลาบอ่อน ๆ ไม่มีคาเฟอีน หอมหวานนุ่มนวล",
+        "sizes": [
+          {
+            "size": "Regular",
+            "price": 105
+          },
+          {
+            "size": "Large",
+            "price": 135
+          }
+        ],
+        "sweetness": "เลือกหวานได้ 25%, 50%, 75%, 100%",
+        "sweetness_adjustable": true,
+        "allergens": [
+          "นม"
+        ],
+        "contains_caffeine": false,
+        "available_default": true,
+        "availability_note": "จำนวนสินค้าอาจเปลี่ยนตามรอบอบและช่วงเวลา แนะนำให้เช็กกับแอดมินก่อนสั่ง",
+        "tags": [
+          "no_caffeine",
+          "floral",
+          "soft"
+        ],
+        "recommended_for": [
+          "คนไม่ดื่มคาเฟอีน",
+          "คนชอบวานิลลา"
+        ],
+        "pairing": [
+          "Rose Vanilla Petal Cake"
+        ]
+      },
+      {
+        "id": "lavender_latte",
+        "name_th": "Lavender Latte",
+        "name_en": "Lavender Latte",
+        "category": "drink",
+        "description": "ลาเต้กาแฟนมหอมลาเวนเดอร์อ่อน ๆ ให้ฟีลพรีเมียมและนุ่มนวล",
+        "sizes": [
+          {
+            "size": "Regular",
+            "price": 115
+          },
+          {
+            "size": "Large",
+            "price": 145
+          }
+        ],
+        "sweetness": "เลือกหวานได้ 0%, 25%, 50%, 75%, 100%",
+        "sweetness_adjustable": true,
+        "allergens": [
+          "นม"
+        ],
+        "contains_caffeine": true,
+        "available_default": true,
+        "availability_note": "จำนวนสินค้าอาจเปลี่ยนตามรอบอบและช่วงเวลา แนะนำให้เช็กกับแอดมินก่อนสั่ง",
+        "tags": [
+          "coffee",
+          "lavender",
+          "work_study"
+        ],
+        "recommended_for": [
+          "คนชอบกาแฟนม",
+          "นั่งทำงาน"
+        ],
+        "pairing": [
+          "Petals Butter Croissant"
+        ]
+      },
+      {
+        "id": "rose_mocha",
+        "name_th": "Rose Mocha",
+        "name_en": "Rose Mocha",
+        "category": "drink",
+        "description": "มอคค่าหอมช็อกโกแลตและกุหลาบอ่อน ๆ รสเข้มละมุน",
+        "sizes": [
+          {
+            "size": "Regular",
+            "price": 125
+          },
+          {
+            "size": "Large",
+            "price": 155
+          }
+        ],
+        "sweetness": "เลือกหวานได้ 0%, 25%, 50%, 75%, 100%",
+        "sweetness_adjustable": true,
+        "allergens": [
+          "นม"
+        ],
+        "contains_caffeine": true,
+        "available_default": true,
+        "availability_note": "จำนวนสินค้าอาจเปลี่ยนตามรอบอบและช่วงเวลา แนะนำให้เช็กกับแอดมินก่อนสั่ง",
+        "tags": [
+          "coffee",
+          "chocolate",
+          "romantic"
+        ],
+        "recommended_for": [
+          "คนชอบมอคค่า",
+          "คนชอบช็อกโกแลต"
+        ],
+        "pairing": [
+          "Chocolate Rose Mousse"
+        ]
+      },
+      {
+        "id": "honey_garden_americano",
+        "name_th": "Honey Garden Americano",
+        "name_en": "Honey Garden Americano",
+        "category": "drink",
+        "description": "อเมริกาโน่น้ำผึ้ง ไม่ใส่นม สดชื่น เหมาะกับคนอยากได้กาแฟเบา ๆ",
+        "sizes": [
+          {
+            "size": "Regular",
+            "price": 95
+          },
+          {
+            "size": "Large",
+            "price": 125
+          }
+        ],
+        "sweetness": "เลือกหวานได้ 0%, 25%, 50%, 75%, 100%",
+        "sweetness_adjustable": true,
+        "allergens": [
+          "น้ำผึ้ง"
+        ],
+        "contains_caffeine": true,
+        "available_default": true,
+        "availability_note": "จำนวนสินค้าอาจเปลี่ยนตามรอบอบและช่วงเวลา แนะนำให้เช็กกับแอดมินก่อนสั่ง",
+        "tags": [
+          "coffee",
+          "no_milk",
+          "refreshing"
+        ],
+        "recommended_for": [
+          "คนไม่ดื่มนม",
+          "คนชอบอเมริกาโน่"
+        ],
+        "pairing": [
+          "Petals Butter Croissant"
+        ]
+      },
+      {
+        "id": "butterfly_pea_blossom_soda",
+        "name_th": "Butterfly Pea Blossom Soda",
+        "name_en": "Butterfly Pea Blossom Soda",
+        "category": "drink",
+        "description": "อัญชันโซดาสีฟ้าม่วง สดชื่น ถ่ายรูปสวย ไม่มีคาเฟอีน",
+        "sizes": [
+          {
+            "size": "Regular",
+            "price": 105
+          },
+          {
+            "size": "Large",
+            "price": 135
+          }
+        ],
+        "sweetness": "เลือกหวานได้ 0%, 25%, 50%, 75%, 100%",
+        "sweetness_adjustable": true,
+        "allergens": [],
+        "contains_caffeine": false,
+        "available_default": true,
+        "availability_note": "จำนวนสินค้าอาจเปลี่ยนตามรอบอบและช่วงเวลา แนะนำให้เช็กกับแอดมินก่อนสั่ง",
+        "tags": [
+          "soda",
+          "no_caffeine",
+          "photo_friendly"
+        ],
+        "recommended_for": [
+          "อากาศร้อน",
+          "สายถ่ายรูป"
+        ],
+        "pairing": [
+          "Blueberry Panna Cotta"
+        ]
+      },
+      {
+        "id": "floral_lemon_soda",
+        "name_th": "Floral Lemon Soda",
+        "name_en": "Floral Lemon Soda",
+        "category": "drink",
+        "description": "เลมอนโซดากลิ่นดอกไม้ เปรี้ยวหวานสดชื่น ไม่มีนม ไม่มีคาเฟอีน",
+        "sizes": [
+          {
+            "size": "Regular",
+            "price": 95
+          },
+          {
+            "size": "Large",
+            "price": 125
+          }
+        ],
+        "sweetness": "เลือกหวานได้ 0%, 25%, 50%, 75%, 100%",
+        "sweetness_adjustable": true,
+        "allergens": [],
+        "contains_caffeine": false,
+        "available_default": true,
+        "availability_note": "จำนวนสินค้าอาจเปลี่ยนตามรอบอบและช่วงเวลา แนะนำให้เช็กกับแอดมินก่อนสั่ง",
+        "tags": [
+          "soda",
+          "no_caffeine",
+          "no_milk",
+          "refreshing"
+        ],
+        "recommended_for": [
+          "คนไม่ดื่มนม",
+          "คนไม่ดื่มคาเฟอีน"
+        ],
+        "pairing": [
+          "Honey Daisy Chiffon"
+        ]
+      }
+    ],
+    "price_matrix": {
+      "strawberry_garden_shortcake": {
+        "name_th": "Strawberry Garden Shortcake",
+        "name_en": "Strawberry Garden Shortcake",
+        "category": "cake",
+        "prices": {
+          "Mini": 89,
+          "Regular": 139,
+          "Whole Cake": 790
+        },
+        "sweetness": "หวานกลาง",
+        "allergens": [
+          "นม",
+          "ไข่",
+          "กลูเตน"
+        ],
+        "contains_caffeine": false
+      },
+      "rose_vanilla_petal_cake": {
+        "name_th": "Rose Vanilla Petal Cake",
+        "name_en": "Rose Vanilla Petal Cake",
+        "category": "cake",
+        "prices": {
+          "Mini": 95,
+          "Regular": 149,
+          "Whole Cake": 850
+        },
+        "sweetness": "หวานน้อยถึงกลาง",
+        "allergens": [
+          "นม",
+          "ไข่",
+          "กลูเตน"
+        ],
+        "contains_caffeine": false
+      },
+      "lavender_blueberry_cheesecake": {
+        "name_th": "Lavender Blueberry Cheesecake",
+        "name_en": "Lavender Blueberry Cheesecake",
+        "category": "cake",
+        "prices": {
+          "Mini": 109,
+          "Regular": 169,
+          "Whole Cake": 920
+        },
+        "sweetness": "หวานกลาง อมเปรี้ยวเล็กน้อย",
+        "allergens": [
+          "นม",
+          "ไข่",
+          "กลูเตน"
+        ],
+        "contains_caffeine": false
+      },
+      "honey_daisy_chiffon": {
+        "name_th": "Honey Daisy Chiffon",
+        "name_en": "Honey Daisy Chiffon",
+        "category": "cake",
+        "prices": {
+          "Mini": 85,
+          "Regular": 129
+        },
+        "sweetness": "หวานน้อยถึงกลาง",
+        "allergens": [
+          "นม",
+          "ไข่",
+          "กลูเตน",
+          "น้ำผึ้ง"
+        ],
+        "contains_caffeine": false
+      },
+      "earl_grey_blossom_cake": {
+        "name_th": "Earl Grey Blossom Cake",
+        "name_en": "Earl Grey Blossom Cake",
+        "category": "cake",
+        "prices": {
+          "Mini": 99,
+          "Regular": 159,
+          "Whole Cake": 890
+        },
+        "sweetness": "หวานน้อยถึงกลาง",
+        "allergens": [
+          "นม",
+          "ไข่",
+          "กลูเตน"
+        ],
+        "contains_caffeine": true
+      },
+      "chocolate_rose_mousse": {
+        "name_th": "Chocolate Rose Mousse",
+        "name_en": "Chocolate Rose Mousse",
+        "category": "cake",
+        "prices": {
+          "Mini": 115,
+          "Regular": 179
+        },
+        "sweetness": "หวานกลาง เข้มช็อกโกแลต",
+        "allergens": [
+          "นม",
+          "ไข่",
+          "กลูเตน"
+        ],
+        "contains_caffeine": true
+      },
+      "matcha_garden_roll": {
+        "name_th": "Matcha Garden Roll",
+        "name_en": "Matcha Garden Roll",
+        "category": "cake",
+        "prices": {
+          "Slice": 119,
+          "Roll": 590
+        },
+        "sweetness": "หวานน้อย",
+        "allergens": [
+          "นม",
+          "ไข่",
+          "กลูเตน"
+        ],
+        "contains_caffeine": true
+      },
+      "peach_petal_tart": {
+        "name_th": "Peach Petal Tart",
+        "name_en": "Peach Petal Tart",
+        "category": "dessert",
+        "prices": {
+          "Piece": 129,
+          "Box of 4": 480
+        },
+        "sweetness": "หวานกลาง อมเปรี้ยว",
+        "allergens": [
+          "นม",
+          "ไข่",
+          "กลูเตน"
+        ],
+        "contains_caffeine": false
+      },
+      "flower_milk_pudding": {
+        "name_th": "Flower Milk Pudding",
+        "name_en": "Flower Milk Pudding",
+        "category": "dessert",
+        "prices": {
+          "Cup": 79,
+          "Set of 3": 219
+        },
+        "sweetness": "หวานน้อย",
+        "allergens": [
+          "นม"
+        ],
+        "contains_caffeine": false
+      },
+      "blueberry_panna_cotta": {
+        "name_th": "Blueberry Panna Cotta",
+        "name_en": "Blueberry Panna Cotta",
+        "category": "dessert",
+        "prices": {
+          "Cup": 89,
+          "Set of 3": 249
+        },
+        "sweetness": "หวานน้อยถึงกลาง",
+        "allergens": [
+          "นม"
+        ],
+        "contains_caffeine": false
+      },
+      "petals_butter_croissant": {
+        "name_th": "Petals Butter Croissant",
+        "name_en": "Petals Butter Croissant",
+        "category": "bakery",
+        "prices": {
+          "Classic": 85,
+          "Set with Drink": 159
+        },
+        "sweetness": "ไม่หวาน",
+        "allergens": [
+          "นม",
+          "ไข่",
+          "กลูเตน"
+        ],
+        "contains_caffeine": false
+      },
+      "almond_flower_madeleine": {
+        "name_th": "Almond Flower Madeleine",
+        "name_en": "Almond Flower Madeleine",
+        "category": "bakery",
+        "prices": {
+          "Piece": 45,
+          "Box of 6": 249
+        },
+        "sweetness": "หวานน้อยถึงกลาง",
+        "allergens": [
+          "นม",
+          "ไข่",
+          "กลูเตน",
+          "อัลมอนด์"
+        ],
+        "contains_caffeine": false
+      },
+      "blooming_garden_tea": {
+        "name_th": "Blooming Garden Tea",
+        "name_en": "Blooming Garden Tea",
+        "category": "drink",
+        "prices": {
+          "Regular": 95,
+          "Large": 125
+        },
+        "sweetness": "เลือกหวานได้ 0%, 25%, 50%, 75%, 100%",
+        "allergens": [],
+        "contains_caffeine": "low"
+      },
+      "rose_earl_grey_tea": {
+        "name_th": "Rose Earl Grey Tea",
+        "name_en": "Rose Earl Grey Tea",
+        "category": "drink",
+        "prices": {
+          "Regular": 105,
+          "Large": 135
+        },
+        "sweetness": "เลือกหวานได้ 0%, 25%, 50%, 75%, 100%",
+        "allergens": [],
+        "contains_caffeine": true
+      },
+      "lavender_milk_tea": {
+        "name_th": "Lavender Milk Tea",
+        "name_en": "Lavender Milk Tea",
+        "category": "drink",
+        "prices": {
+          "Regular": 115,
+          "Large": 145
+        },
+        "sweetness": "เลือกหวานได้ 25%, 50%, 75%, 100%",
+        "allergens": [
+          "นม"
+        ],
+        "contains_caffeine": true
+      },
+      "strawberry_petal_milk": {
+        "name_th": "Strawberry Petal Milk",
+        "name_en": "Strawberry Petal Milk",
+        "category": "drink",
+        "prices": {
+          "Regular": 105,
+          "Large": 135
+        },
+        "sweetness": "เลือกหวานได้ 25%, 50%, 75%, 100%",
+        "allergens": [
+          "นม"
+        ],
+        "contains_caffeine": false
+      },
+      "blueberry_lavender_milk": {
+        "name_th": "Blueberry Lavender Milk",
+        "name_en": "Blueberry Lavender Milk",
+        "category": "drink",
+        "prices": {
+          "Regular": 115,
+          "Large": 145
+        },
+        "sweetness": "เลือกหวานได้ 25%, 50%, 75%, 100%",
+        "allergens": [
+          "นม"
+        ],
+        "contains_caffeine": false
+      },
+      "vanilla_rose_milk": {
+        "name_th": "Vanilla Rose Milk",
+        "name_en": "Vanilla Rose Milk",
+        "category": "drink",
+        "prices": {
+          "Regular": 105,
+          "Large": 135
+        },
+        "sweetness": "เลือกหวานได้ 25%, 50%, 75%, 100%",
+        "allergens": [
+          "นม"
+        ],
+        "contains_caffeine": false
+      },
+      "lavender_latte": {
+        "name_th": "Lavender Latte",
+        "name_en": "Lavender Latte",
+        "category": "drink",
+        "prices": {
+          "Regular": 115,
+          "Large": 145
+        },
+        "sweetness": "เลือกหวานได้ 0%, 25%, 50%, 75%, 100%",
+        "allergens": [
+          "นม"
+        ],
+        "contains_caffeine": true
+      },
+      "rose_mocha": {
+        "name_th": "Rose Mocha",
+        "name_en": "Rose Mocha",
+        "category": "drink",
+        "prices": {
+          "Regular": 125,
+          "Large": 155
+        },
+        "sweetness": "เลือกหวานได้ 0%, 25%, 50%, 75%, 100%",
+        "allergens": [
+          "นม"
+        ],
+        "contains_caffeine": true
+      },
+      "honey_garden_americano": {
+        "name_th": "Honey Garden Americano",
+        "name_en": "Honey Garden Americano",
+        "category": "drink",
+        "prices": {
+          "Regular": 95,
+          "Large": 125
+        },
+        "sweetness": "เลือกหวานได้ 0%, 25%, 50%, 75%, 100%",
+        "allergens": [
+          "น้ำผึ้ง"
+        ],
+        "contains_caffeine": true
+      },
+      "butterfly_pea_blossom_soda": {
+        "name_th": "Butterfly Pea Blossom Soda",
+        "name_en": "Butterfly Pea Blossom Soda",
+        "category": "drink",
+        "prices": {
+          "Regular": 105,
+          "Large": 135
+        },
+        "sweetness": "เลือกหวานได้ 0%, 25%, 50%, 75%, 100%",
+        "allergens": [],
+        "contains_caffeine": false
+      },
+      "floral_lemon_soda": {
+        "name_th": "Floral Lemon Soda",
+        "name_en": "Floral Lemon Soda",
+        "category": "drink",
+        "prices": {
+          "Regular": 95,
+          "Large": 125
+        },
+        "sweetness": "เลือกหวานได้ 0%, 25%, 50%, 75%, 100%",
+        "allergens": [],
+        "contains_caffeine": false
+      }
+    },
+    "category_index": {
+      "cake": [
+        "strawberry_garden_shortcake",
+        "rose_vanilla_petal_cake",
+        "lavender_blueberry_cheesecake",
+        "honey_daisy_chiffon",
+        "earl_grey_blossom_cake",
+        "chocolate_rose_mousse",
+        "matcha_garden_roll"
+      ],
+      "dessert": [
+        "peach_petal_tart",
+        "flower_milk_pudding",
+        "blueberry_panna_cotta"
+      ],
+      "bakery": [
+        "petals_butter_croissant",
+        "almond_flower_madeleine"
+      ],
+      "drink": [
+        "blooming_garden_tea",
+        "rose_earl_grey_tea",
+        "lavender_milk_tea",
+        "strawberry_petal_milk",
+        "blueberry_lavender_milk",
+        "vanilla_rose_milk",
+        "lavender_latte",
+        "rose_mocha",
+        "honey_garden_americano",
+        "butterfly_pea_blossom_soda",
+        "floral_lemon_soda"
+      ]
+    },
+    "allergy_index": {
+      "นม": [
+        "strawberry_garden_shortcake",
+        "rose_vanilla_petal_cake",
+        "lavender_blueberry_cheesecake",
+        "honey_daisy_chiffon",
+        "earl_grey_blossom_cake",
+        "chocolate_rose_mousse",
+        "matcha_garden_roll",
+        "peach_petal_tart",
+        "flower_milk_pudding",
+        "blueberry_panna_cotta",
+        "petals_butter_croissant",
+        "almond_flower_madeleine",
+        "lavender_milk_tea",
+        "strawberry_petal_milk",
+        "blueberry_lavender_milk",
+        "vanilla_rose_milk",
+        "lavender_latte",
+        "rose_mocha"
+      ],
+      "ไข่": [
+        "strawberry_garden_shortcake",
+        "rose_vanilla_petal_cake",
+        "lavender_blueberry_cheesecake",
+        "honey_daisy_chiffon",
+        "earl_grey_blossom_cake",
+        "chocolate_rose_mousse",
+        "matcha_garden_roll",
+        "peach_petal_tart",
+        "petals_butter_croissant",
+        "almond_flower_madeleine"
+      ],
+      "กลูเตน": [
+        "strawberry_garden_shortcake",
+        "rose_vanilla_petal_cake",
+        "lavender_blueberry_cheesecake",
+        "honey_daisy_chiffon",
+        "earl_grey_blossom_cake",
+        "chocolate_rose_mousse",
+        "matcha_garden_roll",
+        "peach_petal_tart",
+        "petals_butter_croissant",
+        "almond_flower_madeleine"
+      ],
+      "น้ำผึ้ง": [
+        "honey_daisy_chiffon",
+        "honey_garden_americano"
+      ],
+      "อัลมอนด์": [
+        "almond_flower_madeleine"
+      ]
+    }
+  },
+  "recommendation_rules": {
+    "first_time_customer": [
+      "strawberry_garden_shortcake",
+      "rose_vanilla_petal_cake",
+      "flower_milk_pudding",
+      "blooming_garden_tea"
+    ],
+    "not_too_sweet": [
+      "flower_milk_pudding",
+      "honey_daisy_chiffon",
+      "matcha_garden_roll",
+      "blooming_garden_tea"
+    ],
+    "photo_lover": [
+      "lavender_blueberry_cheesecake",
+      "rose_vanilla_petal_cake",
+      "blueberry_lavender_milk",
+      "butterfly_pea_blossom_soda"
+    ],
+    "birthday": [
+      "strawberry_garden_shortcake",
+      "rose_vanilla_petal_cake",
+      "lavender_blueberry_cheesecake"
+    ],
+    "gift": [
+      "almond_flower_madeleine",
+      "peach_petal_tart",
+      "rose_vanilla_petal_cake"
+    ],
+    "kids_friendly": [
+      "flower_milk_pudding",
+      "strawberry_petal_milk",
+      "honey_daisy_chiffon"
+    ],
+    "coffee_pairing": [
+      "petals_butter_croissant",
+      "almond_flower_madeleine",
+      "earl_grey_blossom_cake"
+    ],
+    "lavender_theme": [
+      "lavender_blueberry_cheesecake",
+      "lavender_milk_tea",
+      "lavender_latte",
+      "blueberry_lavender_milk"
+    ]
+  },
+  "packaging_options": {
+    "standard_takeaway": {
+      "description": "กล่อง/ถุงสำหรับซื้อกลับบ้านตามขนาดสินค้า",
+      "extra_fee": 0
+    },
+    "gift_packaging": {
+      "description": "แพ็กของขวัญพร้อมริบบิ้นหรือสติ๊กเกอร์ร้าน",
+      "extra_fee": "สอบถามแอดมิน"
+    },
+    "message_card": {
+      "description": "การ์ดข้อความสั้นสำหรับของขวัญ",
+      "extra_fee": "สอบถามแอดมิน"
+    },
+    "cake_box": {
+      "description": "กล่องเค้กตามขนาด พร้อมคำแนะนำการถือและเก็บรักษา",
+      "extra_fee": 0
+    }
+  },
+  "policies": {
+    "promotion_policy": "โปรโมชันอาจเปลี่ยนตามช่วงเวลา แนะนำให้แอดมินเช็กข้อมูลล่าสุดก่อนยืนยันกับลูกค้า",
+    "payment_policy": "รับเงินสด โอน/สแกน QR และชำระผ่านแพลตฟอร์มเดลิเวอรี่ สำหรับเค้กสั่งทำอาจมีมัดจำ",
+    "reservation_policy": "Walk-in ได้ แต่ช่วงวันหยุด ช่วงบ่าย หรือมากันหลายคนควรจองล่วงหน้า",
+    "whole_cake_policy": "Whole Cake และเค้กสั่งทำแนะนำสั่งล่วงหน้าอย่างน้อย 2-3 วัน",
+    "takeaway_policy": "สินค้าแพ็กกลับบ้านได้ แต่เค้กครีมควรถืออย่างระมัดระวังและเก็บเย็นตามคำแนะนำ",
+    "allergy_policy": "หากลูกค้าแพ้อาหาร ต้องส่งต่อแอดมินตรวจสอบวัตถุดิบ ไม่ควรให้ AI ยืนยันว่าปลอดภัยเอง",
+    "dietary_policy": "เมนูส่วนใหญ่มีนม ไข่ หรือกลูเตน หากเป็น vegan, halal, keto หรือแพ้อาหาร ต้องตรวจสอบรายเมนู",
+    "sweetness_policy": "เครื่องดื่มส่วนใหญ่ปรับหวานได้ แต่ขนมและเค้กเป็นสูตรของร้าน อาจปรับเฉพาะชิ้นไม่ได้",
+    "pet_policy": "สัตว์เลี้ยงเข้าได้เฉพาะโซน outdoor และควรอยู่ในสายจูงหรือกระเป๋า",
+    "photography_policy": "ลูกค้าถ่ายรูปทั่วไปได้ แต่การถ่ายงานเชิงพาณิชย์ควรติดต่อแอดมินก่อน",
+    "order_status_policy": "สถานะเดลิเวอรี่ด้านไรเดอร์ตรวจสอบผ่านแอป ส่วนปัญหาสินค้าให้ร้านรับเรื่องตรวจสอบ",
+    "refund_return_policy": "คืนเงิน เปลี่ยนสินค้า หรือเคลม ต้องตรวจสอบเลขออเดอร์ รูปสินค้า ช่องทางที่สั่ง และรายละเอียดปัญหา",
+    "service_recovery_policy": "กรณีร้องเรียนบริการ ให้ขอโทษ รับฟัง ขอวันเวลา/รายละเอียด และส่งต่อผู้เกี่ยวข้อง",
+    "high_risk_escalation_policy": "อาหารเป็นพิษ แพ้รุนแรง ฟ้อง แจ้งความ โกง หรือขอผู้จัดการ ต้องส่งต่อแอดมิน/ผู้รับผิดชอบทันที"
+  },
+  "slot_schema": {
+    "common_slots": [
+      "customer_name",
+      "contact",
+      "topic",
+      "menu_name",
+      "quantity",
+      "size",
+      "budget",
+      "date",
+      "time",
+      "platform",
+      "order_id",
+      "photo"
+    ],
+    "reservation_slots": [
+      "date",
+      "time",
+      "party_size",
+      "preferred_zone",
+      "customer_name",
+      "phone"
+    ],
+    "custom_cake_slots": [
+      "date",
+      "pickup_time",
+      "cake_flavor",
+      "cake_size",
+      "message_on_cake",
+      "theme_color",
+      "candles",
+      "allergy"
+    ],
+    "complaint_slots": [
+      "order_id",
+      "platform",
+      "photo",
+      "problem_detail",
+      "incident_detail",
+      "date",
+      "time",
+      "contact"
+    ],
+    "allergy_slots": [
+      "allergy_items",
+      "severity",
+      "menu_name",
+      "cross_contamination_concern"
+    ]
+  },
+  "intent_priority": [
+    "high_risk_complaint",
+    "allergy",
+    "refund_return",
+    "complaint_staff",
+    "complaint_service",
+    "complaint_product",
+    "order_status",
+    "custom_cake",
+    "reservation",
+    "availability",
+    "dietary_option",
+    "ingredients",
+    "payment",
+    "delivery_takeaway",
+    "promotion",
+    "recommendation",
+    "price_inquiry",
+    "size_option",
+    "menu_inquiry",
+    "opening_hours",
+    "location",
+    "facility",
+    "ambience_photo_spot",
+    "special_occasion",
+    "packaging",
+    "service_question",
+    "compliment",
+    "thanks",
+    "greeting",
+    "empty_message",
+    "general_question"
   ],
-
-  
-  "FAQ" : 
-  {
-      "greeting": 
-      {
-          "category": "general",
-          "answer": "สวัสดีค่ะ ยินดีต้อนรับสู่ Pudding Petals นะคะ 🌷 วันนี้ให้แอดมินช่วยดูเรื่องไหนดีคะ",
-          "requires_human": false,
-          "handoff_note": null,
-          "keywords": ["สวัสดี", "ดีค่ะ", "hello", "hi", "ทักค่ะ"]
-      },
-
-      "menu_inquiry": 
-      {
-          "category": "menu",
-          "answer": "ที่ร้านมีเค้ก ขนมหวาน เบเกอรี่ และเครื่องดื่มค่ะ เมนูของเราจะมีหลายขนาด ทั้ง Mini, Regular และแบบ Set เพื่อให้เลือกตามงบและโอกาสได้ง่ายนะคะ",
-          "requires_human": false,
-          "handoff_note": null,
-          "keywords": ["เมนู", "ขายอะไร", "ขนมอะไร", "เค้กอะไร", "เครื่องดื่ม", "เบเกอรี่"]
-      },
-
-      "price_inquiry": 
-      {
-          "category": "menu",
-          "answer": "เมนูของร้านมีหลายช่วงราคาเลยค่ะ ขนมขนาด Mini เริ่มประมาณ 79-109 บาท เค้กชิ้น Regular ประมาณ 139-169 บาท และเครื่องดื่มเริ่มประมาณ 95 บาทค่ะ",
-          "requires_human": false,
-          "handoff_note": null,
-          "keywords": ["ราคา", "กี่บาท", "เท่าไหร่", "แพงไหม", "งบ", "ราคาเริ่ม"]
-      },
-
-      "recommendation": 
-      {
-          "category": "menu",
-          "answer": "ถ้าเพิ่งมาครั้งแรก แอดมินแนะนำ Strawberry Garden Shortcake หรือ Flower Milk Pudding เลยค่ะ เป็นเมนูที่ทานง่าย ถ่ายรูปสวย และเข้ากับบรรยากาศสวนของร้านมาก ๆ ค่ะ",
-          "requires_human": false,
-          "handoff_note": null,
-          "keywords": ["แนะนำ", "เมนูไหนดี", "กินอะไรดี", "ขายดี", "signature", "ซิกเนเจอร์"]
-      },
-
-      "size_option": 
-      {
-          "category": "menu",
-          "answer": "หลายเมนูของร้านจะมีหลายขนาดค่ะ เช่น Mini สำหรับทานคนเดียว, Regular สำหรับทาน 1-2 คน และ Whole Cake สำหรับวันเกิดหรือโอกาสพิเศษ เพื่อให้ลูกค้าเลือกได้ตามงบและจำนวนคนค่ะ",
-          "requires_human": false,
-          "handoff_note": null,
-          "keywords": ["ขนาด", "ไซส์", "mini", "regular", "whole cake", "ปอนด์", "กี่คนทาน"]
-      },
-
-      "sweetness_allergy": 
-      {
-          "category": "menu_safety",
-          "answer": "บางเมนูสามารถเลือกระดับความหวานได้ค่ะ หากลูกค้ามีอาการแพ้นม ไข่ ถั่ว หรือวัตถุดิบอื่น ๆ รบกวนแจ้งแอดมินก่อนสั่งนะคะ เดี๋ยวช่วยแนะนำเมนูที่เหมาะให้ค่ะ",
-          "requires_human": true,
-          "handoff_note": "ส่งต่อแอดมินหากลูกค้ามีอาการแพ้อาหารหรือมีข้อจำกัดด้านวัตถุดิบ",
-          "keywords": ["หวานน้อย", "หวานมากไหม", "แพ้", "นม", "ถั่ว", "ไข่", "กลูเตน", "คาเฟอีน", "เจ"]
-      },
-
-      "custom_cake": 
-      {
-          "category": "custom_order",
-          "answer": "ทางร้านมีบริการเค้กสำหรับวันเกิดและโอกาสพิเศษค่ะ สามารถเลือกขนาด รสชาติ และสอบถามการเขียนข้อความหน้าเค้กได้ โดยแนะนำสั่งล่วงหน้าอย่างน้อย 2-3 วันนะคะ",
-          "requires_human": true,
-          "handoff_note": "ส่งต่อแอดมินเพื่อสอบถามรายละเอียดแบบเค้ก วันรับสินค้า และข้อความหน้าเค้ก",
-          "keywords": ["เค้กวันเกิด", "สั่งทำ", "custom", "เขียนหน้าเค้ก", "ปักเทียน", "ของขวัญ"]
-      },
-
-      "opening_hours": 
-      {
-          "category": "store_info",
-          "answer": "ร้านเปิดทุกวัน เวลา 10:00 - 20:00 น. ค่ะ ถ้ามาช่วงวันหยุด แนะนำทักมาสอบถามโต๊ะก่อนนิดนึงนะคะ",
-          "requires_human": false,
-          "handoff_note": null,
-          "keywords": ["เปิดกี่โมง", "ปิดกี่โมง", "เปิดไหม", "วันหยุด", "เวลาเปิด", "เวลาปิด"]
-      },
-
-      "location": 
-      {
-          "category": "store_info",
-          "answer": "ร้านตั้งอยู่โซนราชพฤกษ์/นนทบุรีค่ะ เป็นคาเฟ่สวนดอกไม้ที่มีทั้งโซน indoor และ outdoor ลูกค้าสามารถทักแชทเพื่อขอพิกัดร้านได้เลยนะคะ",
-          "requires_human": false,
-          "handoff_note": null,
-          "keywords": ["ร้านอยู่ไหน", "พิกัด", "โลเคชั่น", "ไปยังไง", "แผนที่", "สาขา"]
-      },
-
-      "reservation": 
-      {
-          "category": "reservation",
-          "answer": "สามารถ Walk-in ได้ค่ะ แต่ถ้าเป็นช่วงวันหยุดหรือมากันหลายคน แนะนำจองโต๊ะไว้ก่อนนิดนึงนะคะ แอดมินจะช่วยดูโซนที่เหมาะให้ค่ะ",
-          "requires_human": true,
-          "handoff_note": "ส่งต่อแอดมินหากลูกค้าต้องการจองโต๊ะหรือสอบถามจำนวนที่นั่งว่าง",
-          "keywords": ["จองโต๊ะ", "จองได้ไหม", "walk in", "วอล์คอิน", "โต๊ะว่างไหม", "คนเยอะไหม"]
-      },
-
-      "cafe_facilities": 
-      {
-          "category": "store_info",
-          "answer": "ที่ร้านมี Wi-Fi และมีปลั๊กบางจุดในโซน indoor ค่ะ เหมาะกับนั่งทำงานเบา ๆ หรือพักผ่อนท่ามกลางบรรยากาศสวนดอกไม้ค่ะ",
-          "requires_human": false,
-          "handoff_note": null,
-          "keywords": ["wifi", "ไวไฟ", "ปลั๊ก", "นั่งทำงาน", "แอร์", "ห้องน้ำ", "ที่จอดรถ", "pet friendly"]
-      },
-
-      "photo_spot": 
-      {
-          "category": "store_info",
-          "answer": "ร้านของเราตั้งใจตกแต่งให้ถ่ายรูปได้แทบทุกมุมเลยค่ะ ทั้งโซนสวนดอกไม้ด้านนอก มุมกระจก มุมโต๊ะขนม และโซน indoor ที่มองเห็นวิวสวนค่ะ 🌷",
-          "requires_human": false,
-          "handoff_note": null,
-          "keywords": ["ถ่ายรูป", "มุมถ่ายรูป", "สวนดอกไม้", "วิว", "สวยไหม", "outdoor", "indoor"]
-      },
-
-      "delivery_platform": 
-      {
-          "category": "delivery",
-          "answer": "ลูกค้าสามารถสั่งเดลิเวอรี่ผ่าน GrabFood และ LINE MAN ได้เลยนะคะ ทางร้านจะเตรียมขนมสดใหม่และแพ็กให้อย่างระมัดระวังทุกออเดอร์ค่ะ",
-          "requires_human": false,
-          "handoff_note": null,
-          "keywords": ["เดลิเวอรี่", "delivery", "grab", "grabfood", "lineman", "ไลน์แมน", "สั่งออนไลน์"]
-      },
-
-      "delivery_issue": 
-      {
-          "category": "delivery_support",
-          "answer": "ถ้าเป็นสถานะการจัดส่งหรือไรเดอร์ ลูกค้าสามารถตรวจสอบผ่านแอปที่สั่งได้โดยตรงนะคะ แต่ถ้าเป็นปัญหาเกี่ยวกับสินค้า เช่น ได้ของผิดหรือของไม่ครบ แอดมินยินดีช่วยดูแลให้ค่ะ",
-          "requires_human": true,
-          "handoff_note": "ส่งต่อแอดมินหากลูกค้าระบุว่าสินค้าเสียหาย ได้ของผิด หรือของไม่ครบ",
-          "keywords": ["ไรเดอร์", "ของยังไม่มา", "ส่งช้า", "ตามออเดอร์", "สถานะ", "ขนส่ง", "แอปมีปัญหา"]
-      },
-
-      "order_problem": 
-      {
-          "category": "order_support",
-          "answer": "ต้องขออภัยจริง ๆ นะคะ หากสินค้าไม่ครบ ผิดเมนู หรือเสียหาย รบกวนลูกค้าส่งรูปสินค้าและเลขออเดอร์ให้แอดมินตรวจสอบได้เลยค่ะ",
-          "requires_human": true,
-          "handoff_note": "ส่งต่อแอดมินเพื่อตรวจสอบเลขออเดอร์ รูปสินค้า และรายละเอียดปัญหา",
-          "keywords": ["ได้ของผิด", "ของไม่ครบ", "ขนมหก", "เค้กเละ", "เครื่องดื่มหก", "เสียหาย", "ไม่ตรงปก"]
-      },
-
-      "refund_exchange": 
-      {
-          "category": "order_support",
-          "answer": "เรื่องคืนเงินหรือเคลมสินค้า แอดมินขอรับรายละเอียดไว้ตรวจสอบก่อนนะคะ รบกวนส่งเลขออเดอร์ รูปสินค้า และรายละเอียดปัญหาเข้ามาได้เลยค่ะ",
-          "requires_human": true,
-          "handoff_note": "ส่งต่อแอดมินเพื่อตรวจสอบเงื่อนไขการคืนเงิน เปลี่ยนสินค้า หรือเคลมสินค้า",
-          "keywords": ["คืนเงิน", "เปลี่ยนสินค้า", "เคลม", "refund", "ยกเลิกออเดอร์", "คืนได้ไหม"]
-      },
-
-      "complaint": {
-          "category": "risk_case",
-          "answer": "ต้องขออภัยจริง ๆ นะคะที่ทำให้ลูกค้าไม่สบายใจ แอดมินจะรีบรับเรื่องและช่วยตรวจสอบให้ดีที่สุดค่ะ",
-          "requires_human": true,
-          "handoff_note": "ส่งต่อแอดมินทันที เพราะเป็นข้อความร้องเรียนหรือมีความไม่พอใจ",
-          "keywords": ["แย่", "ไม่พอใจ", "ผิดหวัง", "ช้ามาก", "เสียความรู้สึก", "บริการไม่ดี", "ร้องเรียน"]
-      },
-
-      "compliment": 
-      {
-          "category": "general",
-          "answer": "ขอบคุณมาก ๆ เลยนะคะ ดีใจมากที่ลูกค้าชอบค่ะ คำชมของลูกค้าเป็นกำลังใจให้ Pudding Petals มากเลยค่ะ 🌷",
-          "requires_human": false,
-          "handoff_note": null,
-          "keywords": ["อร่อย", "น่ารัก", "ชอบมาก", "ประทับใจ", "ร้านสวย", "ดีมาก", "ขอบคุณ"]
-      },
-
-      "collaboration": 
-      {
-          "category": "business",
-          "answer": "ยินดีมาก ๆ ค่ะ สำหรับการติดต่อรีวิวหรือร่วมงานกับร้าน รบกวนแจ้งรายละเอียดช่องทาง โปรไฟล์ และรูปแบบงานที่สนใจไว้ได้เลยนะคะ",
-          "requires_human": true,
-          "handoff_note": "ส่งต่อแอดมินหรือเจ้าของร้านเพื่อพิจารณาการร่วมงาน",
-          "keywords": ["รีวิว", "collab", "influencer", "ถ่ายงาน", "ติดต่อโปรโมท", "สปอนเซอร์", "ร่วมงาน"]
-      },
-
-      "event_booking": 
-      {
-          "category": "business",
-          "answer": "ทางร้านสามารถรองรับการจองสำหรับวันเกิด งานเล็ก ๆ หรือ private event ได้ค่ะ รบกวนแจ้งจำนวนคน วันที่ เวลา และรูปแบบงานที่ต้องการให้แอดมินช่วยดูรายละเอียดต่อนะคะ",
-          "requires_human": true,
-          "handoff_note": "ส่งต่อแอดมินเพื่อสอบถามรายละเอียดวัน เวลา จำนวนคน และรูปแบบงาน",
-          "keywords": ["จัดงาน", "วันเกิด", "ปาร์ตี้", "private event", "เหมาร้าน", "จัดเลี้ยง"]
-      },
-
-      "human_required": 
-      {
-          "category": "risk_case",
-          "answer": "ได้เลยค่ะ แอดมินจะรับเรื่องไว้ให้ทีมงานช่วยดูแลต่อนะคะ รบกวนลูกค้าฝากรายละเอียดเพิ่มเติมไว้ได้เลยค่ะ",
-          "requires_human": true,
-          "handoff_note": "ส่งต่อแอดมินทันที เพราะลูกค้าต้องการคุยกับมนุษย์หรือมีเรื่องเร่งด่วน",
-          "keywords": ["ผู้จัดการ", "คุยกับแอดมิน", "ติดต่อเจ้าของร้าน", "เรื่องด่วน", "ฟ้อง", "แจ้งความ", "เสียหายมาก"]
-      },
-
-      "general_question": 
-      {
-          "category": "general",
-          "answer": "ได้เลยค่ะ แอดมินยินดีช่วยดูให้นะคะ ลูกค้าสามารถบอกรายละเอียดเพิ่มเติมได้เลยค่ะ",
-          "requires_human": false,
-          "handoff_note": null,
-          "keywords": []
-      },
-
-      "general": 
-      {
-          "category": "general",
-          "answer": "ได้เลยค่ะ แอดมินยินดีช่วยดูให้นะคะ ลูกค้าสามารถบอกรายละเอียดเพิ่มเติมได้เลยค่ะ",
-          "requires_human": false,
-          "handoff_note": null,
-          "keywords": []
+  "intent_aliases": {
+    "general": "general_question",
+    "unknown": "general_question",
+    "fallback": "general_question",
+    "other": "general_question",
+    "sweetness_allergy": "sweetness_adjustment",
+    "cafe_facilities": "facility",
+    "photo_spot": "ambience_photo_spot",
+    "delivery_platform": "delivery_takeaway",
+    "delivery_issue": "order_status",
+    "order_problem": "complaint_product",
+    "refund_exchange": "refund_return",
+    "complaint": "complaint_service",
+    "human_required": "high_risk_complaint",
+    "staff_complaint": "complaint_staff",
+    "service_complaint": "complaint_service",
+    "product_complaint": "complaint_product"
+  },
+  "intents": {
+    "greeting": {
+      "group": "general",
+      "display_name": "ทักทาย",
+      "description": "ทักทาย เปิดบทสนทนา หรือเรียกแอดมิน",
+      "priority": 20,
+      "risk_level": "low",
+      "auto_reply_allowed": true,
+      "requires_human_default": false,
+      "examples": [
+        "สวัสดีค่ะ",
+        "hi",
+        "hello",
+        "แอดมินคะ",
+        "สอบถามค่ะ",
+        "มีใครอยู่ไหม"
+      ],
+      "keywords": [
+        "สวัสดี",
+        "hi",
+        "hello",
+        "ทัก",
+        "แอดมิน",
+        "สอบถาม"
+      ],
+      "required_slots": [],
+      "default_response": "สวัสดีค่ะ ยินดีต้อนรับสู่ Pudding Petals นะคะ 🌷 วันนี้ให้แอดมินช่วยดูเรื่องเมนู จองโต๊ะ หรือข้อมูลร้านด้านไหนดีคะ",
+      "response_templates": [
+        "สวัสดีค่ะ ยินดีต้อนรับสู่ Pudding Petals นะคะ 🌷 วันนี้ให้แอดมินช่วยดูเรื่องเมนู จองโต๊ะ หรือข้อมูลร้านด้านไหนดีคะ"
+      ],
+      "follow_up_prompts": [],
+      "related_kb": [],
+      "handoff": {
+        "required": false,
+        "when": [],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
       }
+    },
+    "thanks": {
+      "group": "general",
+      "display_name": "ขอบคุณ / รับทราบ",
+      "description": "ขอบคุณ รับทราบ หรือปิดบทสนทนา",
+      "priority": 20,
+      "risk_level": "low",
+      "auto_reply_allowed": true,
+      "requires_human_default": false,
+      "examples": [
+        "ขอบคุณค่ะ",
+        "รับทราบค่ะ",
+        "โอเคค่ะ",
+        "thank you",
+        "thanks"
+      ],
+      "keywords": [
+        "ขอบคุณ",
+        "รับทราบ",
+        "โอเค",
+        "thank",
+        "thanks"
+      ],
+      "required_slots": [],
+      "default_response": "ยินดีมาก ๆ ค่ะ 🌷 ถ้ามีอะไรให้ Pudding Petals ช่วยดูเพิ่มเติม ทักมาได้เสมอนะคะ",
+      "response_templates": [
+        "ยินดีมาก ๆ ค่ะ 🌷 ถ้ามีอะไรให้ Pudding Petals ช่วยดูเพิ่มเติม ทักมาได้เสมอนะคะ"
+      ],
+      "follow_up_prompts": [],
+      "related_kb": [],
+      "handoff": {
+        "required": false,
+        "when": [],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    },
+    "general_question": {
+      "group": "general",
+      "display_name": "คำถามทั่วไป",
+      "description": "คำถามที่ยังไม่เข้า intent เฉพาะ",
+      "priority": 10,
+      "risk_level": "low",
+      "auto_reply_allowed": true,
+      "requires_human_default": false,
+      "examples": [
+        "สอบถามหน่อยค่ะ",
+        "ขอรายละเอียดเพิ่ม",
+        "ร้านเป็นยังไง",
+        "ช่วยแนะนำหน่อย"
+      ],
+      "keywords": [
+        "สอบถาม",
+        "รายละเอียด",
+        "ข้อมูล",
+        "ช่วย",
+        "แนะนำ"
+      ],
+      "required_slots": [],
+      "default_response": "ได้เลยค่ะ แอดมินยินดีช่วยดูให้นะคะ 🌷 ลูกค้าสามารถบอกรายละเอียดเพิ่มเติมได้เลยค่ะ เช่น สนใจเมนู จองโต๊ะ ราคา หรือข้อมูลร้านด้านไหนเป็นพิเศษคะ",
+      "response_templates": [
+        "ได้เลยค่ะ แอดมินยินดีช่วยดูให้นะคะ 🌷 ลูกค้าสามารถบอกรายละเอียดเพิ่มเติมได้เลยค่ะ เช่น สนใจเมนู จองโต๊ะ ราคา หรือข้อมูลร้านด้านไหนเป็นพิเศษคะ"
+      ],
+      "follow_up_prompts": [
+        "ต้องการสอบถามเรื่องเมนู ราคา จองโต๊ะ เดลิเวอรี่ หรือออเดอร์คะ"
+      ],
+      "related_kb": [],
+      "handoff": {
+        "required": false,
+        "when": [],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    },
+    "empty_message": {
+      "group": "general",
+      "display_name": "ข้อความว่าง / อ่านไม่เจอข้อความ",
+      "description": "ข้อความว่าง รูปภาพอย่างเดียว สติกเกอร์ หรือระบบอ่านไม่เจอ",
+      "priority": 5,
+      "risk_level": "low",
+      "auto_reply_allowed": true,
+      "requires_human_default": false,
+      "examples": [
+        "",
+        "ส่งสติกเกอร์",
+        "ส่งรูปอย่างเดียว",
+        "..."
+      ],
+      "keywords": [
+        "empty",
+        "null",
+        "sticker",
+        "image_only"
+      ],
+      "required_slots": [],
+      "default_response": "ขออภัยค่ะ เหมือนระบบยังไม่พบข้อความจากลูกค้า 🌷 รบกวนพิมพ์คำถามเข้ามาอีกครั้งได้ไหมคะ แอดมินยินดีช่วยดูให้ค่ะ",
+      "response_templates": [
+        "ขออภัยค่ะ เหมือนระบบยังไม่พบข้อความจากลูกค้า 🌷 รบกวนพิมพ์คำถามเข้ามาอีกครั้งได้ไหมคะ แอดมินยินดีช่วยดูให้ค่ะ"
+      ],
+      "follow_up_prompts": [],
+      "related_kb": [],
+      "handoff": {
+        "required": false,
+        "when": [],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    },
+    "service_question": {
+      "group": "general",
+      "display_name": "สอบถามทั่วไป / ติดต่อแอดมิน",
+      "description": "ขอรายละเอียด ติดต่อแอดมิน หรือให้ช่วยดู",
+      "priority": 50,
+      "risk_level": "low",
+      "auto_reply_allowed": true,
+      "requires_human_default": false,
+      "examples": [
+        "ติดต่อแอดมินได้ไหม",
+        "ขอรายละเอียดหน่อยค่ะ",
+        "อยากคุยกับร้าน",
+        "ช่วยดูให้หน่อย"
+      ],
+      "keywords": [
+        "ติดต่อ",
+        "แอดมิน",
+        "รายละเอียด",
+        "ช่วยดู",
+        "เจ้าหน้าที่"
+      ],
+      "required_slots": [
+        "topic"
+      ],
+      "default_response": "ได้เลยค่ะ ลูกค้าสามารถฝากรายละเอียดไว้ในแชทนี้ได้เลยนะคะ 🌷 แอดมินจะช่วยดูแลและตอบกลับให้ดีที่สุดค่ะ",
+      "response_templates": [
+        "ได้เลยค่ะ ลูกค้าสามารถฝากรายละเอียดไว้ในแชทนี้ได้เลยนะคะ 🌷 แอดมินจะช่วยดูแลและตอบกลับให้ดีที่สุดค่ะ"
+      ],
+      "follow_up_prompts": [
+        "ลูกค้าต้องการสอบถามเรื่องเมนู จองโต๊ะ หรือออเดอร์คะ"
+      ],
+      "related_kb": [],
+      "handoff": {
+        "required": false,
+        "when": [],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    },
+    "promotion": {
+      "group": "menu_price_promotion",
+      "display_name": "โปรโมชัน / ส่วนลด",
+      "description": "ถามโปรโมชัน ส่วนลด คูปอง เซ็ตคู่เครื่องดื่ม",
+      "priority": 50,
+      "risk_level": "low",
+      "auto_reply_allowed": true,
+      "requires_human_default": false,
+      "examples": [
+        "มีโปรอะไรไหม",
+        "มีส่วนลดไหม",
+        "โปรคู่เครื่องดื่มมีไหม",
+        "มีคูปองไหม"
+      ],
+      "keywords": [
+        "โปร",
+        "โปรโมชั่น",
+        "ส่วนลด",
+        "คูปอง",
+        "เซ็ต",
+        "ลด"
+      ],
+      "required_slots": [],
+      "default_response": "ตอนนี้ทางร้านมีเซ็ตขนมคู่เครื่องดื่มบางรายการค่ะ 🌷 เช่น Petals Butter Croissant Set with Drink ราคา 159 บาท และอาจมีโปรตามฤดูกาล ลูกค้าสนใจเมนูไหนเป็นพิเศษไหมคะ",
+      "response_templates": [
+        "ตอนนี้ทางร้านมีเซ็ตขนมคู่เครื่องดื่มบางรายการค่ะ 🌷 เช่น Petals Butter Croissant Set with Drink ราคา 159 บาท และอาจมีโปรตามฤดูกาล ลูกค้าสนใจเมนูไหนเป็นพิเศษไหมคะ"
+      ],
+      "follow_up_prompts": [],
+      "related_kb": [
+        "menu_catalog",
+        "policies.promotion_policy"
+      ],
+      "handoff": {
+        "required": false,
+        "when": [],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    },
+    "recommendation": {
+      "group": "menu_price_promotion",
+      "display_name": "เมนูแนะนำ / เมนูขายดี",
+      "description": "ขอเมนูแนะนำ signature หรือเมนูตามความต้องการ",
+      "priority": 50,
+      "risk_level": "low",
+      "auto_reply_allowed": true,
+      "requires_human_default": false,
+      "examples": [
+        "มีเมนูแนะนำไหม",
+        "เมนูขายดีคืออะไร",
+        "มาครั้งแรกกินอะไรดี",
+        "อยากได้เมนูถ่ายรูปสวย",
+        "เมนูหวานน้อยมีไหม"
+      ],
+      "keywords": [
+        "แนะนำ",
+        "ขายดี",
+        "signature",
+        "ซิกเนเจอร์",
+        "กินอะไรดี",
+        "ถ่ายรูป",
+        "หวานน้อย"
+      ],
+      "required_slots": [],
+      "default_response": "ถ้าเพิ่งมาครั้งแรก แอดมินแนะนำ Strawberry Garden Shortcake, Rose Vanilla Petal Cake และ Flower Milk Pudding ค่ะ 🌸 เป็นเมนูที่ทานง่าย ถ่ายรูปสวย และเข้ากับบรรยากาศสวนดอกไม้ของร้านมาก ๆ ค่ะ",
+      "response_templates": [
+        "ถ้าเพิ่งมาครั้งแรก แอดมินแนะนำ Strawberry Garden Shortcake, Rose Vanilla Petal Cake และ Flower Milk Pudding ค่ะ 🌸 เป็นเมนูที่ทานง่าย ถ่ายรูปสวย และเข้ากับบรรยากาศสวนดอกไม้ของร้านมาก ๆ ค่ะ"
+      ],
+      "follow_up_prompts": [
+        "ลูกค้าชอบแนวหวานน้อย ผลไม้ ช็อกโกแลต ชา หรือเมนูถ่ายรูปสวยเป็นพิเศษไหมคะ"
+      ],
+      "related_kb": [
+        "menu_catalog",
+        "recommendation_rules"
+      ],
+      "handoff": {
+        "required": false,
+        "when": [],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    },
+    "menu_inquiry": {
+      "group": "menu_price_promotion",
+      "display_name": "สอบถามเมนูทั้งหมด",
+      "description": "ถามว่าร้านขายอะไร มีเค้ก ขนม เครื่องดื่มอะไรบ้าง",
+      "priority": 50,
+      "risk_level": "low",
+      "auto_reply_allowed": true,
+      "requires_human_default": false,
+      "examples": [
+        "มีเมนูอะไรบ้าง",
+        "ขอดูเมนูหน่อย",
+        "ร้านขายอะไร",
+        "มีเค้กอะไร",
+        "มีเครื่องดื่มอะไร"
+      ],
+      "keywords": [
+        "เมนู",
+        "ขายอะไร",
+        "ขนม",
+        "เค้ก",
+        "เครื่องดื่ม",
+        "เบเกอรี่"
+      ],
+      "required_slots": [],
+      "default_response": "ที่ร้านมีเค้ก ขนมหวาน เบเกอรี่ และเครื่องดื่มค่ะ 🌷 เมนูเด่น เช่น Strawberry Garden Shortcake, Rose Vanilla Petal Cake, Lavender Blueberry Cheesecake, Flower Milk Pudding และ Blooming Garden Tea ค่ะ",
+      "response_templates": [
+        "ที่ร้านมีเค้ก ขนมหวาน เบเกอรี่ และเครื่องดื่มค่ะ 🌷 เมนูเด่น เช่น Strawberry Garden Shortcake, Rose Vanilla Petal Cake, Lavender Blueberry Cheesecake, Flower Milk Pudding และ Blooming Garden Tea ค่ะ"
+      ],
+      "follow_up_prompts": [
+        "อยากดูเมนูเค้ก เครื่องดื่ม หรือเมนูแนะนำก่อนดีคะ"
+      ],
+      "related_kb": [
+        "menu_catalog"
+      ],
+      "handoff": {
+        "required": false,
+        "when": [],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    },
+    "price_inquiry": {
+      "group": "menu_price_promotion",
+      "display_name": "สอบถามราคา",
+      "description": "ถามราคาแต่ละเมนู ราคาเริ่มต้น งบประมาณ หรือราคาตามขนาด",
+      "priority": 50,
+      "risk_level": "low",
+      "auto_reply_allowed": true,
+      "requires_human_default": false,
+      "examples": [
+        "ราคาเท่าไหร่",
+        "กี่บาท",
+        "เค้กเริ่มกี่บาท",
+        "whole cake ราคา",
+        "มีงบ 200 แนะนำอะไร"
+      ],
+      "keywords": [
+        "ราคา",
+        "กี่บาท",
+        "เท่าไหร่",
+        "เริ่ม",
+        "งบ",
+        "บาท"
+      ],
+      "required_slots": [],
+      "default_response": "เมนูของร้านมีหลายช่วงราคาค่ะ 🌷 ขนม Mini เริ่มประมาณ 79-115 บาท, Regular ประมาณ 129-179 บาท, Whole Cake ประมาณ 790-920 บาท และเครื่องดื่มเริ่มประมาณ 95 บาทค่ะ",
+      "response_templates": [
+        "เมนูของร้านมีหลายช่วงราคาค่ะ 🌷 ขนม Mini เริ่มประมาณ 79-115 บาท, Regular ประมาณ 129-179 บาท, Whole Cake ประมาณ 790-920 บาท และเครื่องดื่มเริ่มประมาณ 95 บาทค่ะ"
+      ],
+      "follow_up_prompts": [
+        "ลูกค้าสนใจราคาเมนูไหนหรืออยากให้แนะนำตามงบเท่าไหร่คะ"
+      ],
+      "related_kb": [
+        "menu_catalog.price_matrix"
+      ],
+      "handoff": {
+        "required": false,
+        "when": [],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    },
+    "size_option": {
+      "group": "menu_price_promotion",
+      "display_name": "ขนาดสินค้า",
+      "description": "ถามขนาด Mini Regular Set Whole Cake หรือจำนวนคนที่ทานได้",
+      "priority": 50,
+      "risk_level": "low",
+      "auto_reply_allowed": true,
+      "requires_human_default": false,
+      "examples": [
+        "มีขนาดอะไรบ้าง",
+        "Mini กับ Regular ต่างกันยังไง",
+        "Whole Cake กี่คนทาน",
+        "มีแบบเซ็ตไหม"
+      ],
+      "keywords": [
+        "ขนาด",
+        "ไซส์",
+        "mini",
+        "regular",
+        "whole cake",
+        "set",
+        "ปอนด์",
+        "กี่คน"
+      ],
+      "required_slots": [],
+      "default_response": "หลายเมนูมีหลายขนาดค่ะ 🌷 Mini เหมาะกับ 1 คน, Regular เหมาะกับ 1-2 คน, Set เหมาะกับแชร์หรือซื้อกลับบ้าน และ Whole Cake เหมาะกับวันเกิดหรือโอกาสพิเศษประมาณ 4-6 คนค่ะ",
+      "response_templates": [
+        "หลายเมนูมีหลายขนาดค่ะ 🌷 Mini เหมาะกับ 1 คน, Regular เหมาะกับ 1-2 คน, Set เหมาะกับแชร์หรือซื้อกลับบ้าน และ Whole Cake เหมาะกับวันเกิดหรือโอกาสพิเศษประมาณ 4-6 คนค่ะ"
+      ],
+      "follow_up_prompts": [
+        "ลูกค้าต้องการทานประมาณกี่คน หรือใช้สำหรับโอกาสอะไรคะ"
+      ],
+      "related_kb": [
+        "menu_catalog.items.sizes"
+      ],
+      "handoff": {
+        "required": false,
+        "when": [],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    },
+    "availability": {
+      "group": "menu_price_promotion",
+      "display_name": "สอบถามสินค้ายังมีไหม",
+      "description": "ถามว่ายังมีไหม หมดไหม พร้อมขายไหม จองสินค้าได้ไหม",
+      "priority": 50,
+      "risk_level": "medium",
+      "auto_reply_allowed": true,
+      "requires_human_default": true,
+      "examples": [
+        "เมนูนี้ยังมีไหม",
+        "หมดหรือยัง",
+        "วันนี้มี Lavender Cheesecake ไหม",
+        "สั่งตอนนี้ทันไหม"
+      ],
+      "keywords": [
+        "ยังมี",
+        "หมด",
+        "พร้อมขาย",
+        "วันนี้มี",
+        "จอง",
+        "ทันไหม",
+        "stock"
+      ],
+      "required_slots": [
+        "menu_name"
+      ],
+      "default_response": "บางเมนูมีจำนวนจำกัดต่อวันค่ะ 🌷 ลูกค้าบอกชื่อเมนูและเวลาที่สะดวกเข้ามาได้เลยนะคะ แอดมินจะช่วยเช็กความพร้อมให้ค่ะ",
+      "response_templates": [
+        "บางเมนูมีจำนวนจำกัดต่อวันค่ะ 🌷 ลูกค้าบอกชื่อเมนูและเวลาที่สะดวกเข้ามาได้เลยนะคะ แอดมินจะช่วยเช็กความพร้อมให้ค่ะ"
+      ],
+      "follow_up_prompts": [
+        "ขอชื่อเมนูและเวลาที่ต้องการรับสินค้าได้ไหมคะ"
+      ],
+      "related_kb": [
+        "menu_catalog.items.available"
+      ],
+      "handoff": {
+        "required": true,
+        "when": [
+          "ต้องตรวจสอบข้อมูลจริง",
+          "ลูกค้าต้องการดำเนินการต่อ"
+        ],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    },
+    "opening_hours": {
+      "group": "store_info",
+      "display_name": "เวลาเปิด-ปิดร้าน",
+      "description": "ถามเวลาเปิด ปิด วันหยุด เปิดวันนี้ไหม",
+      "priority": 50,
+      "risk_level": "low",
+      "auto_reply_allowed": true,
+      "requires_human_default": false,
+      "examples": [
+        "ร้านเปิดกี่โมง",
+        "ปิดกี่โมง",
+        "วันนี้เปิดไหม",
+        "เปิดทุกวันไหม"
+      ],
+      "keywords": [
+        "เปิด",
+        "ปิด",
+        "กี่โมง",
+        "เวลา",
+        "วันนี้",
+        "วันหยุด"
+      ],
+      "required_slots": [],
+      "default_response": "ร้าน Pudding Petals เปิดทุกวัน เวลา 10:00 - 20:00 น. ค่ะ 🌷 ถ้ามาช่วงวันหยุดหรือช่วงบ่าย แนะนำทักมาสอบถามโต๊ะก่อนนิดนึงนะคะ",
+      "response_templates": [
+        "ร้าน Pudding Petals เปิดทุกวัน เวลา 10:00 - 20:00 น. ค่ะ 🌷 ถ้ามาช่วงวันหยุดหรือช่วงบ่าย แนะนำทักมาสอบถามโต๊ะก่อนนิดนึงนะคะ"
+      ],
+      "follow_up_prompts": [],
+      "related_kb": [
+        "store_info.opening_hours"
+      ],
+      "handoff": {
+        "required": false,
+        "when": [],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    },
+    "location": {
+      "group": "store_info",
+      "display_name": "ที่ตั้ง / พิกัด / สาขา",
+      "description": "ถามร้านอยู่ไหน พิกัด แผนที่ สาขา วิธีเดินทาง",
+      "priority": 50,
+      "risk_level": "low",
+      "auto_reply_allowed": true,
+      "requires_human_default": false,
+      "examples": [
+        "ร้านอยู่ไหน",
+        "ขอพิกัด",
+        "ไปยังไง",
+        "มีสาขาไหม",
+        "ราชพฤกษ์ตรงไหน"
+      ],
+      "keywords": [
+        "อยู่ไหน",
+        "พิกัด",
+        "แผนที่",
+        "สาขา",
+        "ราชพฤกษ์",
+        "ไปยังไง"
+      ],
+      "required_slots": [],
+      "default_response": "ร้านตั้งอยู่โซนราชพฤกษ์ค่ะ 🌷 เป็นคาเฟ่สวนดอกไม้ที่มีทั้งโซน indoor และ outdoor ลูกค้าสามารถทักแชทเพื่อขอพิกัดร้านได้เลยนะคะ",
+      "response_templates": [
+        "ร้านตั้งอยู่โซนราชพฤกษ์ค่ะ 🌷 เป็นคาเฟ่สวนดอกไม้ที่มีทั้งโซน indoor และ outdoor ลูกค้าสามารถทักแชทเพื่อขอพิกัดร้านได้เลยนะคะ"
+      ],
+      "follow_up_prompts": [],
+      "related_kb": [
+        "store_info.location"
+      ],
+      "handoff": {
+        "required": false,
+        "when": [],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    },
+    "reservation": {
+      "group": "store_info",
+      "display_name": "จองโต๊ะ / Walk-in",
+      "description": "จองโต๊ะ เช็กโต๊ะว่าง Walk-in จำนวนคน โซนที่นั่ง",
+      "priority": 50,
+      "risk_level": "low",
+      "auto_reply_allowed": true,
+      "requires_human_default": true,
+      "examples": [
+        "จองโต๊ะได้ไหม",
+        "Walk-in ได้ไหม",
+        "โต๊ะว่างไหม",
+        "อยากนั่ง outdoor",
+        "จองวันเสาร์ได้ไหม"
+      ],
+      "keywords": [
+        "จองโต๊ะ",
+        "walk-in",
+        "วอล์คอิน",
+        "โต๊ะว่าง",
+        "จำนวนคน",
+        "indoor",
+        "outdoor"
+      ],
+      "required_slots": [
+        "date",
+        "time",
+        "party_size"
+      ],
+      "default_response": "สามารถ Walk-in ได้ค่ะ 🌷 แต่ถ้าเป็นช่วงวันหยุด ช่วงบ่าย หรือมากันหลายคน แนะนำจองโต๊ะไว้ก่อนนิดนึงนะคะ แอดมินจะช่วยดูโซนที่เหมาะให้ค่ะ",
+      "response_templates": [
+        "สามารถ Walk-in ได้ค่ะ 🌷 แต่ถ้าเป็นช่วงวันหยุด ช่วงบ่าย หรือมากันหลายคน แนะนำจองโต๊ะไว้ก่อนนิดนึงนะคะ แอดมินจะช่วยดูโซนที่เหมาะให้ค่ะ"
+      ],
+      "follow_up_prompts": [
+        "ขอวันที่ เวลา จำนวนคน และโซนที่อยากนั่งได้ไหมคะ"
+      ],
+      "related_kb": [
+        "store_info.reservation_policy"
+      ],
+      "handoff": {
+        "required": true,
+        "when": [
+          "ต้องตรวจสอบข้อมูลจริง",
+          "ลูกค้าต้องการดำเนินการต่อ"
+        ],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    },
+    "ambience_photo_spot": {
+      "group": "store_info",
+      "display_name": "บรรยากาศร้าน / มุมถ่ายรูป",
+      "description": "ถามบรรยากาศร้าน สวนดอกไม้ มุมถ่ายรูป indoor outdoor",
+      "priority": 50,
+      "risk_level": "low",
+      "auto_reply_allowed": true,
+      "requires_human_default": false,
+      "examples": [
+        "ร้านสวยไหม",
+        "มีมุมถ่ายรูปไหม",
+        "บรรยากาศเป็นยังไง",
+        "มีสวนดอกไม้จริงไหม"
+      ],
+      "keywords": [
+        "บรรยากาศ",
+        "ถ่ายรูป",
+        "มุม",
+        "สวนดอกไม้",
+        "สวย",
+        "วิว",
+        "indoor",
+        "outdoor"
+      ],
+      "required_slots": [],
+      "default_response": "ร้านของเราตกแต่งเป็นคาเฟ่ขนมหวานท่ามกลางสวนดอกไม้ค่ะ 🌸 มีทั้งโซน indoor ที่มองเห็นวิวสวน และโซน outdoor ที่มีมุมดอกไม้หลายมุม เหมาะกับถ่ายรูปมากค่ะ",
+      "response_templates": [
+        "ร้านของเราตกแต่งเป็นคาเฟ่ขนมหวานท่ามกลางสวนดอกไม้ค่ะ 🌸 มีทั้งโซน indoor ที่มองเห็นวิวสวน และโซน outdoor ที่มีมุมดอกไม้หลายมุม เหมาะกับถ่ายรูปมากค่ะ"
+      ],
+      "follow_up_prompts": [],
+      "related_kb": [
+        "store_info.cafe_zones",
+        "store_info.photo_spots"
+      ],
+      "handoff": {
+        "required": false,
+        "when": [],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    },
+    "facility": {
+      "group": "store_info",
+      "display_name": "สิ่งอำนวยความสะดวก",
+      "description": "ถามที่จอดรถ Wi-Fi ปลั๊ก pet friendly ห้องน้ำ",
+      "priority": 50,
+      "risk_level": "low",
+      "auto_reply_allowed": true,
+      "requires_human_default": false,
+      "examples": [
+        "มีที่จอดรถไหม",
+        "มี Wi-Fi ไหม",
+        "มีปลั๊กไหม",
+        "นั่งทำงานได้ไหม",
+        "พาน้องหมาไปได้ไหม"
+      ],
+      "keywords": [
+        "ที่จอดรถ",
+        "wifi",
+        "ไวไฟ",
+        "ปลั๊ก",
+        "นั่งทำงาน",
+        "pet",
+        "สัตว์เลี้ยง",
+        "ห้องน้ำ"
+      ],
+      "required_slots": [],
+      "default_response": "ที่ร้านมี Wi-Fi และมีปลั๊กบางจุดในโซน indoor ค่ะ 🌷 มีที่จอดรถจำนวนจำกัด และโซน outdoor สามารถพาสัตว์เลี้ยงมาได้ โดยรบกวนดูแลน้องให้อยู่ในสายจูงหรือกระเป๋านะคะ",
+      "response_templates": [
+        "ที่ร้านมี Wi-Fi และมีปลั๊กบางจุดในโซน indoor ค่ะ 🌷 มีที่จอดรถจำนวนจำกัด และโซน outdoor สามารถพาสัตว์เลี้ยงมาได้ โดยรบกวนดูแลน้องให้อยู่ในสายจูงหรือกระเป๋านะคะ"
+      ],
+      "follow_up_prompts": [],
+      "related_kb": [
+        "store_info.facilities",
+        "policies.pet_policy"
+      ],
+      "handoff": {
+        "required": false,
+        "when": [],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    },
+    "delivery_takeaway": {
+      "group": "ordering_service",
+      "display_name": "เดลิเวอรี่ / สั่งกลับบ้าน",
+      "description": "ถามเดลิเวอรี่ GrabFood LINE MAN สั่งกลับบ้าน รับเอง",
+      "priority": 50,
+      "risk_level": "low",
+      "auto_reply_allowed": true,
+      "requires_human_default": false,
+      "examples": [
+        "สั่งเดลิเวอรี่ได้ไหม",
+        "มี GrabFood ไหม",
+        "สั่ง LINE MAN ได้ไหม",
+        "รับเองที่ร้านได้ไหม"
+      ],
+      "keywords": [
+        "เดลิเวอรี่",
+        "delivery",
+        "grab",
+        "grabfood",
+        "line man",
+        "lineman",
+        "สั่งกลับบ้าน",
+        "รับเอง"
+      ],
+      "required_slots": [],
+      "default_response": "ลูกค้าสามารถสั่งขนมและเครื่องดื่มผ่าน GrabFood และ LINE MAN ได้ค่ะ 🌷 หรือสั่งกลับบ้าน/รับเองที่ร้านก็ได้เช่นกัน ทางร้านจะแพ็กให้อย่างระมัดระวังทุกออเดอร์ค่ะ",
+      "response_templates": [
+        "ลูกค้าสามารถสั่งขนมและเครื่องดื่มผ่าน GrabFood และ LINE MAN ได้ค่ะ 🌷 หรือสั่งกลับบ้าน/รับเองที่ร้านก็ได้เช่นกัน ทางร้านจะแพ็กให้อย่างระมัดระวังทุกออเดอร์ค่ะ"
+      ],
+      "follow_up_prompts": [],
+      "related_kb": [
+        "delivery_info",
+        "packaging_options"
+      ],
+      "handoff": {
+        "required": false,
+        "when": [],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    },
+    "payment": {
+      "group": "ordering_service",
+      "display_name": "การชำระเงิน",
+      "description": "ถามช่องทางจ่ายเงิน โอน QR เงินสด บัตร แพลตฟอร์มเดลิเวอรี่",
+      "priority": 50,
+      "risk_level": "low",
+      "auto_reply_allowed": true,
+      "requires_human_default": false,
+      "examples": [
+        "จ่ายเงินยังไง",
+        "รับโอนไหม",
+        "มี QR ไหม",
+        "จ่ายเงินสดได้ไหม",
+        "มัดจำไหม"
+      ],
+      "keywords": [
+        "จ่าย",
+        "ชำระ",
+        "โอน",
+        "QR",
+        "เงินสด",
+        "บัตร",
+        "พร้อมเพย์",
+        "มัดจำ"
+      ],
+      "required_slots": [],
+      "default_response": "ที่ร้านรองรับเงินสด โอน/สแกน QR และการชำระผ่านแพลตฟอร์มเดลิเวอรี่ค่ะ 🌷 สำหรับเค้กสั่งทำหรือออเดอร์พิเศษ อาจมีการมัดจำตามเงื่อนไขร้านนะคะ",
+      "response_templates": [
+        "ที่ร้านรองรับเงินสด โอน/สแกน QR และการชำระผ่านแพลตฟอร์มเดลิเวอรี่ค่ะ 🌷 สำหรับเค้กสั่งทำหรือออเดอร์พิเศษ อาจมีการมัดจำตามเงื่อนไขร้านนะคะ"
+      ],
+      "follow_up_prompts": [],
+      "related_kb": [
+        "policies.payment_policy"
+      ],
+      "handoff": {
+        "required": false,
+        "when": [],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    },
+    "order_status": {
+      "group": "ordering_service",
+      "display_name": "ติดตามสถานะออเดอร์",
+      "description": "ตามออเดอร์ ส่งหรือยัง เตรียมเสร็จหรือยัง สถานะไรเดอร์",
+      "priority": 50,
+      "risk_level": "medium",
+      "auto_reply_allowed": true,
+      "requires_human_default": true,
+      "examples": [
+        "ตามออเดอร์ค่ะ",
+        "ของส่งหรือยัง",
+        "ไรเดอร์มาหรือยัง",
+        "ออเดอร์ถึงไหนแล้ว",
+        "ยังไม่ได้ของ"
+      ],
+      "keywords": [
+        "ตามออเดอร์",
+        "ส่งหรือยัง",
+        "ไรเดอร์",
+        "สถานะ",
+        "รอนาน",
+        "ยังไม่ได้",
+        "เลขออเดอร์"
+      ],
+      "required_slots": [
+        "order_id",
+        "platform"
+      ],
+      "default_response": "แอดมินช่วยตรวจสอบให้ได้นะคะ 🌷 รบกวนลูกค้าส่งเลขออเดอร์ ช่องทางที่สั่ง และชื่อเมนูเข้ามาได้เลยค่ะ หากเป็นสถานะไรเดอร์ในแอป แนะนำตรวจสอบผ่านแพลตฟอร์มที่สั่งโดยตรงควบคู่กันนะคะ",
+      "response_templates": [
+        "แอดมินช่วยตรวจสอบให้ได้นะคะ 🌷 รบกวนลูกค้าส่งเลขออเดอร์ ช่องทางที่สั่ง และชื่อเมนูเข้ามาได้เลยค่ะ หากเป็นสถานะไรเดอร์ในแอป แนะนำตรวจสอบผ่านแพลตฟอร์มที่สั่งโดยตรงควบคู่กันนะคะ"
+      ],
+      "follow_up_prompts": [
+        "ขอเลขออเดอร์และช่องทางที่สั่ง เช่น หน้าร้าน GrabFood หรือ LINE MAN ได้ไหมคะ"
+      ],
+      "related_kb": [
+        "delivery_info.tracking_policy"
+      ],
+      "handoff": {
+        "required": true,
+        "when": [
+          "ต้องตรวจสอบข้อมูลจริง",
+          "ลูกค้าต้องการดำเนินการต่อ"
+        ],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    },
+    "custom_cake": {
+      "group": "special_occasion",
+      "display_name": "เค้กวันเกิด / เค้กสั่งทำ",
+      "description": "ถามเค้กวันเกิด เค้กสั่งทำ เขียนหน้าเค้ก เทียน ขนาด วันรับสินค้า",
+      "priority": 50,
+      "risk_level": "low",
+      "auto_reply_allowed": true,
+      "requires_human_default": true,
+      "examples": [
+        "มีเค้กวันเกิดไหม",
+        "สั่งทำเค้กได้ไหม",
+        "เขียนหน้าเค้กได้ไหม",
+        "สั่งล่วงหน้ากี่วัน"
+      ],
+      "keywords": [
+        "เค้กวันเกิด",
+        "สั่งทำ",
+        "custom",
+        "เขียนหน้าเค้ก",
+        "เทียน",
+        "ปอนด์",
+        "whole cake"
+      ],
+      "required_slots": [
+        "date",
+        "pickup_time",
+        "cake_flavor",
+        "cake_size"
+      ],
+      "default_response": "ทางร้านมีบริการเค้กสำหรับวันเกิดและโอกาสพิเศษค่ะ 🌷 สามารถเลือกขนาด รสชาติ และสอบถามการเขียนข้อความหน้าเค้กได้ โดยแนะนำสั่งล่วงหน้าอย่างน้อย 2-3 วันนะคะ",
+      "response_templates": [
+        "ทางร้านมีบริการเค้กสำหรับวันเกิดและโอกาสพิเศษค่ะ 🌷 สามารถเลือกขนาด รสชาติ และสอบถามการเขียนข้อความหน้าเค้กได้ โดยแนะนำสั่งล่วงหน้าอย่างน้อย 2-3 วันนะคะ"
+      ],
+      "follow_up_prompts": [
+        "ขอวันที่รับสินค้า ขนาดเค้ก รสชาติที่สนใจ และข้อความหน้าเค้กได้ไหมคะ"
+      ],
+      "related_kb": [
+        "menu_catalog",
+        "policies.whole_cake_policy"
+      ],
+      "handoff": {
+        "required": true,
+        "when": [
+          "ต้องตรวจสอบข้อมูลจริง",
+          "ลูกค้าต้องการดำเนินการต่อ"
+        ],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    },
+    "special_occasion": {
+      "group": "special_occasion",
+      "display_name": "โอกาสพิเศษ / ของขวัญ",
+      "description": "วันเกิด วันครบรอบ ของขวัญ ของฝาก งานเลี้ยง",
+      "priority": 50,
+      "risk_level": "low",
+      "auto_reply_allowed": true,
+      "requires_human_default": false,
+      "examples": [
+        "ซื้อเป็นของขวัญแนะนำอะไร",
+        "วันเกิดแฟนควรซื้ออะไรดี",
+        "วันครบรอบมีเมนูไหม",
+        "ของฝากผู้ใหญ่"
+      ],
+      "keywords": [
+        "ของขวัญ",
+        "ของฝาก",
+        "วันเกิด",
+        "วันครบรอบ",
+        "เซอร์ไพรส์",
+        "งานเลี้ยง"
+      ],
+      "required_slots": [],
+      "default_response": "ถ้าเป็นโอกาสพิเศษ แอดมินแนะนำ Rose Vanilla Petal Cake, Strawberry Garden Shortcake แบบ Whole Cake หรือ Almond Flower Madeleine Box of 6 ค่ะ 🌷 สามารถเพิ่มแพ็กเกจของขวัญหรือข้อความสั้น ๆ ได้ตามเงื่อนไขร้านค่ะ",
+      "response_templates": [
+        "ถ้าเป็นโอกาสพิเศษ แอดมินแนะนำ Rose Vanilla Petal Cake, Strawberry Garden Shortcake แบบ Whole Cake หรือ Almond Flower Madeleine Box of 6 ค่ะ 🌷 สามารถเพิ่มแพ็กเกจของขวัญหรือข้อความสั้น ๆ ได้ตามเงื่อนไขร้านค่ะ"
+      ],
+      "follow_up_prompts": [
+        "ใช้สำหรับโอกาสอะไร และประมาณกี่คนทานคะ"
+      ],
+      "related_kb": [
+        "recommendation_rules",
+        "packaging_options"
+      ],
+      "handoff": {
+        "required": false,
+        "when": [],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    },
+    "packaging": {
+      "group": "special_occasion",
+      "display_name": "บรรจุภัณฑ์ / แพ็กของขวัญ",
+      "description": "ถามกล่อง ถุง แพ็กของขวัญ แพ็กกลับบ้าน",
+      "priority": 50,
+      "risk_level": "low",
+      "auto_reply_allowed": true,
+      "requires_human_default": false,
+      "examples": [
+        "มีกล่องไหม",
+        "แพ็กกลับบ้านได้ไหม",
+        "มีถุงให้ไหม",
+        "แพ็กของขวัญได้ไหม"
+      ],
+      "keywords": [
+        "กล่อง",
+        "ถุง",
+        "แพ็ก",
+        "แพ็ค",
+        "ของขวัญ",
+        "กลับบ้าน",
+        "การ์ด"
+      ],
+      "required_slots": [],
+      "default_response": "ทางร้านมีแพ็กกลับบ้านให้ค่ะ 🌷 สำหรับเค้กและขนมจะมีกล่องตามขนาดสินค้า และสามารถสอบถามแพ็กของขวัญหรือการ์ดข้อความเพิ่มเติมได้ตามเงื่อนไขร้านนะคะ",
+      "response_templates": [
+        "ทางร้านมีแพ็กกลับบ้านให้ค่ะ 🌷 สำหรับเค้กและขนมจะมีกล่องตามขนาดสินค้า และสามารถสอบถามแพ็กของขวัญหรือการ์ดข้อความเพิ่มเติมได้ตามเงื่อนไขร้านนะคะ"
+      ],
+      "follow_up_prompts": [
+        "ต้องการแพ็กสำหรับทานกลับบ้านหรือเป็นของขวัญคะ"
+      ],
+      "related_kb": [
+        "packaging_options"
+      ],
+      "handoff": {
+        "required": false,
+        "when": [],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    },
+    "sweetness_adjustment": {
+      "group": "ingredients_dietary",
+      "display_name": "ปรับความหวาน",
+      "description": "ถามหวานน้อย ไม่หวาน เลือกความหวาน",
+      "priority": 50,
+      "risk_level": "low",
+      "auto_reply_allowed": true,
+      "requires_human_default": false,
+      "examples": [
+        "หวานน้อยได้ไหม",
+        "ไม่หวานได้ไหม",
+        "เลือกความหวานได้ไหม",
+        "เมนูไหนไม่หวาน"
+      ],
+      "keywords": [
+        "หวานน้อย",
+        "ไม่หวาน",
+        "ระดับความหวาน",
+        "เลือกหวาน",
+        "25%",
+        "50%",
+        "low sugar"
+      ],
+      "required_slots": [],
+      "default_response": "เครื่องดื่มส่วนใหญ่สามารถเลือกระดับความหวานได้ค่ะ 🌷 ส่วนขนมจะเป็นสูตรของร้าน แนะนำเมนูหวานน้อยอย่าง Flower Milk Pudding, Honey Daisy Chiffon หรือ Matcha Garden Roll ค่ะ",
+      "response_templates": [
+        "เครื่องดื่มส่วนใหญ่สามารถเลือกระดับความหวานได้ค่ะ 🌷 ส่วนขนมจะเป็นสูตรของร้าน แนะนำเมนูหวานน้อยอย่าง Flower Milk Pudding, Honey Daisy Chiffon หรือ Matcha Garden Roll ค่ะ"
+      ],
+      "follow_up_prompts": [
+        "สนใจปรับความหวานของเครื่องดื่ม หรืออยากให้แนะนำขนมหวานน้อยคะ"
+      ],
+      "related_kb": [
+        "menu_catalog.items.sweetness",
+        "policies.sweetness_policy"
+      ],
+      "handoff": {
+        "required": false,
+        "when": [],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    },
+    "allergy": {
+      "group": "ingredients_dietary",
+      "display_name": "แพ้อาหาร",
+      "description": "แพ้นม ไข่ ถั่ว กลูเตน แลคโตส หรือแพ้รุนแรง",
+      "priority": 50,
+      "risk_level": "high",
+      "auto_reply_allowed": false,
+      "requires_human_default": true,
+      "examples": [
+        "แพ้นมกินอะไรได้",
+        "มีถั่วไหม",
+        "แพ้ไข่ค่ะ",
+        "แพ้กลูเตน",
+        "แพ้อัลมอนด์"
+      ],
+      "keywords": [
+        "แพ้",
+        "allergy",
+        "นม",
+        "ไข่",
+        "ถั่ว",
+        "อัลมอนด์",
+        "กลูเตน",
+        "lactose",
+        "แลคโตส"
+      ],
+      "required_slots": [
+        "allergy_items"
+      ],
+      "default_response": "หากลูกค้ามีอาการแพ้อาหาร รบกวนแจ้งวัตถุดิบที่แพ้ให้แอดมินทราบก่อนสั่งนะคะ 🌷 หลายเมนูมีนม ไข่ หรือกลูเตน และบางเมนูมีถั่ว/อัลมอนด์ ทางร้านจะช่วยตรวจสอบเมนูที่เหมาะให้ค่ะ",
+      "response_templates": [
+        "หากลูกค้ามีอาการแพ้อาหาร รบกวนแจ้งวัตถุดิบที่แพ้ให้แอดมินทราบก่อนสั่งนะคะ 🌷 หลายเมนูมีนม ไข่ หรือกลูเตน และบางเมนูมีถั่ว/อัลมอนด์ ทางร้านจะช่วยตรวจสอบเมนูที่เหมาะให้ค่ะ"
+      ],
+      "follow_up_prompts": [
+        "ลูกค้าแพ้วัตถุดิบอะไรบ้าง และแพ้รุนแรงระดับไหนคะ"
+      ],
+      "related_kb": [
+        "menu_catalog.allergy_index",
+        "policies.allergy_policy"
+      ],
+      "handoff": {
+        "required": true,
+        "when": [
+          "ต้องตรวจสอบข้อมูลจริง",
+          "ลูกค้าต้องการดำเนินการต่อ"
+        ],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    },
+    "ingredients": {
+      "group": "ingredients_dietary",
+      "display_name": "ส่วนผสม / วัตถุดิบ",
+      "description": "ถามส่วนผสม มีนม ไข่ ถั่ว คาเฟอีน กลูเตนไหม",
+      "priority": 50,
+      "risk_level": "low",
+      "auto_reply_allowed": true,
+      "requires_human_default": false,
+      "examples": [
+        "เมนูนี้มีนมไหม",
+        "มีไข่ไหม",
+        "มีถั่วไหม",
+        "มีคาเฟอีนไหม",
+        "ใช้วัตถุดิบอะไร"
+      ],
+      "keywords": [
+        "ส่วนผสม",
+        "วัตถุดิบ",
+        "มีนม",
+        "มีไข่",
+        "มีถั่ว",
+        "กลูเตน",
+        "คาเฟอีน"
+      ],
+      "required_slots": [],
+      "default_response": "แต่ละเมนูมีส่วนผสมต่างกันค่ะ 🌷 โดยเค้กส่วนใหญ่มีนม ไข่ และกลูเตน ส่วนเครื่องดื่มบางเมนูมีนมและคาเฟอีน หากลูกค้าสนใจเมนูไหนเป็นพิเศษ แจ้งชื่อเมนูได้เลยค่ะ แอดมินช่วยดูส่วนผสมให้ค่ะ",
+      "response_templates": [
+        "แต่ละเมนูมีส่วนผสมต่างกันค่ะ 🌷 โดยเค้กส่วนใหญ่มีนม ไข่ และกลูเตน ส่วนเครื่องดื่มบางเมนูมีนมและคาเฟอีน หากลูกค้าสนใจเมนูไหนเป็นพิเศษ แจ้งชื่อเมนูได้เลยค่ะ แอดมินช่วยดูส่วนผสมให้ค่ะ"
+      ],
+      "follow_up_prompts": [
+        "ต้องการตรวจสอบส่วนผสมของเมนูไหนคะ"
+      ],
+      "related_kb": [
+        "menu_catalog.items.allergens"
+      ],
+      "handoff": {
+        "required": false,
+        "when": [],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    },
+    "dietary_option": {
+      "group": "ingredients_dietary",
+      "display_name": "ข้อจำกัดอาหาร / dietary option",
+      "description": "ถาม vegan vegetarian halal keto low sugar healthy",
+      "priority": 50,
+      "risk_level": "medium",
+      "auto_reply_allowed": true,
+      "requires_human_default": true,
+      "examples": [
+        "มี vegan ไหม",
+        "มี vegetarian ไหม",
+        "มี halal ไหม",
+        "มี keto ไหม",
+        "มี low sugar ไหม"
+      ],
+      "keywords": [
+        "vegan",
+        "vegetarian",
+        "halal",
+        "keto",
+        "low sugar",
+        "healthy",
+        "ไม่มีนม",
+        "ไม่มีคาเฟอีน"
+      ],
+      "required_slots": [],
+      "default_response": "ตอนนี้เมนูของร้านส่วนใหญ่เป็นขนมและเครื่องดื่มสูตรปกติค่ะ 🌷 หากต้องการหวานน้อย แนะนำกลุ่ม Flower Milk Pudding, Honey Daisy Chiffon หรือเครื่องดื่มที่ปรับหวานได้ ส่วน vegan/halal/keto แนะนำให้แอดมินช่วยตรวจสอบเป็นรายเมนูก่อนนะคะ",
+      "response_templates": [
+        "ตอนนี้เมนูของร้านส่วนใหญ่เป็นขนมและเครื่องดื่มสูตรปกติค่ะ 🌷 หากต้องการหวานน้อย แนะนำกลุ่ม Flower Milk Pudding, Honey Daisy Chiffon หรือเครื่องดื่มที่ปรับหวานได้ ส่วน vegan/halal/keto แนะนำให้แอดมินช่วยตรวจสอบเป็นรายเมนูก่อนนะคะ"
+      ],
+      "follow_up_prompts": [
+        "ลูกค้ามีข้อจำกัดอาหารแบบไหนคะ เช่น vegan, halal, low sugar หรือไม่ดื่มนม"
+      ],
+      "related_kb": [
+        "menu_catalog",
+        "policies.dietary_policy"
+      ],
+      "handoff": {
+        "required": true,
+        "when": [
+          "ต้องตรวจสอบข้อมูลจริง",
+          "ลูกค้าต้องการดำเนินการต่อ"
+        ],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    },
+    "compliment": {
+      "group": "emotion_review",
+      "display_name": "คำชม / รีวิวเชิงบวก",
+      "description": "ลูกค้าชมรสชาติ ร้านน่ารัก บริการดี บรรยากาศดี",
+      "priority": 50,
+      "risk_level": "low",
+      "auto_reply_allowed": true,
+      "requires_human_default": false,
+      "examples": [
+        "เค้กอร่อยมาก",
+        "ร้านน่ารักมาก",
+        "พนักงานบริการดี",
+        "ประทับใจมากค่ะ"
+      ],
+      "keywords": [
+        "อร่อย",
+        "น่ารัก",
+        "ประทับใจ",
+        "บริการดี",
+        "บรรยากาศดี",
+        "สวย",
+        "ชอบ"
+      ],
+      "required_slots": [],
+      "default_response": "ขอบคุณมาก ๆ เลยนะคะ 🌷 ดีใจมากที่ลูกค้าชอบค่ะ คำชมของลูกค้าเป็นเหมือนแสงแดดอุ่น ๆ ให้สวนขนมของ Pudding Petals เลยค่ะ",
+      "response_templates": [
+        "ขอบคุณมาก ๆ เลยนะคะ 🌷 ดีใจมากที่ลูกค้าชอบค่ะ คำชมของลูกค้าเป็นเหมือนแสงแดดอุ่น ๆ ให้สวนขนมของ Pudding Petals เลยค่ะ"
+      ],
+      "follow_up_prompts": [],
+      "related_kb": [],
+      "handoff": {
+        "required": false,
+        "when": [],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    },
+    "complaint_product": {
+      "group": "emotion_review",
+      "display_name": "ร้องเรียนสินค้า",
+      "description": "รสชาติไม่ดี ของเสีย ได้ของผิด สินค้าไม่ครบ ขนมเสียหาย",
+      "priority": 50,
+      "risk_level": "medium",
+      "auto_reply_allowed": true,
+      "requires_human_default": true,
+      "examples": [
+        "เค้กไม่สด",
+        "ได้ของผิด",
+        "ของไม่ครบ",
+        "เครื่องดื่มหก",
+        "เค้กเละ"
+      ],
+      "keywords": [
+        "ไม่สด",
+        "ของผิด",
+        "ของไม่ครบ",
+        "เสียหาย",
+        "เละ",
+        "หก",
+        "รสชาติแปลก",
+        "ไม่ตรงปก"
+      ],
+      "required_slots": [
+        "order_id",
+        "photo",
+        "problem_detail"
+      ],
+      "default_response": "ต้องขออภัยจริง ๆ นะคะที่สินค้าไม่เป็นไปตามที่ลูกค้าคาดหวัง 🌷 รบกวนส่งรูปสินค้า เลขออเดอร์ ช่องทางที่สั่ง และรายละเอียดปัญหาให้แอดมินตรวจสอบได้เลยค่ะ ทางร้านจะรีบดูแลให้ดีที่สุดค่ะ",
+      "response_templates": [
+        "ต้องขออภัยจริง ๆ นะคะที่สินค้าไม่เป็นไปตามที่ลูกค้าคาดหวัง 🌷 รบกวนส่งรูปสินค้า เลขออเดอร์ ช่องทางที่สั่ง และรายละเอียดปัญหาให้แอดมินตรวจสอบได้เลยค่ะ ทางร้านจะรีบดูแลให้ดีที่สุดค่ะ"
+      ],
+      "follow_up_prompts": [],
+      "related_kb": [
+        "policies.refund_return_policy"
+      ],
+      "handoff": {
+        "required": true,
+        "when": [
+          "ต้องตรวจสอบข้อมูลจริง",
+          "ลูกค้าต้องการดำเนินการต่อ"
+        ],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    },
+    "complaint_service": {
+      "group": "emotion_review",
+      "display_name": "ร้องเรียนบริการ",
+      "description": "พนักงานบริการไม่ดี รอนาน ตอบช้า การจัดการไม่ดี",
+      "priority": 50,
+      "risk_level": "medium",
+      "auto_reply_allowed": true,
+      "requires_human_default": true,
+      "examples": [
+        "บริการแย่มาก",
+        "รอนานมาก",
+        "ตอบช้ามาก",
+        "ไม่มีใครดูแล",
+        "เสียความรู้สึก"
+      ],
+      "keywords": [
+        "บริการแย่",
+        "รอนาน",
+        "ตอบช้า",
+        "ไม่ดูแล",
+        "เสียความรู้สึก",
+        "ไม่ประทับใจ"
+      ],
+      "required_slots": [
+        "incident_detail"
+      ],
+      "default_response": "ต้องขออภัยจริง ๆ นะคะที่ทำให้ลูกค้ารู้สึกไม่สบายใจ 🌷 แอดมินจะรับเรื่องนี้ไว้ตรวจสอบและปรับปรุงการบริการให้ดีที่สุด รบกวนเล่ารายละเอียดเพิ่มเติม เช่น วันเวลาและเหตุการณ์ที่เกิดขึ้นได้ไหมคะ",
+      "response_templates": [
+        "ต้องขออภัยจริง ๆ นะคะที่ทำให้ลูกค้ารู้สึกไม่สบายใจ 🌷 แอดมินจะรับเรื่องนี้ไว้ตรวจสอบและปรับปรุงการบริการให้ดีที่สุด รบกวนเล่ารายละเอียดเพิ่มเติม เช่น วันเวลาและเหตุการณ์ที่เกิดขึ้นได้ไหมคะ"
+      ],
+      "follow_up_prompts": [],
+      "related_kb": [
+        "policies.service_recovery_policy"
+      ],
+      "handoff": {
+        "required": true,
+        "when": [
+          "ต้องตรวจสอบข้อมูลจริง",
+          "ลูกค้าต้องการดำเนินการต่อ"
+        ],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    },
+    "complaint_staff": {
+      "group": "emotion_review",
+      "display_name": "ร้องเรียนพนักงานโดยตรง",
+      "description": "ร้องเรียนพนักงานเฉพาะเจาะจง พฤติกรรม คำพูด หรือการดูแล",
+      "priority": 50,
+      "risk_level": "high",
+      "auto_reply_allowed": false,
+      "requires_human_default": true,
+      "examples": [
+        "พนักงานพูดไม่ดี",
+        "พนักงานไม่สุภาพ",
+        "อยากร้องเรียนพนักงาน",
+        "ขอคุยกับผู้จัดการเรื่องพนักงาน"
+      ],
+      "keywords": [
+        "พนักงาน",
+        "ไม่สุภาพ",
+        "พูดไม่ดี",
+        "ร้องเรียนพนักงาน",
+        "ผู้จัดการ",
+        "คำพูด"
+      ],
+      "required_slots": [
+        "date",
+        "time",
+        "incident_detail"
+      ],
+      "default_response": "ต้องขออภัยอย่างจริงใจนะคะที่ลูกค้าได้รับประสบการณ์แบบนี้ 🌷 แอดมินจะรับเรื่องส่งต่อให้ผู้เกี่ยวข้องตรวจสอบโดยตรง รบกวนแจ้งวัน เวลา รายละเอียดเหตุการณ์ และลักษณะ/ชื่อพนักงานถ้าทราบได้เลยค่ะ",
+      "response_templates": [
+        "ต้องขออภัยอย่างจริงใจนะคะที่ลูกค้าได้รับประสบการณ์แบบนี้ 🌷 แอดมินจะรับเรื่องส่งต่อให้ผู้เกี่ยวข้องตรวจสอบโดยตรง รบกวนแจ้งวัน เวลา รายละเอียดเหตุการณ์ และลักษณะ/ชื่อพนักงานถ้าทราบได้เลยค่ะ"
+      ],
+      "follow_up_prompts": [],
+      "related_kb": [
+        "policies.service_recovery_policy"
+      ],
+      "handoff": {
+        "required": true,
+        "when": [
+          "ต้องตรวจสอบข้อมูลจริง",
+          "ลูกค้าต้องการดำเนินการต่อ"
+        ],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    },
+    "refund_return": {
+      "group": "emotion_review",
+      "display_name": "คืนเงิน / เปลี่ยนสินค้า / เคลม",
+      "description": "ขอคืนเงิน เปลี่ยนสินค้า เคลมสินค้า ยกเลิกออเดอร์",
+      "priority": 50,
+      "risk_level": "high",
+      "auto_reply_allowed": false,
+      "requires_human_default": true,
+      "examples": [
+        "ขอคืนเงิน",
+        "เปลี่ยนสินค้าได้ไหม",
+        "เคลมได้ไหม",
+        "ยกเลิกออเดอร์"
+      ],
+      "keywords": [
+        "คืนเงิน",
+        "เปลี่ยนสินค้า",
+        "เคลม",
+        "ยกเลิก",
+        "refund",
+        "return",
+        "cancel"
+      ],
+      "required_slots": [
+        "order_id",
+        "problem_detail"
+      ],
+      "default_response": "เรื่องคืนเงิน เปลี่ยนสินค้า หรือเคลมสินค้า แอดมินขอรับรายละเอียดไว้ตรวจสอบก่อนนะคะ 🌷 รบกวนส่งเลขออเดอร์ รูปสินค้า ช่องทางที่สั่ง และรายละเอียดปัญหาเข้ามาได้เลยค่ะ",
+      "response_templates": [
+        "เรื่องคืนเงิน เปลี่ยนสินค้า หรือเคลมสินค้า แอดมินขอรับรายละเอียดไว้ตรวจสอบก่อนนะคะ 🌷 รบกวนส่งเลขออเดอร์ รูปสินค้า ช่องทางที่สั่ง และรายละเอียดปัญหาเข้ามาได้เลยค่ะ"
+      ],
+      "follow_up_prompts": [],
+      "related_kb": [
+        "policies.refund_return_policy"
+      ],
+      "handoff": {
+        "required": true,
+        "when": [
+          "ต้องตรวจสอบข้อมูลจริง",
+          "ลูกค้าต้องการดำเนินการต่อ"
+        ],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    },
+    "high_risk_complaint": {
+      "group": "emotion_review",
+      "display_name": "ร้องเรียนความเสี่ยงสูง",
+      "description": "อาหารเป็นพิษ แพ้รุนแรง ฟ้อง แจ้งความ โกง หรือเคสที่เสี่ยงต่อความปลอดภัย/ชื่อเสียง",
+      "priority": 50,
+      "risk_level": "critical",
+      "auto_reply_allowed": false,
+      "requires_human_default": true,
+      "examples": [
+        "กินแล้วอาหารเป็นพิษ",
+        "แพ้รุนแรง",
+        "หายใจไม่ออก",
+        "จะฟ้อง",
+        "จะแจ้งความ",
+        "ร้านโกง",
+        "จะโพสต์ประจาน"
+      ],
+      "keywords": [
+        "อาหารเป็นพิษ",
+        "แพ้รุนแรง",
+        "หายใจไม่ออก",
+        "ฟ้อง",
+        "แจ้งความ",
+        "โกง",
+        "ประจาน",
+        "สคบ",
+        "ผู้จัดการ"
+      ],
+      "required_slots": [
+        "order_id",
+        "incident_detail",
+        "contact",
+        "time_of_incident"
+      ],
+      "default_response": "ต้องขออภัยอย่างจริงใจนะคะ แอดมินรับเรื่องนี้เป็นกรณีเร่งด่วนและจะส่งต่อให้ผู้รับผิดชอบตรวจสอบทันทีค่ะ 🌷 หากเกี่ยวข้องกับอาการแพ้หรือสุขภาพ รบกวนลูกค้าให้ความสำคัญกับการพบแพทย์ก่อนนะคะ และส่งรายละเอียดออเดอร์ รูปสินค้า เวลาเกิดเหตุ และช่องทางติดต่อกลับไว้ได้เลยค่ะ",
+      "response_templates": [
+        "ต้องขออภัยอย่างจริงใจนะคะ แอดมินรับเรื่องนี้เป็นกรณีเร่งด่วนและจะส่งต่อให้ผู้รับผิดชอบตรวจสอบทันทีค่ะ 🌷 หากเกี่ยวข้องกับอาการแพ้หรือสุขภาพ รบกวนลูกค้าให้ความสำคัญกับการพบแพทย์ก่อนนะคะ และส่งรายละเอียดออเดอร์ รูปสินค้า เวลาเกิดเหตุ และช่องทางติดต่อกลับไว้ได้เลยค่ะ"
+      ],
+      "follow_up_prompts": [],
+      "related_kb": [
+        "policies.high_risk_escalation_policy"
+      ],
+      "handoff": {
+        "required": true,
+        "when": [
+          "ต้องตรวจสอบข้อมูลจริง",
+          "ลูกค้าต้องการดำเนินการต่อ"
+        ],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    }
+  },
+  "extra_intents": {
+    "collaboration": {
+      "group": "business_extra",
+      "display_name": "รีวิว / ร่วมงาน / influencer",
+      "description": "ติดต่อรีวิว สปอนเซอร์ ถ่ายงาน หรือร่วมโปรโมต",
+      "priority": 50,
+      "risk_level": "low",
+      "auto_reply_allowed": true,
+      "requires_human_default": true,
+      "examples": [
+        "รับรีวิวไหม",
+        "ขอ collab",
+        "เป็น influencer อยากรีวิว",
+        "ติดต่อโปรโมทร้าน"
+      ],
+      "keywords": [
+        "รีวิว",
+        "collab",
+        "influencer",
+        "โปรโมท",
+        "สปอนเซอร์"
+      ],
+      "required_slots": [],
+      "default_response": "ยินดีมาก ๆ ค่ะ 🌷 สำหรับการติดต่อรีวิวหรือร่วมงานกับร้าน รบกวนแจ้งช่องทาง โปรไฟล์ จำนวนผู้ติดตาม และรูปแบบงานที่สนใจไว้ได้เลยนะคะ แอดมินจะส่งต่อให้ทีมพิจารณาค่ะ",
+      "response_templates": [
+        "ยินดีมาก ๆ ค่ะ 🌷 สำหรับการติดต่อรีวิวหรือร่วมงานกับร้าน รบกวนแจ้งช่องทาง โปรไฟล์ จำนวนผู้ติดตาม และรูปแบบงานที่สนใจไว้ได้เลยนะคะ แอดมินจะส่งต่อให้ทีมพิจารณาค่ะ"
+      ],
+      "follow_up_prompts": [],
+      "related_kb": [],
+      "handoff": {
+        "required": true,
+        "when": [
+          "ต้องตรวจสอบข้อมูลจริง",
+          "ลูกค้าต้องการดำเนินการต่อ"
+        ],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    },
+    "event_booking": {
+      "group": "business_extra",
+      "display_name": "จัดงาน / private event",
+      "description": "จองพื้นที่จัดวันเกิด งานเลี้ยงเล็ก ๆ เหมาร้าน หรือ private event",
+      "priority": 50,
+      "risk_level": "low",
+      "auto_reply_allowed": true,
+      "requires_human_default": true,
+      "examples": [
+        "จัดงานวันเกิดได้ไหม",
+        "เหมาร้านได้ไหม",
+        "จัด private event",
+        "จองร้านสำหรับ 20 คน"
+      ],
+      "keywords": [
+        "จัดงาน",
+        "private event",
+        "เหมาร้าน",
+        "ปาร์ตี้",
+        "แพ็กเกจ"
+      ],
+      "required_slots": [
+        "date",
+        "time",
+        "party_size",
+        "event_type"
+      ],
+      "default_response": "ทางร้านสามารถรองรับการจองสำหรับวันเกิด งานเล็ก ๆ หรือ private event ได้ค่ะ 🌷 รบกวนแจ้งวันที่ เวลา จำนวนคน และรูปแบบงานที่ต้องการ แอดมินจะช่วยส่งต่อเพื่อดูรายละเอียดให้นะคะ",
+      "response_templates": [
+        "ทางร้านสามารถรองรับการจองสำหรับวันเกิด งานเล็ก ๆ หรือ private event ได้ค่ะ 🌷 รบกวนแจ้งวันที่ เวลา จำนวนคน และรูปแบบงานที่ต้องการ แอดมินจะช่วยส่งต่อเพื่อดูรายละเอียดให้นะคะ"
+      ],
+      "follow_up_prompts": [],
+      "related_kb": [],
+      "handoff": {
+        "required": true,
+        "when": [
+          "ต้องตรวจสอบข้อมูลจริง",
+          "ลูกค้าต้องการดำเนินการต่อ"
+        ],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    },
+    "social_media": {
+      "group": "business_extra",
+      "display_name": "ช่องทางโซเชียล",
+      "description": "ถาม Facebook Instagram TikTok LINE OA",
+      "priority": 50,
+      "risk_level": "low",
+      "auto_reply_allowed": true,
+      "requires_human_default": false,
+      "examples": [
+        "มี IG ไหม",
+        "มี Facebook ไหม",
+        "ขอ TikTok ร้าน",
+        "ติดตามร้านที่ไหน"
+      ],
+      "keywords": [
+        "ig",
+        "instagram",
+        "facebook",
+        "tiktok",
+        "เพจ",
+        "line"
+      ],
+      "required_slots": [],
+      "default_response": "สามารถติดตามข่าวสาร เมนูใหม่ และภาพบรรยากาศสวนขนมของ Pudding Petals ผ่านช่องทางโซเชียลของร้านได้เลยค่ะ 🌷 หากต้องการ แอดมินส่งลิงก์ช่องทางให้ได้นะคะ",
+      "response_templates": [
+        "สามารถติดตามข่าวสาร เมนูใหม่ และภาพบรรยากาศสวนขนมของ Pudding Petals ผ่านช่องทางโซเชียลของร้านได้เลยค่ะ 🌷 หากต้องการ แอดมินส่งลิงก์ช่องทางให้ได้นะคะ"
+      ],
+      "follow_up_prompts": [],
+      "related_kb": [],
+      "handoff": {
+        "required": false,
+        "when": [],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    },
+    "queue_waiting": {
+      "group": "store_info",
+      "display_name": "คิว / ความหนาแน่นในร้าน",
+      "description": "ถามคนเยอะไหม รอคิวนานไหม ต้องรอไหม",
+      "priority": 50,
+      "risk_level": "low",
+      "auto_reply_allowed": true,
+      "requires_human_default": true,
+      "examples": [
+        "ตอนนี้คนเยอะไหม",
+        "ต้องรอคิวนานไหม",
+        "มีคิวไหม",
+        "ช่วงไหนคนน้อย"
+      ],
+      "keywords": [
+        "คนเยอะ",
+        "รอคิว",
+        "คิว",
+        "โต๊ะว่าง",
+        "คนน้อย"
+      ],
+      "required_slots": [],
+      "default_response": "ช่วงวันหยุดและช่วงบ่ายลูกค้าอาจค่อนข้างเยอะค่ะ 🌷 ถ้าต้องการเช็กโต๊ะว่างแบบปัจจุบัน แนะนำแจ้งเวลาที่จะเข้ามา เดี๋ยวแอดมินช่วยดูให้ค่ะ",
+      "response_templates": [
+        "ช่วงวันหยุดและช่วงบ่ายลูกค้าอาจค่อนข้างเยอะค่ะ 🌷 ถ้าต้องการเช็กโต๊ะว่างแบบปัจจุบัน แนะนำแจ้งเวลาที่จะเข้ามา เดี๋ยวแอดมินช่วยดูให้ค่ะ"
+      ],
+      "follow_up_prompts": [],
+      "related_kb": [],
+      "handoff": {
+        "required": true,
+        "when": [
+          "ต้องตรวจสอบข้อมูลจริง",
+          "ลูกค้าต้องการดำเนินการต่อ"
+        ],
+        "handoff_message": "แอดมินจะรับเรื่องไว้และช่วยดูแลต่อให้นะคะ 🌷"
+      }
+    }
+  },
+  "response_generation_rules": {
+    "global_rules": [
+      "ตอบเป็นภาษาไทยสุภาพ มีความอ่อนโยนตามบุคลิก Pudding Petals",
+      "ตอบให้ตรง intent ก่อน แล้วค่อยเสนอ follow-up ที่เกี่ยวข้อง",
+      "ข้อมูล real-time เช่น โต๊ะว่าง stock สถานะออเดอร์ ให้ขอข้อมูลจำเป็นและส่งต่อแอดมิน",
+      "กรณี allergy อาหารเป็นพิษ ฟ้อง แจ้งความ โกง หรือร้องเรียนรุนแรง ต้องส่งต่อมนุษย์ทันที",
+      "อย่าให้ AI รับปากคืนเงิน เปลี่ยนสินค้า หรือยืนยันอาการทางสุขภาพเอง"
+    ],
+    "fallback_response": "ได้เลยค่ะ แอดมินยินดีช่วยดูให้นะคะ 🌷 รบกวนบอกรายละเอียดเพิ่มเติมอีกนิดว่าอยากสอบถามเรื่องเมนู ราคา จองโต๊ะ เดลิเวอรี่ หรือออเดอร์คะ"
+  },
+  "risk_scoring_rules": {
+    "low": [
+      "greeting",
+      "thanks",
+      "menu_inquiry",
+      "opening_hours",
+      "location",
+      "compliment"
+    ],
+    "medium": [
+      "complaint_product",
+      "complaint_service",
+      "order_status",
+      "availability",
+      "dietary_option"
+    ],
+    "high": [
+      "allergy",
+      "complaint_staff",
+      "refund_return"
+    ],
+    "critical": [
+      "high_risk_complaint"
+    ],
+    "escalation_keywords": [
+      "อาหารเป็นพิษ",
+      "แพ้รุนแรง",
+      "หายใจไม่ออก",
+      "ฟ้อง",
+      "แจ้งความ",
+      "โกง",
+      "ประจาน",
+      "สคบ",
+      "ผู้จัดการ",
+      "เสียหายมาก"
+    ]
+  },
+  "legacy_source_snapshot": {
+    "source_keys": [
+      "STORE_INFO",
+      "DELIVERY_INFO",
+      "MENU_ITEMS",
+      "FAQ"
+    ],
+    "original_menu_count": 7,
+    "original_faq_keys": [
+      "greeting",
+      "menu_inquiry",
+      "price_inquiry",
+      "recommendation",
+      "size_option",
+      "sweetness_allergy",
+      "custom_cake",
+      "opening_hours",
+      "location",
+      "reservation",
+      "cafe_facilities",
+      "photo_spot",
+      "delivery_platform",
+      "delivery_issue",
+      "order_problem",
+      "refund_exchange",
+      "complaint",
+      "compliment",
+      "collaboration",
+      "event_booking",
+      "human_required",
+      "general_question",
+      "general"
+    ]
   }
 }
