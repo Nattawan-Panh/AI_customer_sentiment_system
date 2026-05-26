@@ -8,25 +8,38 @@ async function saveFeedback(cid,p){
 
 const ADMIN_API_KEY = 'pudding_petals_admin_secure_key';
 
-async function sendLineReply(cid, msg) {
-    const r = await fetch(`${API_BASE_URL}/admin/send-line-reply`, {
-        method: 'POST',
+async function sendLineReply(commentId, message) {
+    const response = await fetch(`${API_BASE_URL}/admin/send-line-reply`, {
+        method: "POST",
         headers: {
-            'Content-Type': 'application/json',
-            'X-Admin-Key': ADMIN_API_KEY
+            "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            comment_id: cid,
-            message: msg
+            comment_id: commentId,
+            message: message
         })
     });
 
-    if (!r.ok) {
-        const err = await r.text();
-        throw new Error(`Send failed: ${r.status} ${err}`);
+    const text = await response.text();
+    let data = {};
+
+    try {
+        data = text ? JSON.parse(text) : {};
+    } catch {
+        data = { raw: text };
     }
 
-    return r.json();
+    if (!response.ok) {
+        throw new Error(
+            data.detail ||
+            data.error ||
+            data.message ||
+            text ||
+            `HTTP ${response.status}`
+        );
+    }
+
+    return data;
 }
     
 onValue(ref(db,'comments'),
