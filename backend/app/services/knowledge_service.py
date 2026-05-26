@@ -1251,6 +1251,103 @@ def detect_menu_category(text: str) -> str:
 
     return ""
 
+def detect_menu_question_focus(text: str, intent_label: str = "") -> str:
+    text = _safe_str(text).lower()
+    intent_label = _safe_str(intent_label).lower()
+
+    if any(word in text for word in [
+        "ราคา", "กี่บาท", "เท่าไหร่", "เท่าไร", "บาท", "price"
+    ]) or intent_label == "price_inquiry":
+        return "price"
+
+    if any(word in text for word in [
+        "รสชาติ", "รส", "อร่อยไหม", "เป็นยังไง", "เป็นอย่างไร", "flavor", "taste"
+    ]):
+        return "taste"
+
+    if any(word in text for word in [
+        "หวาน", "ความหวาน", "หวานไหม", "หวานมากไหม", "ปรับหวาน", "sweet"
+    ]) or intent_label == "sweetness_adjustment":
+        return "sweetness"
+
+    if any(word in text for word in [
+        "ทานคู่", "กินคู่", "คู่กับ", "จับคู่", "pairing", "ทานกับอะไร", "กินกับอะไร"
+    ]):
+        return "pairing"
+
+    if any(word in text for word in [
+        "คาเฟอีน", "caffeine", "กาแฟไหม", "มีชาไหม"
+    ]):
+        return "caffeine"
+
+    if any(word in text for word in [
+        "แพ้", "allergen", "allergy", "นม", "ไข่", "กลูเตน", "ถั่ว", "อัลมอนด์"
+    ]) or intent_label in {"allergy", "ingredients"}:
+        return "allergen"
+
+    if any(word in text for word in [
+        "มีไหม", "ยังมี", "หมดไหม", "available", "พร้อมขาย"
+    ]) or intent_label == "availability":
+        return "availability"
+
+    return "detail"
+
+def format_menu_detail_by_focus(item: dict, text: str = "", intent_label: str = "") -> str:
+    if not isinstance(item, dict):
+        return ""
+
+    name = get_menu_name(item)
+    focus = detect_menu_question_focus(text, intent_label)
+
+    description = _safe_str(item.get("description"))
+    sweetness = _safe_str(item.get("sweetness") or item.get("sweetness_level"))
+    allergens = item.get("allergens", [])
+    pairing = item.get("pairing", [])
+    contains_caffeine = item.get("contains_caffeine")
+    availability_note = _safe_str(item.get("availability_note"))
+
+    if focus == "price":
+        return format_menu_price(item)
+
+    if focus == "taste":
+        if description:
+            return f"{name} {description}ค่ะ"
+        return f"{name} เป็นเมนูของทางร้านค่ะ"
+
+    if focus == "sweetness":
+        if sweetness:
+            return f"{name} ระดับความหวานคือ {sweetness}ค่ะ"
+        return f"{name} ยังไม่มีข้อมูลระดับความหวานระบุไว้ค่ะ"
+
+    if focus == "pairing":
+        if isinstance(pairing, list) and pairing:
+            return f"{name} แนะนำทานคู่กับ {', '.join(str(p) for p in pairing)} ค่ะ"
+        return f"{name} สามารถทานคู่กับเครื่องดื่มหรือขนมที่ลูกค้าชอบได้เลยค่ะ"
+
+    if focus == "caffeine":
+        if contains_caffeine is True:
+            return f"{name} มีคาเฟอีนค่ะ"
+        if contains_caffeine is False:
+            return f"{name} ไม่มีคาเฟอีนค่ะ"
+        if contains_caffeine:
+            return f"{name} มีคาเฟอีนระดับ {contains_caffeine} ค่ะ"
+        return f"{name} ยังไม่มีข้อมูลคาเฟอีนระบุไว้ค่ะ"
+
+    if focus == "allergen":
+        if isinstance(allergens, list) and allergens:
+            return f"{name} มีส่วนผสมที่อาจก่อให้เกิดอาการแพ้ ได้แก่ {', '.join(str(a) for a in allergens)} ค่ะ"
+        return f"{name} ไม่มีข้อมูลสารก่อภูมิแพ้ระบุไว้ค่ะ"
+
+    if focus == "availability":
+        if availability_note:
+            return f"{name} {availability_note}ค่ะ"
+        return f"{name} โดยปกติเป็นเมนูที่มีจำหน่ายค่ะ แนะนำเช็กกับแอดมินก่อนสั่งอีกครั้งนะคะ"
+
+    # default detail แบบสั้น ไม่ดึงทุก field มารวม
+    if description:
+        return f"{name} {description}ค่ะ"
+
+    return f"{name} เป็นเมนูของทางร้านค่ะ"
 
 def detect_recommendation_rule(text: str) -> str:
     text_lower = _safe_str(text).lower()
@@ -1855,6 +1952,47 @@ def retrieve_knowledge(intent_label: str = "general_question", text: str = "") -
     normalized_intent = normalize_intent_label(intent_label, text)
 
     faq_data = get_faq_answer(normalized_intent, text)
+    matched_menu = find_menu_in_text(text) if text else None
+
+    if matched_menu and normalized_intent in {
+        "menu_inquiry",
+        "general_question",
+        "service_question",
+        "recommendation",
+        "price_inquiry",
+        "size_option",
+        "availability",
+        "ingredients",
+        "sweetness_adjustment",
+        "allergy"
+    }:
+        answer = format_menu_detail_by_focus(
+            matched_menu,
+            text,
+            normalized_intent
+        )
+
+        return {
+            "title": "Menu Detail",
+            "content": answer,
+            "answer": answer,
+            "matched": True,
+            "intent": normalized_intent,
+            "label": normalized_intent,
+            "canonical_intent": normalized_intent,
+            "requires_human": normalized_intent in {"ingredients", "allergy"},
+            "handoff_note": (
+                "ส่งต่อแอดมินเพื่อตรวจสอบส่วนผสมหรือข้อมูลการแพ้อาหาร"
+                if normalized_intent in {"ingredients", "allergy"}
+                else None
+            ),
+            "keywords": faq_data.get("keywords", []),
+            "examples": faq_data.get("examples", []),
+            "category": "menu_detail",
+            "source": "menu_catalog_json",
+            "matched_menu": matched_menu,
+            "question_focus": detect_menu_question_focus(text, normalized_intent)
+        }
 
     # ถ้าเป็น general_question แต่มีข้อความ ให้ลองหา intent จาก keyword
     if normalized_intent == "general_question" and text:

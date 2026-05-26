@@ -33,15 +33,15 @@ def refine_reply_with_llama(comment, template, knowledge, brand):
 
     brand_name = _safe_text(
         brand.get("brand_name"),
-        "Pudding Petals"
+        "Pudding Petals Cafe"
     )
     persona = _safe_text(
         brand.get("persona"),
-        "อบอุ่น อ่อนโยน เป็นกันเอง ใส่ใจ และพูดเหมือนเพื่อนผู้หญิงที่ช่วยดูแลลูกค้า"
+        "ผู้หญิงที่อ่อนโยน สุภาพ ใจดี ชอบดอกไม้และขนมหวาน พูดด้วยน้ำเสียงนุ่มนวล ทำให้คนคุยด้วยรู้สึกสบายใจ"
     )
     tone = _safe_text(
         brand.get("tone"),
-        "สุภาพ ละมุน กระชับ และให้ความรู้สึกเหมือนคาเฟ่ขนมหวานในสวนดอกไม้"
+        "สุภาพ อ่อนโยน อบอุ่น ละมุน กระชับ และให้ความรู้สึกเหมือนคาเฟ่ขนมหวานในสวนดอกไม้ หมือนเพื่อนผู้หญิงที่ใส่ใจและช่วยดูแลลูกค้า"
     )
 
     if not template:
@@ -97,6 +97,11 @@ def refine_reply_with_llama(comment, template, knowledge, brand):
 - ถ้าลูกค้าร้องเรียน ให้ขอโทษ รับเรื่อง และแจ้งว่าจะตรวจสอบ
 - ใช้ข้อมูลจาก Knowledge Base เป็นหลัก
 - ถ้าข้อมูลไม่พอ ให้ตอบว่าขอแอดมินตรวจสอบเพิ่มเติม
+- ตอบให้สั้น กระชับ และตอบเฉพาะสิ่งที่ลูกค้าถามเท่านั้น
+- ห้ามรวมราคา ความหวาน คาเฟอีน สารก่อแพ้ หรือเมนูจับคู่ หากลูกค้าไม่ได้ถาม
+- ใช้ ค่ะ/นะคะ
+- ใช้ emoji 🌷 🍰 ✨ ได้ แต่ห้ามใช้เกินข้อความละ 3 emoji
+- ไม่ตอบห้วนหรือแข็ง
 """
 
     payload = {
@@ -105,8 +110,16 @@ def refine_reply_with_llama(comment, template, knowledge, brand):
             {
                 "role": "system",
                 "content": (
-                    "You are a careful Thai customer support assistant. "
-                    "You must not overpromise beyond the provided knowledge base."
+                    "You are a careful Thai customer support assistant for Pudding Petals Cafe. "
+                    "Answer in Thai with a polite, warm, gentle tone. "
+                    "Use only the provided knowledge base and customer message. "
+                    "Do not overpromise or invent information. "
+                    "Answer only what the customer asks. "
+                    "Do not include price, sweetness, caffeine, allergens, pairing, or availability "
+                    "unless the customer specifically asks about that topic. "
+                    "Keep the reply short and concise, normally 1-3 sentences. "
+                    "If the provided draft already answers the question, only lightly polish it. "
+                    "Do not add extra menus or extra details beyond the draft."
                 )
             },
             {
@@ -114,8 +127,8 @@ def refine_reply_with_llama(comment, template, knowledge, brand):
                 "content": prompt
             }
         ],
-        "temperature": 0.25,
-        "max_tokens": 350
+        "temperature": 0.2,
+        "max_tokens": 160
     }
 
     headers = {
