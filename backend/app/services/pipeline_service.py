@@ -116,8 +116,15 @@ async def process_line_message(event, mock=False):
             })
         )
 
-        template_result = select_template(intent["label"])
-        template = template_result["reply"]
+        template_result = select_template(
+            intent.get("label"),
+            knowledge_base=knowledge,
+            customer_text=clean,
+            sentiment_label=sentiment.get("label"),
+            risk_level=risk.get("level")
+        )
+
+        template = template_result.get("reply") or knowledge.get("answer") or knowledge.get("content")
         brand = get_brand_settings()
 
         llm_reason = None

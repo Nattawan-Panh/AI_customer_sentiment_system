@@ -205,33 +205,35 @@ def _candidate_knowledge_paths() -> List[Path]:
         paths.append(Path(env_path))
 
     paths.extend([
-        # path หลักที่แนะนำ
-        APP_DIR / "data" / KNOWLEDGE_PATH,
-        APP_DIR / "knowledge" / KNOWLEDGE_PATH,
-
-        # path เดิม / fallback
+        # path หลักของโปรเจกต์
         KNOWLEDGE_PATH,
-        BASE_DIR / "knowledge" / KNOWLEDGE_PATH,
-        BASE_DIR / "kb" / KNOWLEDGE_PATH,
-
-        # เผื่อตอนรันจาก root project
-        Path.cwd() / "app" / "data" / KNOWLEDGE_PATH,
-        Path.cwd() / "app" / "knowledge" / KNOWLEDGE_PATH,
-        Path.cwd() / "backend" / "app" / "data" / KNOWLEDGE_PATH,
-        Path.cwd() / "backend" / "app" / "knowledge" / KNOWLEDGE_PATH,
-        Path.cwd() / "data" / KNOWLEDGE_PATH,
-        Path.cwd() / "knowledge" / KNOWLEDGE_PATH,
-        Path.cwd() / KNOWLEDGE_PATH,
-
-        # fallback ถ้ายังมีไฟล์เก่า
-        APP_DIR / "data" / "sample_knowledge.json",
         BASE_DIR / "data" / "sample_knowledge.json",
-        Path.cwd() / "app" / "data" / "sample_knowledge.json",
+        APP_DIR / "data" / "sample_knowledge.json",
+
+        # เผื่อตอนรันจาก root project / backend
+        Path.cwd() / "data" / "sample_knowledge.json",
+        Path.cwd() / "backend" / "data" / "sample_knowledge.json",
         Path.cwd() / "backend" / "app" / "data" / "sample_knowledge.json",
+        Path.cwd() / "app" / "data" / "sample_knowledge.json",
+
+        # เผื่อใช้โฟลเดอร์ knowledge
+        BASE_DIR / "knowledge" / "sample_knowledge.json",
+        APP_DIR / "knowledge" / "sample_knowledge.json",
+        Path.cwd() / "knowledge" / "sample_knowledge.json",
+        Path.cwd() / "backend" / "knowledge" / "sample_knowledge.json",
     ])
 
-    return paths
+    # ลบ path ซ้ำ แต่ยังคงลำดับเดิม
+    unique_paths = []
+    seen = set()
 
+    for path in paths:
+        key = str(path)
+        if key not in seen:
+            unique_paths.append(path)
+            seen.add(key)
+
+    return unique_paths
 
 @lru_cache(maxsize=1)
 def load_knowledge_base() -> dict:
@@ -325,26 +327,178 @@ def _is_knowledge_item(value: Any) -> bool:
         or "content" in value
     )
 
+def extract_intent_answer(intent_data: dict) -> str:
+    """
+    ดึงคำตอบจาก intent ใน sample_knowledge.json
+    รองรับ schema เดิมของไฟล์:
+    - default_response
+    - response_templates
+    - answer/content เผื่ออนาคต
+    """
+
+    if not isinstance(intent_data, dict):
+        return ""
+
+    for key in ["answer", "content", "default_response"]:
+        value = intent_data.get(key)
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+
+    templates = intent_data.get("response_templates")
+    if isinstance(templates, list) and templates:
+        first_template = templates[0]
+        if isinstance(first_template, str) and first_template.strip():
+            return first_template.strip()
+
+    return ""
+
+def detect_menu_category(text: str) -> str:
+    text = str(text or "").lower()
+
+    if any(word in text for word in ["เครื่องดื่ม", "น้ำ", "ชา", "กาแฟ", "ลาเต้", "โซดา", "drink"]):
+        return "drink"
+
+    if any(word in text for word in ["เค้ก", "cake"]):
+        return "cake"
+
+    if any(word in text for word in ["ขนม", "ของหวาน", "dessert", "พุดดิ้ง", "ทาร์ต"]):
+        return "dessert"
+
+    if any(word in text for word in ["เบเกอรี่", "ครัวซองต์", "bakery"]):
+        return "bakery"
+
+    return ""
+
+def format_price_from_sizes(sizes) -> str:
+    if not isinstance(sizes, list):
+        return ""
+
+    prices = []
+
+    for size in sizes:
+        if not isinstance(size, dict):
+            continue
+
+        size_name = str(size.get("size") or "").strip()
+        price = size.get("price")
+
+        if size_name and price:
+            prices.append(f"{size_name} {price} บาท")
+        elif price:
+            prices.append(f"{price} บาท")
+
+    return ", ".join(prices)
+
+
+def format_menu_item(item: dict) -> str:
+    name = get_menu_name(item)
+    description = item.get("description") or ""
+    price_text = format_price_from_sizes(item.get("sizes"))
+
+    line = f"{name}"
+
+    if description:
+        line += f" - {description}"
+
+    if price_text:
+        line += f" ({price_text})"
+
+    return line
+
+def build_recommendation_answer(kb: dict, text: str) -> str:
+    menu_catalog = kb.get("menu_catalog", {})
+    items = menu_catalog.get("items", [])
+
+    if not isinstance(items, list):
+        return ""
+
+    category = detect_menu_category(text)
+
+    filtered_items = []
+
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+
+        if category and item.get("category") != category:
+            continue
+
+        tags = item.get("tags", [])
+        recommended_for = item.get("recommended_for", [])
+
+        is_recommended = (
+            "signature" in tags
+            or "signature_drink" in tags
+            or "best_seller" in tags
+            or "photo_friendly" in tags
+            or len(recommended_for) > 0
+        )
+
+        if is_recommended:
+            filtered_items.append(item)
+
+    if not filtered_items:
+        filtered_items = [
+            item for item in items
+            if isinstance(item, dict)
+            and (not category or item.get("category") == category)
+        ]
+
+    selected_items = filtered_items[:3]
+
+    if not selected_items:
+        return ""
+
+    if category == "drink":
+        intro = "เครื่องดื่มแนะนำของร้านมีหลายเมนูที่เข้ากับบรรยากาศสวนดอกไม้มาก ๆ ค่ะ 🌷"
+    elif category == "cake":
+        intro = "เค้กแนะนำของร้านมีหลายเมนูน่าลองค่ะ 🌷"
+    elif category == "dessert":
+        intro = "ขนมหวานแนะนำของร้านมีเมนูนุ่มละมุนหลายรายการค่ะ 🌷"
+    else:
+        intro = "เมนูแนะนำของร้านมีหลายเมนูที่ลูกค้าชอบค่ะ 🌷"
+
+    lines = [intro]
+
+    for item in selected_items:
+        lines.append(f"- {format_menu_item(item)}")
+
+    lines.append("ลูกค้าชอบแนวหวานน้อย ชา กาแฟ นม หรือโซดาสดชื่นเป็นพิเศษไหมคะ")
+
+    return "\n".join(lines)
 
 def _extract_answer(data: Dict[str, Any]) -> str:
     if not isinstance(data, dict):
         return ""
 
-    answer = (
-        data.get("answer")
-        or data.get("reply")
-        or data.get("response")
-        or data.get("template")
-        or data.get("message")
-        or data.get("content")
-        or ""
-    )
+    # รองรับ schema เดิม + schema ใหม่ของ sample_knowledge.json
+    for key in [
+        "answer",
+        "content",
+        "default_response",
+        "reply",
+        "response",
+        "template",
+        "message"
+    ]:
+        value = data.get(key)
 
-    if isinstance(answer, list):
-        answer = answer[0] if answer else ""
+        if isinstance(value, str) and value.strip():
+            return value.strip()
 
-    return _safe_str(answer)
+        if isinstance(value, list) and value:
+            first = value[0]
+            if isinstance(first, str) and first.strip():
+                return first.strip()
 
+    # sample_knowledge.json ใช้ response_templates เป็น list
+    templates = data.get("response_templates")
+    if isinstance(templates, list) and templates:
+        first_template = templates[0]
+        if isinstance(first_template, str) and first_template.strip():
+            return first_template.strip()
+
+    return ""
 
 def _extract_requires_human(data: Dict[str, Any]) -> bool:
     if not isinstance(data, dict):
@@ -353,19 +507,30 @@ def _extract_requires_human(data: Dict[str, Any]) -> bool:
     if "requires_human" in data:
         return bool(data.get("requires_human"))
 
+    if "requires_human_default" in data:
+        return bool(data.get("requires_human_default"))
+
     if "human_required" in data:
         return bool(data.get("human_required"))
 
-    return False
+    handoff = data.get("handoff")
+    if isinstance(handoff, dict):
+        return bool(handoff.get("required", False))
 
+    return False
 
 def _extract_handoff_note(data: Dict[str, Any]) -> Optional[str]:
     if not isinstance(data, dict):
         return None
 
+    handoff = data.get("handoff")
+    if isinstance(handoff, dict):
+        message = _safe_str(handoff.get("handoff_message"))
+        if message:
+            return message
+
     note = (
         data.get("handoff_note")
-        or data.get("handoff")
         or data.get("admin_note")
         or data.get("escalation_note")
     )
@@ -374,15 +539,19 @@ def _extract_handoff_note(data: Dict[str, Any]) -> Optional[str]:
 
     return note or None
 
-
 def _extract_category(data: Dict[str, Any], default: str = "general") -> str:
     if not isinstance(data, dict):
         return default
 
-    category = _safe_str(data.get("category"), default)
+    category = (
+        data.get("category")
+        or data.get("group")
+        or default
+    )
+
+    category = _safe_str(category, default)
 
     return category or default
-
 
 def _extract_keywords(data: Dict[str, Any]) -> List[str]:
     if not isinstance(data, dict):
@@ -642,6 +811,14 @@ def get_menu_items() -> list:
 
     kb = load_knowledge_base()
 
+    # schema จริงของ sample_knowledge.json
+    menu_catalog = kb.get("menu_catalog")
+    if isinstance(menu_catalog, dict):
+        items = menu_catalog.get("items")
+        if isinstance(items, list):
+            return items
+
+    # fallback เผื่อใช้ schema เก่า
     menu_items = _first_existing(
         kb,
         ["MENU_ITEMS", "menu_items", "menus", "MENU", "menu"],
@@ -649,7 +826,6 @@ def get_menu_items() -> list:
     )
 
     return menu_items if isinstance(menu_items, list) else []
-
 
 def get_policies() -> dict:
     kb = load_knowledge_base()
@@ -696,6 +872,18 @@ def get_intent_priority_list() -> list:
 # MENU FUNCTIONS
 # =========================================================
 
+def get_menu_name(item: dict) -> str:
+    if not isinstance(item, dict):
+        return "เมนู"
+
+    return (
+        item.get("name_th")
+        or item.get("name_en")
+        or item.get("name")
+        or item.get("id")
+        or "เมนู"
+    )
+
 def get_available_menu_items(category: str = None) -> list:
 
     menu_items = get_menu_items()
@@ -706,8 +894,8 @@ def get_available_menu_items(category: str = None) -> list:
         if not isinstance(item, dict):
             continue
 
-        # ถ้าไม่มี available ให้ถือว่ายังขายได้
-        available = item.get("available", True)
+        # sample_knowledge.json ใช้ available_default
+        available = item.get("available", item.get("available_default", True))
 
         if available is True:
             results.append(item)
@@ -722,7 +910,6 @@ def get_available_menu_items(category: str = None) -> list:
 
     return results
 
-
 def find_menu_by_keyword(keyword: str) -> list:
     keyword = _safe_str(keyword).lower()
 
@@ -735,13 +922,15 @@ def find_menu_by_keyword(keyword: str) -> list:
         searchable_parts = [
             item.get("id", ""),
             item.get("name", ""),
+            item.get("name_th", ""),
+            item.get("name_en", ""),
             item.get("category", ""),
             item.get("description", ""),
             item.get("sweetness", ""),
             item.get("sweetness_level", ""),
         ]
 
-        for field_name in ["tags", "recommended_for", "allergens", "aliases"]:
+        for field_name in ["tags", "recommended_for", "allergens", "aliases", "pairing"]:
             value = item.get(field_name, [])
             if isinstance(value, list):
                 searchable_parts.extend(value)
@@ -754,7 +943,6 @@ def find_menu_by_keyword(keyword: str) -> list:
             results.append(item)
 
     return results
-
 
 def find_menu_in_text(text: str) -> Optional[dict]:
     """
@@ -772,7 +960,9 @@ def find_menu_in_text(text: str) -> Optional[dict]:
 
         searchable_names = [
             item.get("id", ""),
-            item.get("name", "")
+            item.get("name", ""),
+            item.get("name_th", ""),
+            item.get("name_en", "")
         ]
 
         aliases = item.get("aliases", [])
@@ -785,9 +975,8 @@ def find_menu_in_text(text: str) -> Optional[dict]:
             if name_lower and name_lower in text_lower:
                 return item
 
-        item_name = _safe_str(item.get("name")).lower()
+        item_name = _safe_str(get_menu_name(item)).lower()
 
-        # แยกคำบางส่วนจากชื่อเมนู
         name_parts = [
             part.strip()
             for part in item_name.replace("-", " ").split()
@@ -799,12 +988,11 @@ def find_menu_in_text(text: str) -> Optional[dict]:
 
     return None
 
-
 def format_menu_price(item: dict) -> str:
     if not isinstance(item, dict):
         return ""
 
-    name = item.get("name") or item.get("id") or "เมนู"
+    name = get_menu_name(item)
     sizes = item.get("sizes", [])
 
     if not isinstance(sizes, list) or not sizes:
@@ -831,7 +1019,6 @@ def format_menu_price(item: dict) -> str:
         return f"{name} สามารถสอบถามราคาเพิ่มเติมกับแอดมินได้ค่ะ"
 
     return f"{name} มีราคา {', '.join(price_parts)} ค่ะ 🌷"
-
 
 def format_menu_detail(item: dict) -> str:
     if not isinstance(item, dict):
@@ -870,7 +1057,7 @@ def build_menu_summary() -> str:
 
     for item in menu_items:
         category = _safe_str(item.get("category"), "other")
-        name = item.get("name") or item.get("id")
+        name = get_menu_name(item)
 
         if not name:
             continue
@@ -903,7 +1090,6 @@ def build_menu_summary() -> str:
         + "\n".join(lines)
         + "\n\nหากสนใจเมนูไหนเป็นพิเศษ สามารถถามราคา ขนาด หรือส่วนผสมของเมนูนั้นได้เลยนะคะ 🌷"
     )
-
 
 def build_price_summary(limit: int = 10) -> str:
     menu_items = get_available_menu_items()
@@ -945,11 +1131,14 @@ def build_recommendation_summary() -> str:
 
         if (
             "signature" in tag_text
+            or "signature_drink" in tag_text
+            or "best_seller" in tag_text
             or "ยอดนิยม" in tag_text
             or "ขายดี" in tag_text
             or "ถ่ายรูปสวย" in tag_text
             or "ลูกค้าใหม่" in rec_text
             or "first_time_customer" in rec_text
+            or rec_text
         ):
             recommended.append(item)
 
@@ -959,7 +1148,7 @@ def build_recommendation_summary() -> str:
     lines = []
 
     for item in recommended[:5]:
-        name = item.get("name") or item.get("id")
+        name = get_menu_name(item)
         description = _safe_str(item.get("description"))
         price = format_menu_price(item)
 
@@ -973,7 +1162,6 @@ def build_recommendation_summary() -> str:
         + "\n".join(lines)
         + "\n\nถ้าลูกค้าชอบหวานน้อย ชอบถ่ายรูป หรืออยากได้เมนูสำหรับวันเกิด บอกแอดมินได้เลยนะคะ"
     )
-
 
 # =========================================================
 # HUMAN / HANDOFF FUNCTIONS
@@ -1068,9 +1256,24 @@ def _build_store_info_answer(intent: str) -> str:
         return ""
 
     if intent == "opening_hours":
-        opening_hours = _safe_str(store_info.get("opening_hours"))
-        if opening_hours:
-            return f"ร้าน Pudding Petals Cafe {opening_hours} ค่ะ 🌷"
+        opening_hours = store_info.get("opening_hours")
+
+        if isinstance(opening_hours, dict):
+            days = _safe_str(opening_hours.get("days"))
+            time = _safe_str(opening_hours.get("time"))
+            holiday_note = _safe_str(opening_hours.get("holiday_note"))
+
+            if days or time:
+                answer = f"ร้าน Pudding Petals {days} เวลา {time} ค่ะ 🌷".strip()
+
+                if holiday_note:
+                    answer += f" {holiday_note}"
+
+                return answer
+
+        opening_hours_text = _safe_str(opening_hours)
+        if opening_hours_text:
+            return f"ร้าน Pudding Petals Cafe {opening_hours_text} ค่ะ 🌷"
 
     if intent == "location":
         location = _safe_str(store_info.get("location"))
@@ -1086,7 +1289,6 @@ def _build_store_info_answer(intent: str) -> str:
             return reservation_policy
 
     return ""
-
 
 # =========================================================
 # RETRIEVE KNOWLEDGE
@@ -1214,12 +1416,20 @@ def retrieve_knowledge(intent_label: str = "general_question", text: str = "") -
 
     # ขอเมนูแนะนำ
     if normalized_intent == "recommendation":
-        recommendation_summary = build_recommendation_summary()
-        if recommendation_summary:
+        kb = load_knowledge_base()
+
+        # ใช้คำถามลูกค้าเพื่อแยก category เช่น เครื่องดื่ม / เค้ก / ขนม
+        recommendation_answer = build_recommendation_answer(kb, text)
+
+        # fallback เผื่อ build_recommendation_answer ไม่ได้ผล
+        if not recommendation_answer:
+            recommendation_answer = build_recommendation_summary()
+
+        if recommendation_answer:
             return {
                 "title": "Recommendation",
-                "content": recommendation_summary,
-                "answer": recommendation_summary,
+                "content": recommendation_answer,
+                "answer": recommendation_answer,
                 "matched": True,
                 "intent": normalized_intent,
                 "label": normalized_intent,
@@ -1229,7 +1439,7 @@ def retrieve_knowledge(intent_label: str = "general_question", text: str = "") -
                 "keywords": faq_data.get("keywords", []),
                 "examples": faq_data.get("examples", []),
                 "category": "menu",
-                "source": "menu_items_json"
+                "source": "menu_catalog_json"
             }
 
     # ข้อมูลร้านที่ดึงจาก STORE_INFO ได้โดยตรง

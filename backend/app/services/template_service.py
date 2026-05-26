@@ -516,43 +516,25 @@ def select_template(
     sentiment_label=None,
     risk_level=None
 ):
-    """
-    เลือก template สำหรับตอบลูกค้า
-
-    ใช้แบบเดิมได้:
-        template = select_template(intent)
-
-    ใช้แบบใหม่ได้:
-        template = select_template(intent, customer_text=text)
-
-    Returns:
-        {
-            "intent": str,
-            "reply": str,
-            "requires_human": bool,
-            "category": str,
-            "handoff_note": str | None
-        }
-    """
-
+    
     normalized_intent = normalize_template_intent(intent)
-    fallback = _fallback_template(normalized_intent)
 
-    try:
-        knowledge = retrieve_knowledge(
-            intent_label=normalized_intent,
-            text=customer_text or ""
-        )
+    if isinstance(knowledge_base, dict):
+        knowledge_reply = (
+            knowledge_base.get("answer")
+            or knowledge_base.get("content")
+            or ""
+        ).strip()
 
-        if knowledge and knowledge.get("matched") and (
-            knowledge.get("answer") or knowledge.get("content")
-        ):
-            return _knowledge_to_template_result(knowledge, fallback)
+        if knowledge_base.get("matched") and knowledge_reply:
+            return {
+                "reply": knowledge_reply,
+                "source": knowledge_base.get("source", "sample_knowledge_json"),
+                "intent": normalized_intent,
+                "used_knowledge": True
+            }
 
-    except Exception:
-        pass
-
-    return fallback
+    return _fallback_template(normalized_intent)
 
 
 # =========================================================
