@@ -1,11 +1,36 @@
+from typing import Any, Dict, Optional
+
+from app.services.knowledge_service import (
+    normalize_intent_label,
+    retrieve_knowledge,
+    is_human_required as knowledge_is_human_required,
+)
+
+
+# =========================================================
+# DEFAULT CONFIG
+# คงชื่อตัวแปรเดิม เพื่อให้ไฟล์อื่นที่ import อยู่ไม่พัง
+# =========================================================
+
+DEFAULT_INTENT = "general_question"
+
+
+# =========================================================
+# FALLBACK TEMPLATES
+# ใช้เฉพาะกรณี knowledge_service หาไม่เจอ / JSON โหลดไม่ได้
+# ไม่ควรใส่ข้อมูลราคา เมนู หรือข้อมูลร้านจริงเยอะเกินไปที่นี่
+# =========================================================
+
 TEMPLATES = {
     "greeting": {
         "reply": (
-            "สวัสดีค่ะ 🌷 "
-            "ยินดีต้อนรับสู่ Pudding Petals Cafe คาเฟ่ขนมหวานบรรยากาศสวนดอกไม้นะคะ"
+            "สวัสดีค่ะ 🌷 ยินดีต้อนรับสู่ Pudding Petals Cafe "
+            "คาเฟ่ขนมหวานท่ามกลางสวนดอกไม้นะคะ "
+            "วันนี้ให้แอดมินช่วยดูเรื่องไหนดีคะ"
         ),
         "requires_human": False,
-        "category": "general"
+        "category": "general",
+        "handoff_note": None
     },
 
     "thanks": {
@@ -14,258 +39,29 @@ TEMPLATES = {
             "ขอบคุณที่ติดต่อ Pudding Petals Cafe นะคะ"
         ),
         "requires_human": False,
-        "category": "general"
+        "category": "general",
+        "handoff_note": None
     },
 
-    "menu_inquiry": {
+    "general_question": {
         "reply": (
-            "ที่ร้านมีทั้งเค้ก ขนมหวาน เบเกอรี่ "
-            "และเครื่องดื่มค่ะ 🍰✨"
+            "ได้เลยค่ะ 🌷 แอดมินยินดีช่วยดูให้นะคะ "
+            "ลูกค้าสามารถบอกรายละเอียดเพิ่มเติมได้เลยค่ะ"
         ),
         "requires_human": False,
-        "category": "menu"
-    },
-
-    "recommendation": {
-        "reply": (
-            "เมนูแนะนำของร้านมีทั้งเค้ก ขนมหวาน "
-            "และเครื่องดื่มที่เข้ากับบรรยากาศสวนดอกไม้ค่ะ 🌷"
-        ),
-        "requires_human": False,
-        "category": "recommendation"
-    },
-
-    "promotion": {
-        "reply": (
-            "ตอนนี้ทางร้านมีโปรโมชันสำหรับเมนูขนมและเครื่องดื่มค่ะ 🌷 "
-            "เหมาะสำหรับลูกค้าที่อยากทานขนมหวานคู่กับเครื่องดื่มในบรรยากาศสวนดอกไม้ค่ะ"
-        ),
-        "requires_human": False,
-        "category": "promotion"
-    },
-
-    "price_inquiry": {
-        "reply": (
-            "ราคาของเมนูที่ร้านจะแตกต่างกันตามประเภทและขนาดค่ะ 🌷 "
-            "มีทั้งขนาด Mini, Regular, Whole Cake และแบบ Set ในบางเมนูค่ะ"
-        ),
-        "requires_human": False,
-        "category": "menu"
-    },
-
-    "size_option": {
-        "reply": (
-            "เมนูของร้านมีหลายขนาดให้เลือกค่ะ 🌷 "
-            "เช่น Mini, Regular, Whole Cake หรือแบบ Set ตามประเภทของเมนูค่ะ"
-        ),
-        "requires_human": False,
-        "category": "menu"
-    },
-
-    "availability": {
-        "reply": (
-            "เมนูขนมและเบเกอรี่บางรายการอาจมีจำนวนจำกัดในแต่ละวันค่ะ 🌷 "
-            "ทางร้านจะเตรียมสดใหม่เพื่อคงคุณภาพของเมนูค่ะ"
-        ),
-        "requires_human": False,
-        "category": "menu"
-    },
-
-    "opening_hours": {
-        "reply": (
-            "ร้าน Pudding Petals Cafe เปิดทุกวัน เวลา 10:00 - 20:00 น. ค่ะ 🌷"
-        ),
-        "requires_human": False,
-        "category": "store_info"
-    },
-
-    "location": {
-        "reply": (
-            "ร้าน Pudding Petals Cafe ตั้งอยู่โซนราชพฤกษ์ค่ะ 🌷 "
-            "เป็นคาเฟ่ขนมหวานบรรยากาศสวนดอกไม้ มีทั้งโซน indoor และ outdoor ค่ะ"
-        ),
-        "requires_human": False,
-        "category": "store_info"
-    },
-
-    "reservation": {
-        "reply": (
-            "ร้านสามารถ Walk-in ได้ตามปกติค่ะ 🌷 "
-            "หากเป็นช่วงวันหยุดหรือมากันหลายคน แนะนำจองล่วงหน้าเล็กน้อยนะคะ"
-        ),
-        "requires_human": True,
-        "category": "reservation"
-    },
-
-    "delivery_takeaway": {
-        "reply": (
-            "ทางร้านมีบริการเดลิเวอรี่ผ่าน GrabFood และ LINE MAN ค่ะ 🌷 "
-            "และสามารถสั่งกลับบ้านหรือรับเองได้ตามความสะดวกค่ะ"
-        ),
-        "requires_human": False,
-        "category": "delivery"
-    },
-
-    "payment": {
-        "reply": (
-            "ทางร้านรองรับการชำระเงินตามช่องทางที่ร้านกำหนดค่ะ 🌷 "
-            "หากเป็นออเดอร์พิเศษ แอดมินจะแจ้งรายละเอียดการชำระเงินให้ชัดเจนค่ะ"
-        ),
-        "requires_human": True,
-        "category": "payment"
-    },
-
-    "order_status": {
-        "reply": (
-            "สำหรับสถานะออเดอร์เดลิเวอรี่ ลูกค้าสามารถตรวจสอบผ่านแอปที่สั่งซื้อได้ค่ะ 🌷 "
-            "หากเป็นปัญหาเกี่ยวกับสินค้า ทางร้านจะช่วยตรวจสอบให้ค่ะ"
-        ),
-        "requires_human": True,
-        "category": "support"
-    },
-
-    "custom_cake": {
-        "reply": (
-            "ทางร้านมีเมนูเค้กที่เหมาะสำหรับวันเกิดและโอกาสพิเศษค่ะ 🎂✨ "
-            "เช่น เค้กแบบ Whole Cake สำหรับ 4-6 คนค่ะ"
-        ),
-        "requires_human": True,
-        "category": "custom_order"
-    },
-
-    "special_occasion": {
-        "reply": (
-            "สำหรับโอกาสพิเศษ เช่น วันเกิด วันครบรอบ ของขวัญ หรือของฝาก "
-            "ทางร้านมีเมนูขนมหวานและเค้กที่เหมาะกับบรรยากาศละมุน ๆ ค่ะ 🌷"
-        ),
-        "requires_human": False,
-        "category": "special_occasion"
-    },
-
-    "packaging": {
-        "reply": (
-            "ทางร้านแพ็กขนมและเครื่องดื่มอย่างระมัดระวังค่ะ 🌷 "
-            "หากต้องการแพ็กเป็นของขวัญหรือรับกลับบ้าน สามารถแจ้งเพิ่มเติมได้ค่ะ"
-        ),
-        "requires_human": True,
-        "category": "packaging"
-    },
-
-    "sweetness_adjustment": {
-        "reply": (
-            "เครื่องดื่มบางเมนูสามารถเลือกระดับความหวานได้ค่ะ 🌷 "
-            "ส่วนขนมและเค้กจะมีความหวานตามสูตรของร้านค่ะ"
-        ),
-        "requires_human": False,
-        "category": "menu_safety"
-    },
-
-    "allergy": {
-        "reply": (
-            "หากลูกค้ามีอาการแพ้อาหาร เช่น แพ้นม ไข่ ถั่ว หรือกลูเตน "
-            "ทางร้านแนะนำให้ตรวจสอบส่วนผสมก่อนสั่งนะคะ 🌷"
-        ),
-        "requires_human": True,
-        "category": "menu_safety"
-    },
-
-    "ingredients": {
-        "reply": (
-            "เมนูขนมหวานและเบเกอรี่ของร้านมีส่วนผสมแตกต่างกันค่ะ 🌷 "
-            "บางเมนูอาจมีนม ไข่ เนย ครีม กลูเตน หรือถั่วค่ะ"
-        ),
-        "requires_human": True,
-        "category": "menu_safety"
-    },
-
-    "dietary_option": {
-        "reply": (
-            "สำหรับตัวเลือกอาหารพิเศษ เช่น vegan, halal, keto, gluten-free หรือ dairy-free "
-            "จำเป็นต้องตรวจสอบตามวัตถุดิบของแต่ละเมนูก่อนค่ะ 🌷"
-        ),
-        "requires_human": True,
-        "category": "menu_safety"
-    },
-
-    "ambience_photo_spot": {
-        "reply": (
-            "Pudding Petals Cafe เป็นคาเฟ่บรรยากาศสวนดอกไม้ค่ะ 🌷 "
-            "มีทั้งโซน indoor และ outdoor พร้อมมุมถ่ายรูปหลายมุมค่ะ"
-        ),
-        "requires_human": False,
-        "category": "store_info"
-    },
-
-    "facility": {
-        "reply": (
-            "ที่ร้านมี Wi-Fi มีปลั๊กบางจุดในโซน indoor "
-            "มีที่จอดรถจำนวนจำกัด และโซน outdoor สามารถพาสัตว์เลี้ยงมาได้ค่ะ 🌷"
-        ),
-        "requires_human": False,
-        "category": "store_info"
-    },
-
-    "compliment": {
-        "reply": (
-            "ขอบคุณมาก ๆ เลยค่ะ 🌷 "
-            "ดีใจมากที่ลูกค้าชอบขนม เครื่องดื่ม และบรรยากาศของร้านค่ะ"
-        ),
-        "requires_human": False,
-        "category": "positive"
-    },
-
-    "complaint_product": {
-        "reply": (
-            "ทางร้านขออภัยอย่างมากสำหรับประสบการณ์ที่ไม่ดีค่ะ 🙏 "
-            "ทางร้านจะรับเรื่องเกี่ยวกับสินค้าไว้ตรวจสอบและดูแลต่ออย่างเหมาะสมค่ะ"
-        ),
-        "requires_human": True,
-        "category": "support"
-    },
-
-    "complaint_service": {
-        "reply": (
-            "ทางร้านขออภัยอย่างจริงใจสำหรับประสบการณ์ด้านการบริการค่ะ 🙏 "
-            "ทางร้านจะรับเรื่องไว้ตรวจสอบกับทีมงานและปรับปรุงการบริการให้ดีขึ้นค่ะ"
-        ),
-        "requires_human": True,
-        "category": "support"
-    },
-
-    "complaint_staff": {
-        "reply": (
-            "ทางร้านขออภัยอย่างจริงใจสำหรับเหตุการณ์ที่เกี่ยวข้องกับพนักงานค่ะ 🙏 "
-            "ทางร้านจะรับเรื่องไว้ตรวจสอบและปรับปรุงการสื่อสารให้เหมาะสมมากขึ้นค่ะ"
-        ),
-        "requires_human": True,
-        "category": "support"
-    },
-
-    "refund_return": {
-        "reply": (
-            "กรณีคืนเงิน เปลี่ยนสินค้า เคลม หรือยกเลิกออเดอร์ "
-            "ทางร้านจะรับเรื่องไว้ตรวจสอบตามรายละเอียดและเงื่อนไขของร้านค่ะ 🙏"
-        ),
-        "requires_human": True,
-        "category": "support"
-    },
-
-    "high_risk_complaint": {
-        "reply": (
-            "ทางร้านขออภัยอย่างสูงสำหรับเหตุการณ์ที่เกิดขึ้นค่ะ 🙏 "
-            "กรณีนี้เป็นเคสเร่งด่วน ทางร้านจะส่งต่อให้แอดมินตรวจสอบทันทีค่ะ"
-        ),
-        "requires_human": True,
-        "category": "risk"
+        "category": "general",
+        "handoff_note": None
     },
 
     "empty_message": {
         "reply": (
             "Pudding Petals Cafe ยินดีให้บริการค่ะ 🌷 "
-            "ร้านมีเมนูเค้ก ขนมหวาน เบเกอรี่ เครื่องดื่ม และบรรยากาศสวนดอกไม้ค่ะ"
+            "หากต้องการสอบถามเมนู ราคา โปรโมชัน การจองโต๊ะ หรือเดลิเวอรี่ "
+            "สามารถพิมพ์ข้อความมาได้เลยนะคะ"
         ),
         "requires_human": False,
-        "category": "general"
+        "category": "general",
+        "handoff_note": None
     },
 
     "service_question": {
@@ -274,26 +70,294 @@ TEMPLATES = {
             "การจองโต๊ะ เดลิเวอรี่ และข้อมูลร้านค่ะ 🌷"
         ),
         "requires_human": False,
-        "category": "general"
+        "category": "general",
+        "handoff_note": None
     },
 
-    "general_question": {
+    "promotion": {
         "reply": (
-            "ขอบคุณที่ติดต่อเข้ามานะคะ 🌷 "
-            "Pudding Petals Cafe เป็นคาเฟ่ขนมหวานบรรยากาศสวนดอกไม้ "
-            "มีเค้ก ขนมหวาน เบเกอรี่ และเครื่องดื่มค่ะ"
+            "โปรโมชันของร้านอาจเปลี่ยนตามช่วงเวลาค่ะ 🌷 "
+            "ลูกค้าสามารถสอบถามโปรล่าสุดกับแอดมินได้เลยนะคะ"
         ),
         "requires_human": False,
-        "category": "general"
+        "category": "menu",
+        "handoff_note": None
+    },
+
+    "recommendation": {
+        "reply": (
+            "ถ้าเพิ่งมาครั้งแรก แอดมินแนะนำเมนู signature หรือเมนูขายดีของร้านค่ะ 🌷 "
+            "ลูกค้าบอกได้เลยนะคะว่าชอบหวานน้อย ชอบถ่ายรูป หรืออยากได้เมนูสำหรับโอกาสพิเศษ"
+        ),
+        "requires_human": False,
+        "category": "menu",
+        "handoff_note": None
+    },
+
+    "menu_inquiry": {
+        "reply": (
+            "ที่ร้านมีทั้งเค้ก ขนมหวาน เบเกอรี่ และเครื่องดื่มค่ะ 🍰✨ "
+            "หากสนใจเมนูไหนเป็นพิเศษ สามารถถามราคา ขนาด หรือส่วนผสมได้เลยนะคะ"
+        ),
+        "requires_human": False,
+        "category": "menu",
+        "handoff_note": None
+    },
+
+    "price_inquiry": {
+        "reply": (
+            "ราคาของเมนูจะแตกต่างกันตามประเภทและขนาดค่ะ 🌷 "
+            "ลูกค้าสามารถแจ้งชื่อเมนูที่สนใจได้เลยนะคะ เดี๋ยวแอดมินช่วยดูราคาให้ค่ะ"
+        ),
+        "requires_human": False,
+        "category": "menu",
+        "handoff_note": None
+    },
+
+    "size_option": {
+        "reply": (
+            "เมนูของร้านมีหลายขนาดให้เลือกค่ะ 🌷 "
+            "เช่น Mini, Regular, Set หรือ Whole Cake ตามประเภทของเมนูค่ะ"
+        ),
+        "requires_human": False,
+        "category": "menu",
+        "handoff_note": None
+    },
+
+    "availability": {
+        "reply": (
+            "เมนูบางรายการอาจมีจำนวนจำกัดในแต่ละวันค่ะ 🌷 "
+            "หากสนใจเมนูไหนเป็นพิเศษ แอดมินช่วยเช็กให้ได้ค่ะ"
+        ),
+        "requires_human": True,
+        "category": "menu",
+        "handoff_note": "ให้แอดมินตรวจสอบสต็อกหรือจำนวนสินค้าที่พร้อมขาย"
+    },
+
+    "opening_hours": {
+        "reply": (
+            "ร้าน Pudding Petals Cafe เปิดทุกวันค่ะ 🌷 "
+            "สามารถสอบถามเวลาเปิด-ปิดล่าสุดกับแอดมินได้เลยนะคะ"
+        ),
+        "requires_human": False,
+        "category": "store_info",
+        "handoff_note": None
+    },
+
+    "location": {
+        "reply": (
+            "ร้าน Pudding Petals Cafe เป็นคาเฟ่ขนมหวานบรรยากาศสวนดอกไม้ค่ะ 🌷 "
+            "ลูกค้าสามารถทักแชทเพื่อขอพิกัดร้านได้เลยนะคะ"
+        ),
+        "requires_human": False,
+        "category": "store_info",
+        "handoff_note": None
+    },
+
+    "reservation": {
+        "reply": (
+            "สามารถสอบถามโต๊ะว่างหรือจองโต๊ะกับแอดมินได้เลยค่ะ 🌷 "
+            "รบกวนแจ้งวันที่ เวลา และจำนวนคนที่ต้องการเข้ามานะคะ"
+        ),
+        "requires_human": True,
+        "category": "reservation",
+        "handoff_note": "ส่งต่อแอดมินเพื่อเช็กโต๊ะว่าง วันที่ เวลา จำนวนคน และโซนที่ต้องการ"
+    },
+
+    "ambience_photo_spot": {
+        "reply": (
+            "Pudding Petals Cafe เป็นคาเฟ่ขนมหวานท่ามกลางสวนดอกไม้ค่ะ 🌷 "
+            "มีมุมถ่ายรูปหลายมุมทั้งโซน indoor และ outdoor ค่ะ"
+        ),
+        "requires_human": False,
+        "category": "store_info",
+        "handoff_note": None
+    },
+
+    "facility": {
+        "reply": (
+            "ที่ร้านมีสิ่งอำนวยความสะดวกสำหรับลูกค้าค่ะ 🌷 "
+            "เช่น Wi-Fi ที่นั่ง indoor/outdoor และรายละเอียดอื่น ๆ สามารถสอบถามเพิ่มเติมได้เลยนะคะ"
+        ),
+        "requires_human": False,
+        "category": "store_info",
+        "handoff_note": None
+    },
+
+    "delivery_takeaway": {
+        "reply": (
+            "ทางร้านมีบริการเดลิเวอรี่และสั่งกลับบ้านค่ะ 🌷 "
+            "ลูกค้าสามารถสอบถามช่องทางสั่งซื้อที่สะดวกได้เลยนะคะ"
+        ),
+        "requires_human": False,
+        "category": "delivery",
+        "handoff_note": None
+    },
+
+    "payment": {
+        "reply": (
+            "ทางร้านรองรับช่องทางชำระเงินตามที่ร้านกำหนดค่ะ 🌷 "
+            "หากเป็นออเดอร์พิเศษ แอดมินจะแจ้งรายละเอียดให้อีกครั้งนะคะ"
+        ),
+        "requires_human": False,
+        "category": "payment",
+        "handoff_note": None
+    },
+
+    "order_status": {
+        "reply": (
+            "สำหรับสถานะออเดอร์ รบกวนลูกค้าส่งเลขออเดอร์หรือรายละเอียดการสั่งซื้อให้แอดมินตรวจสอบได้เลยค่ะ 🌷"
+        ),
+        "requires_human": True,
+        "category": "support",
+        "handoff_note": "ส่งต่อแอดมินเพื่อตรวจสอบสถานะออเดอร์"
+    },
+
+    "custom_cake": {
+        "reply": (
+            "ทางร้านมีเค้กสำหรับวันเกิดและโอกาสพิเศษค่ะ 🎂✨ "
+            "รบกวนแจ้งแบบ ขนาด วันที่รับ และข้อความหน้าเค้กให้แอดมินช่วยดูรายละเอียดต่อนะคะ"
+        ),
+        "requires_human": True,
+        "category": "custom_order",
+        "handoff_note": "ส่งต่อแอดมินเพื่อสอบถามแบบเค้ก ขนาด วันรับสินค้า และข้อความหน้าเค้ก"
+    },
+
+    "special_occasion": {
+        "reply": (
+            "สำหรับโอกาสพิเศษ เช่น วันเกิด วันครบรอบ ของขวัญ หรือของฝาก "
+            "แอดมินช่วยแนะนำเมนูที่เหมาะให้ได้ค่ะ 🌷"
+        ),
+        "requires_human": False,
+        "category": "special_occasion",
+        "handoff_note": None
+    },
+
+    "packaging": {
+        "reply": (
+            "ทางร้านสามารถช่วยดูเรื่องแพ็กขนม กล่อง ถุง หรือแพ็กของขวัญได้ค่ะ 🌷 "
+            "รบกวนแจ้งรูปแบบที่ต้องการเพิ่มเติมนะคะ"
+        ),
+        "requires_human": True,
+        "category": "packaging",
+        "handoff_note": "ส่งต่อแอดมินหากลูกค้าต้องการแพ็กของขวัญหรือรายละเอียดแพ็กเกจพิเศษ"
+    },
+
+    "sweetness_adjustment": {
+        "reply": (
+            "เครื่องดื่มบางเมนูสามารถเลือกระดับความหวานได้ค่ะ 🌷 "
+            "ส่วนขนมและเค้กจะมีความหวานตามสูตรของร้านค่ะ"
+        ),
+        "requires_human": False,
+        "category": "menu_safety",
+        "handoff_note": None
+    },
+
+    "allergy": {
+        "reply": (
+            "หากลูกค้ามีอาการแพ้อาหาร เช่น แพ้นม ไข่ ถั่ว หรือกลูเตน "
+            "รบกวนแจ้งแอดมินก่อนสั่งทุกครั้งนะคะ 🌷 "
+            "ทางร้านจะช่วยตรวจสอบส่วนผสมให้ละเอียดก่อนค่ะ"
+        ),
+        "requires_human": True,
+        "category": "menu_safety",
+        "handoff_note": "ส่งต่อแอดมินทันทีหากลูกค้ามีอาการแพ้อาหารหรือข้อจำกัดด้านวัตถุดิบ"
+    },
+
+    "ingredients": {
+        "reply": (
+            "ส่วนผสมของแต่ละเมนูจะแตกต่างกันค่ะ 🌷 "
+            "หากลูกค้าต้องการตรวจสอบเมนูใดเป็นพิเศษ แจ้งชื่อเมนูให้แอดมินได้เลยค่ะ"
+        ),
+        "requires_human": True,
+        "category": "menu_safety",
+        "handoff_note": "ส่งต่อแอดมินเพื่อเช็กส่วนผสมเฉพาะเมนู"
+    },
+
+    "dietary_option": {
+        "reply": (
+            "สำหรับตัวเลือกอาหารพิเศษ เช่น vegan, vegetarian, halal, keto, low sugar, "
+            "gluten-free หรือ lactose-free จำเป็นต้องตรวจสอบตามวัตถุดิบของแต่ละเมนูก่อนค่ะ 🌷"
+        ),
+        "requires_human": True,
+        "category": "menu_safety",
+        "handoff_note": "ส่งต่อแอดมินเพื่อตรวจสอบตัวเลือกอาหารพิเศษตามวัตถุดิบจริง"
+    },
+
+    "compliment": {
+        "reply": (
+            "ขอบคุณมาก ๆ เลยค่ะ 🌷 "
+            "ดีใจมากที่ลูกค้าชอบขนม เครื่องดื่ม และบรรยากาศของร้านนะคะ"
+        ),
+        "requires_human": False,
+        "category": "positive",
+        "handoff_note": None
+    },
+
+    "complaint_product": {
+        "reply": (
+            "ทางร้านต้องขออภัยอย่างมากสำหรับประสบการณ์ที่ไม่ดีเกี่ยวกับสินค้านะคะ 🙏 "
+            "รบกวนลูกค้าส่งเลขออเดอร์ รูปสินค้า และรายละเอียดปัญหาเพิ่มเติมได้เลยค่ะ"
+        ),
+        "requires_human": True,
+        "category": "support",
+        "handoff_note": "ส่งต่อแอดมินเพื่อตรวจสอบเลขออเดอร์ รูปสินค้า และรายละเอียดปัญหา"
+    },
+
+    "complaint_service": {
+        "reply": (
+            "ทางร้านต้องขออภัยอย่างจริงใจสำหรับประสบการณ์ด้านการบริการนะคะ 🙏 "
+            "แอดมินจะรับเรื่องไว้ตรวจสอบและนำไปปรับปรุงให้ดีขึ้นค่ะ"
+        ),
+        "requires_human": True,
+        "category": "support",
+        "handoff_note": "ส่งต่อแอดมินเพื่อตรวจสอบเหตุการณ์ด้านการบริการ"
+    },
+
+    "complaint_staff": {
+        "reply": (
+            "ทางร้านต้องขออภัยอย่างจริงใจสำหรับเหตุการณ์ที่เกี่ยวข้องกับพนักงานนะคะ 🙏 "
+            "แอดมินจะรับเรื่องไว้ตรวจสอบอย่างเหมาะสมค่ะ"
+        ),
+        "requires_human": True,
+        "category": "support",
+        "handoff_note": "ส่งต่อแอดมินเพื่อตรวจสอบเหตุการณ์ที่เกี่ยวข้องกับพนักงาน"
+    },
+
+    "refund_return": {
+        "reply": (
+            "กรณีคืนเงิน เปลี่ยนสินค้า เคลม หรือยกเลิกออเดอร์ "
+            "ทางร้านขอรับรายละเอียดไว้ตรวจสอบก่อนนะคะ 🙏"
+        ),
+        "requires_human": True,
+        "category": "support",
+        "handoff_note": "ส่งต่อแอดมินเพื่อตรวจสอบเงื่อนไขการคืนเงิน เปลี่ยนสินค้า หรือเคลมสินค้า"
+    },
+
+    "high_risk_complaint": {
+        "reply": (
+            "ทางร้านต้องขออภัยอย่างสูงสำหรับเหตุการณ์ที่เกิดขึ้นนะคะ 🙏 "
+            "กรณีนี้เป็นเคสเร่งด่วน แอดมินจะส่งต่อให้ผู้เกี่ยวข้องตรวจสอบทันทีค่ะ"
+        ),
+        "requires_human": True,
+        "category": "risk",
+        "handoff_note": "เคสเสี่ยงสูง ต้องส่งต่อแอดมินหรือผู้ดูแลทันที"
     }
 }
 
+
+# =========================================================
+# INTENT ALIASES
+# คงตัวแปรเดิมไว้ และ map ให้ตรงกับ knowledge_service
+# =========================================================
 
 TEMPLATE_ALIASES = {
     "general": "general_question",
     "unknown": "general_question",
     "fallback": "general_question",
     "other": "general_question",
+    "none": "general_question",
+    "null": "general_question",
 
     "sweetness_allergy": "sweetness_adjustment",
 
@@ -309,51 +373,209 @@ TEMPLATE_ALIASES = {
     "staff_complaint": "complaint_staff",
     "service_complaint": "complaint_service",
     "product_complaint": "complaint_product",
+    "negative_feedback": "complaint_service",
 
     "menu": "menu_inquiry",
+    "ask_menu": "menu_inquiry",
+    "menu_question": "menu_inquiry",
+
     "price": "price_inquiry",
+    "ask_price": "price_inquiry",
+
     "size": "size_option",
+    "sizes": "size_option",
+
     "hours": "opening_hours",
     "open_hours": "opening_hours",
+    "business_hours": "opening_hours",
+
     "store_location": "location",
+    "map": "location",
+
     "delivery": "delivery_takeaway",
     "takeaway": "delivery_takeaway",
+
     "ingredient": "ingredients",
+    "allergens": "allergy",
+
     "ambience": "ambience_photo_spot",
     "photo": "ambience_photo_spot",
     "facilities": "facility",
+
+    "booking": "reservation",
+    "table_booking": "reservation",
+
+    "payment_method": "payment",
+    "pay": "payment",
+
+    "custom_order": "custom_cake",
+    "birthday_cake": "custom_cake",
+
+    "refund": "refund_return",
+    "return": "refund_return",
+    "cancel_order": "refund_return",
+
+    "urgent": "high_risk_complaint",
+    "legal_threat": "high_risk_complaint",
+    "food_poisoning": "high_risk_complaint",
+
+    "collab": "collaboration",
+    "influencer": "collaboration",
+    "event": "event_booking",
+    "private_event": "event_booking",
+    "social": "social_media",
+    "queue": "queue_waiting",
+    "waiting": "queue_waiting"
 }
 
 
+# =========================================================
+# NORMALIZE INTENT
+# =========================================================
+
 def normalize_template_intent(intent):
+    """
+    คงชื่อฟังก์ชันเดิมไว้
+    ใช้ normalize_intent_label จาก knowledge_service เป็นหลัก
+    """
     if isinstance(intent, dict):
-        intent = (
+        raw_intent = (
             intent.get("canonical_intent")
             or intent.get("intent")
             or intent.get("label")
             or intent.get("risk_intent")
-            or "general_question"
+            or intent.get("predicted_intent")
+            or DEFAULT_INTENT
         )
+    else:
+        raw_intent = intent
 
-    intent = str(intent or "general_question").strip()
+    raw_intent = str(raw_intent or DEFAULT_INTENT).strip().lower()
 
-    if not intent:
-        intent = "general_question"
+    if not raw_intent:
+        raw_intent = DEFAULT_INTENT
 
-    return TEMPLATE_ALIASES.get(intent, intent)
+    raw_intent = TEMPLATE_ALIASES.get(raw_intent, raw_intent)
+
+    return normalize_intent_label(raw_intent)
 
 
-def select_template(intent):
+# =========================================================
+# INTERNAL HELPERS
+# =========================================================
+
+def _fallback_template(intent: str) -> Dict[str, Any]:
     normalized_intent = normalize_template_intent(intent)
 
-    result = TEMPLATES.get(
-        normalized_intent,
-        TEMPLATES["general_question"]
-    )
+    item = TEMPLATES.get(normalized_intent)
+
+    if not item:
+        item = TEMPLATES[DEFAULT_INTENT]
+        normalized_intent = DEFAULT_INTENT
 
     return {
         "intent": normalized_intent,
-        "reply": result.get("reply"),
-        "requires_human": result.get("requires_human", False),
-        "category": result.get("category", "general")
+        "reply": item.get("reply"),
+        "requires_human": item.get("requires_human", False),
+        "category": item.get("category", "general"),
+        "handoff_note": item.get("handoff_note")
     }
+
+
+def _knowledge_to_template_result(knowledge: Dict[str, Any], fallback: Dict[str, Any]) -> Dict[str, Any]:
+    answer = (
+        knowledge.get("answer")
+        or knowledge.get("content")
+        or fallback.get("reply")
+    )
+
+    return {
+        "intent": knowledge.get("canonical_intent") or knowledge.get("intent") or fallback.get("intent"),
+        "reply": answer,
+        "requires_human": bool(
+            knowledge.get("requires_human")
+            if "requires_human" in knowledge
+            else fallback.get("requires_human", False)
+        ),
+        "category": knowledge.get("category") or fallback.get("category", "general"),
+        "handoff_note": knowledge.get("handoff_note") or fallback.get("handoff_note"),
+        "source": knowledge.get("source", "knowledge_service")
+    }
+
+
+# =========================================================
+# MAIN SELECT TEMPLATE
+# ใช้แทนของเดิมได้เลย
+# =========================================================
+
+def select_template(
+    intent,
+    knowledge_base=None,
+    customer_text=None,
+    matched_menu=None,
+    sentiment_label=None,
+    risk_level=None
+):
+    """
+    เลือก template สำหรับตอบลูกค้า
+
+    ใช้แบบเดิมได้:
+        template = select_template(intent)
+
+    ใช้แบบใหม่ได้:
+        template = select_template(intent, customer_text=text)
+
+    Returns:
+        {
+            "intent": str,
+            "reply": str,
+            "requires_human": bool,
+            "category": str,
+            "handoff_note": str | None
+        }
+    """
+
+    normalized_intent = normalize_template_intent(intent)
+    fallback = _fallback_template(normalized_intent)
+
+    try:
+        knowledge = retrieve_knowledge(
+            intent_label=normalized_intent,
+            text=customer_text or ""
+        )
+
+        if knowledge and knowledge.get("matched") and (
+            knowledge.get("answer") or knowledge.get("content")
+        ):
+            return _knowledge_to_template_result(knowledge, fallback)
+
+    except Exception:
+        pass
+
+    return fallback
+
+
+# =========================================================
+# OPTIONAL UTILS
+# เผื่อไฟล์อื่นเรียกใช้
+# =========================================================
+
+def is_human_required(intent, customer_text: str = "") -> bool:
+    try:
+        return knowledge_is_human_required(
+            normalize_template_intent(intent),
+            customer_text
+        )
+    except Exception:
+        template = select_template(intent, customer_text=customer_text)
+        return bool(template.get("requires_human", False))
+
+
+def get_template_reply(intent, customer_text: str = "") -> str:
+    template = select_template(intent, customer_text=customer_text)
+    return template.get("reply") or ""
+
+
+def get_template_category(intent, customer_text: str = "") -> str:
+    template = select_template(intent, customer_text=customer_text)
+    return template.get("category") or "general"
